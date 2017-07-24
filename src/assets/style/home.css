@@ -1,0 +1,17 @@
+#topMeun {
+  position: fixed;
+  top: 0;
+  width: 100%;
+}
+#topMeun header {
+  height: 60px;
+  line-height: 60px;
+  margin-left: 20px;
+}
+#topMeun #top {
+  background: #FFF;
+  box-shadow: 0 0 6px 0 rgba(71, 71, 71, 0.5);
+}
+#topMeun .el-menu {
+  background: transparent;
+}

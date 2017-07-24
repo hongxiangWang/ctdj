@@ -1,8 +1,6 @@
 <template>
   <div id="app">
-    <img src="./assets/logo.png">
-    <h1>{{ msg }}</h1>
-    <el-button @click.native="startHacking">Let's do it</el-button>
+    <router-view></router-view>
   </div>
 </template>
 
@@ -20,7 +18,8 @@ export default {
         title: 'It Works',
         message: 'We have laid the groundwork for you. Now it\'s your time to build something epic!',
         duration: 6000
-      })
+      });
+       this.$router.push('/home');
     }
   }
 }
@@ -29,5 +28,13 @@ export default {
 <style>
 body {
   font-family: Helvetica, sans-serif;
+  margin: 0;
+}
+
+.icon {
+  width: 1em; height: 1em;
+  vertical-align: -0.15em;
+  fill: currentColor;
+  overflow: hidden;
 }
 </style>

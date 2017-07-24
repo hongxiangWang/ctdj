@@ -1,12 +1,12 @@
 import App from '../App.vue'
-//const login = r => require.ensure([], () => r(require('../page/login/index.vue')), 'login');
+const home = r => require.ensure([], () => r(require('../page/home/index.vue')), 'home');
 export default [{
     path: '/',
     component: App,
     children: [{
         path: '/',
         // 使用vue-route + Webpack 的 code splitting feature 把组件按组分块
-       // component: login
+        component: home
     },
     ]
 }
