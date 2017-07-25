@@ -15,3 +15,16 @@
 #topMeun .el-menu {
   background: transparent;
 }
+#bottom {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+  /* Rectangle 7: */
+  background: #FFFFFF;
+  box-shadow: 0 -1px 2px 0 rgba(127, 127, 127, 0.38);
+  font-size: 10px;
+}
+#bottom svg {
+  color: #E64A19;
+}
