@@ -15,7 +15,7 @@
                             <use xlink:href="#icon-party"></use>
                         </svg>
                     </span>
-                        中国电信新疆公司党建
+                        中国电信新疆公司党建LOGO
                     </header>
                 </el-col>
                 <el-col :span="16">
