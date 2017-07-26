@@ -5,6 +5,7 @@ import ElementUI from 'element-ui'
 import routes from './router/router.js'
 import vueStore from './vueStore/index.js'
 import 'element-ui/lib/theme-default/index.css'
+import './assets/font/iconfont.js'
 
 import axios from 'axios'
 import config from './api/config'
@@ -24,7 +25,6 @@ Vue.prototype.$localStore = localStore;
 
 const router = new VueRouter({
     routes: routes,
-
 })
 
 new Vue({

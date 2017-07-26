@@ -1,7 +1,7 @@
 {
-  "name": "element-starter",
+  "name": "ctdj-starter",
   "description": "A Vue.js project",
-  "author": "yi.shyang@ele.me",
+  "author": "936590874@qq.com",
   "private": true,
   "scripts": {
     "dev": "webpack-dev-server --inline --hot --env.dev",
