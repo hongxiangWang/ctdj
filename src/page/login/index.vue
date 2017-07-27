@@ -2,9 +2,9 @@
     <div id="login">
         <p>
             <svg class="icon" aria-hidden="true">
-                <use xlink:href="#icon-ctlogo"></use>
+                <use xlink:href="#icon-dianxin"></use>
             </svg>
-            新疆电信特殊号码备案管理平台
+            新疆电信数字党建
         </p>
         <div id="login-box">
             <el-card class="box-card">
@@ -85,15 +85,15 @@
                     if (valid) {
                         let params = {
                             username: this.ruleForm2.phone,
-                            loginPwd: this.ruleForm2.checkPass
+                            userpwd: this.ruleForm2.checkPass
                         }
 
-                        this.$ajax.post('user/login', params).then(response => {
+                        this.$ajax.post('admin/login', params).then(response => {
                             console.log(response.data.data);
                             switch (Number(response.data.data.flg)) {
                                 case 0 :
                                     getAccount(this, response.data.data);
-                                    this.$router.replace('home');
+                                    this.$router.replace('/home');
                                     break;
                                 default:
                                     console.log(response.data)
@@ -175,19 +175,19 @@
         }, 1000)
     }
 
-    function getAccount(_this, data) {
-        let list = data.access_list;
+    function getAccount(vm, data) {
+        //let list = data.access_list;
         let json = {};
-        list.forEach(value => {
-            json[value.node_id] = value.node_status
-        })
-        _this.$localStore.set('token', data.token);
-        json.name = data.people_name;
-        json.loginName = data.loginName;
-        json.dept_id = data.dept_id;
-        json.dept_name = data.dept_name;
-        json.role_code = data.access_list[0].role_code;
-        _this.$localStore.set('account', json);
+//        list.forEach(value => {
+//            json[value.node_id] = value.node_status
+//        })
+        vm.$localStore.set('token', data.token);
+//        json.name = data.people_name;
+        json.username = data.username;
+//        json.dept_id = data.dept_id;
+//        json.dept_name = data.dept_name;
+//        json.role_code = data.access_list[0].role_code;
+        vm.$localStore.set('account', json);
     }
     //获取URL参数
     function GetQueryString(name) {
@@ -198,5 +198,4 @@
     }
     import '../../assets/style/login.less'
     import '../../assets/elCss/input.css'
-    import '../../assets/elCss/button.css'
 </script>

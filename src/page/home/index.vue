@@ -15,7 +15,7 @@
                             <use xlink:href="#icon-party"></use>
                         </svg>
                     </span>
-                        中国电信新疆公司党建LOGO
+                        中国电信新疆公司党建LOGO {{}}
                     </header>
                 </el-col>
                 <el-col :span="16">
@@ -48,17 +48,28 @@
                             <el-menu-item index="4-2">账户：王洪翔6</el-menu-item>
                             <el-menu-item index="4-3">账户：王洪翔6</el-menu-item>
                         </el-submenu>
+
+
+
+                        <el-submenu index="5">
+                            <template slot="title">组件测试</template>
+                            <el-menu-item index="table1Mode">table1</el-menu-item>
+                            <el-menu-item index="4-2">账户：王洪翔6</el-menu-item>
+                            <el-menu-item index="4-3">账户：王洪翔6</el-menu-item>
+                        </el-submenu>
                     </el-menu>
                 </el-col>
             </el-row>
 
-            <router-view ref="main"></router-view>
+            <router-view ref="main" style="margin-top: 10px"></router-view>
 
         </div>
         <div id="bottom">
-            <small><svg class="icon" aria-hidden="true">
-                            <use xlink:href="#icon-banquan"></use>
-                        </svg> &nbsp;&nbsp;中国电信新疆公司企业信息化部自主研发</small>
+            <small>
+                <svg class="icon" aria-hidden="true">
+                    <use xlink:href="#icon-banquan"></use>
+                </svg> &nbsp;&nbsp;中国电信新疆公司企业信息化部自主研发
+            </small>
         </div>
     </div>
 </template>
@@ -67,6 +78,7 @@
     import '../../assets/elCss/menu.css'
     import '../../assets/style/app.less'
     import '../../assets/style/home.less'
+
     export default {
         data() {
             return {
@@ -78,6 +90,34 @@
             handleSelect(key, keyPath) {
                 console.log(key, keyPath);
             }
+        },
+        mounted() {
+            let vm = this;
+            console.log('token---',vm.$localStore.get('token'))
+            this.$ajax.interceptors.request.use(function (config) {
+                //在请求发出之前进行一些操作
+                let token = vm.$localStore.get('token');
+
+                if (token) {
+                    config.headers.token = token;
+                }
+                return config;
+            }, function (err) {
+                //Do something with request error
+                return Promise.reject(err);
+            });
+
+            this.$ajax.interceptors.response.use(function (res) {
+                //在这里对返回的数据进行处理
+                if (Number(res.data.errno) == 1000) {
+                    vm.$router.replace('/')
+                    return;
+                }
+                return res;
+            }, function (err) {
+                //Do something with response error
+                return Promise.reject(err);
+            })
         }
     }
 

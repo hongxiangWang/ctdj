@@ -225,7 +225,7 @@
         //获取用户列表
         mounted(){
             this.tableLoading = true;
-            this.$ajax.post('/user/getuserlist')
+            this.$ajax.post('/people/userlist')
                 .then((respons) => {
                     axajData = respons.data.data.data;
                     console.log('getuserlist---', respons.data)
