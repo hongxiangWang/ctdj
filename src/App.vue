@@ -19,7 +19,7 @@ export default {
         message: 'We have laid the groundwork for you. Now it\'s your time to build something epic!',
         duration: 6000
       });
-       this.$router.push('/home');
+       this.$router.push('/login');
     }
   }
 }

@@ -1,0 +1,43 @@
+body {
+  background-color: white;
+}
+#login {
+  padding: 0;
+  margin: 0 auto;
+  height: 800px;
+  width: 100%;
+  background-position: top left;
+  background-size: 100% auto;
+}
+#login #login-box {
+  width: 350px;
+  height: 300px;
+  position: absolute;
+  top: 45%;
+  left: 50%;
+}
+#login p {
+  font-size: 30px;
+  color: #FFAB91;
+  position: absolute;
+  top: 25%;
+  left: 45%;
+}
+#login #query_entry {
+  position: fixed;
+  right: 5%;
+  top: 30px;
+}
+#login #query_entry .el-button {
+  margin: 0 10px;
+  background-color: #3399cc;
+}
+#login .el-form-item:last-child {
+  margin-bottom: 0;
+}
+#login .box-card {
+  padding-top: 10px;
+}
+#login #entry {
+  width: 100%;
+}
