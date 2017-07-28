@@ -25,7 +25,7 @@
                     <el-button
                             v-for="op in operates"
                             :size="op.size"
-                            type="op.type"
+                            :type="op.type"
                             :key="op.lable"
                             @click="emit(scope.$index, scope.row,op.clickFun)">{{op.lable}}
                     </el-button>

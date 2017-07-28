@@ -89,8 +89,8 @@
                         }
 
                         this.$ajax.post('admin/login', params).then(response => {
-                            console.log(response.data.data);
-                            switch (Number(response.data.data.flg)) {
+                            console.log(response.data.data.token);
+                            switch (Number(response.data.errno)) {
                                 case 0 :
                                     getAccount(this, response.data.data);
                                     this.$router.replace('/home');
@@ -143,7 +143,8 @@
                 return;
             }
             this.$ajax.post('/user/logintoken', params).then(response => {
-                switch (Number(response.data.data.flg)) {
+                console.log('sssss',response.errno)
+                switch (Number(response.errno)) {
                     case 0 :
                         getAccount(this, response.data.data);
                         //this.$router.replace('/home');
@@ -155,7 +156,7 @@
                         this.$message({message: response.data.data.msg, type: 'error'})
                 }
             }).catch(error => {
-                this.$message({message: response.data.data.msg, type: 'error'})
+                this.$message({message: error, type: 'error'})
             })
         }
     }
