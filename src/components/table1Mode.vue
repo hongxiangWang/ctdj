@@ -38,6 +38,8 @@
                 operate: [{lable: '查看', type: 'primary', clickFun: 'info', size: "small"},
                     {lable: '编辑', type: 'primary', clickFun: 'edit', size: "small"}],
                 //操作的方法
+
+                tableLoading:false
             }
         },
         components: {
