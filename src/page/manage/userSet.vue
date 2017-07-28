@@ -8,8 +8,6 @@
             @info="info"
             @edit="edit"
         ></table1>
-
-    </div>
     </div>
 </template>
 
