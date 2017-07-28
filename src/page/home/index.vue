@@ -28,15 +28,15 @@
 
                         <el-submenu index="2">
                             <template slot="title">活动/建设</template>
-                            <el-menu-item index="userManage">上传</el-menu-item>
-                            <el-menu-item index="permissionSet">检查</el-menu-item>
+                            <el-menu-item index="">上传</el-menu-item>
+                            <el-menu-item index="">检查</el-menu-item>
                         </el-submenu>
 
                         <el-submenu index="3">
                             <template slot="title">管理</template>
                             <el-menu-item index="userManage">用户管理</el-menu-item>
                             <el-menu-item index="permissionSet">角色管理</el-menu-item>
-                            <el-menu-item index="2-3">权限管理</el-menu-item>
+                            <el-menu-item index="3-3">权限管理</el-menu-item>
                         </el-submenu>
 
                         <el-submenu index="4">
@@ -83,7 +83,8 @@
         data() {
             return {
                 activeIndex: '1',
-                activeIndex2: '1'
+                activeIndex2: '1',
+
             };
         },
         methods: {
