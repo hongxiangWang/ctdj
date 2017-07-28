@@ -5,11 +5,16 @@
                 v-loading="tableLoading"
                 element-loading-text="拼命加载中"
                 max-height="500"
-                border
-                style="width: 100%">
+                border>
+            <el-table-column
+                    type="index"
+                    width="50">
+            </el-table-column>
             <el-table-column
                     v-for="td in tdArr"
                     :label="td.lable"
+                    :key="td.lable"
+                    :align="td.align"
                     :width="td.width">
                 <template scope="scope">
                     <span>{{ scope.row[td.prop] }}</span>
@@ -21,6 +26,7 @@
                             v-for="op in operates"
                             :size="op.size"
                             type="op.type"
+                            :key="op.lable"
                             @click="emit(scope.$index, scope.row,op.clickFun)">{{op.lable}}
                     </el-button>
                 </template>
@@ -31,15 +37,17 @@
 
 <script>
     import '../assets/elCss/table.css'
-
     export default {
         data() {
-            return {}
+            return {
+                table:this.tableData
+            }
         },
         props: {
             operates: Array,
             tableData: Array,
-            tdArr: Array
+            tdArr:Array,
+            tableLoading:Boolean
         },
         methods: {
             emit(index, row, fun) {
@@ -48,13 +56,8 @@
             }
         },
         mounted() {
-            console.log('aaaaaaaa', this.operates);
+
         },
-        computed: {
-            tableLoading: () => {
-                return this.tableData == [] ? true : false;
-            }
-        }
     }
 </script>
 

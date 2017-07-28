@@ -28,14 +28,14 @@
 
                         <el-submenu index="2">
                             <template slot="title">活动/建设</template>
-                            <el-menu-item index="">上传</el-menu-item>
-                            <el-menu-item index="">检查</el-menu-item>
+                            <el-menu-item index="2-1">上传</el-menu-item>
+                            <el-menu-item index="2-2">检查</el-menu-item>
                         </el-submenu>
 
                         <el-submenu index="3">
                             <template slot="title">管理</template>
-                            <el-menu-item index="userManage">用户管理</el-menu-item>
-                            <el-menu-item index="permissionSet">角色管理</el-menu-item>
+                            <el-menu-item index="/home/userManage">用户管理</el-menu-item>
+                            <el-menu-item index="/home/roleManage">角色管理</el-menu-item>
                             <el-menu-item index="3-3">权限管理</el-menu-item>
                         </el-submenu>
 
@@ -92,13 +92,11 @@
                 console.log(key, keyPath);
             }
         },
-        mounted() {
+        created() {
             let vm = this;
-            console.log('token---',vm.$localStore.get('token'))
-            this.$ajax.interceptors.request.use(function (config) {
+            let axios = this.$ajax.interceptors.request.use(function (config) {
                 //在请求发出之前进行一些操作
                 let token = vm.$localStore.get('token');
-
                 if (token) {
                     config.headers.token = token;
                 }
