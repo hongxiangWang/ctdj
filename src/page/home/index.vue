@@ -49,18 +49,18 @@
                             <el-menu-item index="4-3">账户：王洪翔6</el-menu-item>
                         </el-submenu>
 
-
-
                         <el-submenu index="5">
                             <template slot="title">组件测试</template>
                             <el-menu-item index="/home/table1Mode">table1</el-menu-item>
                             <el-menu-item index="/home/cellMode">cellMode</el-menu-item>
+                            <el-menu-item index="/home/editDialogMode">editDialogMode</el-menu-item>
+                            <el-menu-item index="/home/formMode">formMode</el-menu-item>
                         </el-submenu>
                     </el-menu>
                 </el-col>
             </el-row>
 
-            <router-view ref="main" style="margin-top: 20px"></router-view>
+            <router-view ref="main" style="margin-top: 20px;margin-bottom: 20px"></router-view>
 
         </div>
         <div id="bottom">

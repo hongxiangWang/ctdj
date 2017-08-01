@@ -7,6 +7,8 @@ const permissionSet = r => require.ensure([], () => r(require('../page/manage/pe
 
 const table1Mode = r => require.ensure([], () => r(require('../components/table1Mode.vue')), 'table1Mode');
 const cellMode = r => require.ensure([], () => r(require('../components/cellMode.vue')), 'cellMode');
+const editDialogMode = r => require.ensure([], () => r(require('../components/editDialogMode.vue')), 'editDialogMode');
+const formMode = r => require.ensure([], () => r(require('../components/formMode.vue')), 'formMode');
 
 export default [{
     path: '/',
@@ -32,6 +34,14 @@ export default [{
                 {
                     path: 'cellMode',
                     component: cellMode
+                },
+                {
+                    path: 'editDialogMode',
+                    component: editDialogMode
+                },
+                {
+                    path: 'formMode',
+                    component: formMode
                 },
             ]
         },

@@ -20,7 +20,10 @@
                     <span>{{ scope.row[td.prop] }}</span>
                 </template>
             </el-table-column>
-            <el-table-column label="操作" fixed="right">
+            <el-table-column label="操作"
+                             fixed="right"
+                             :min-width="200"
+                             align="center">
                 <template scope="scope">
                     <el-button
                             v-for="op in operates"
@@ -37,17 +40,18 @@
 
 <script>
     import '../assets/elCss/table.css'
+
     export default {
         data() {
             return {
-                table:this.tableData
+                table: this.tableData
             }
         },
         props: {
             operates: Array,
             tableData: Array,
-            tdArr:Array,
-            tableLoading:Boolean
+            tdArr: Array,
+            tableLoading: Boolean
         },
         methods: {
             emit(index, row, fun) {
