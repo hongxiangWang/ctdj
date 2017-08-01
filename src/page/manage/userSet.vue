@@ -67,7 +67,6 @@
                 @delete="deletePeople"
         ></table1>
 
-
     </div>
 </template>
 
@@ -139,7 +138,6 @@
                 this.addDialog = true;
                 let noNeedEmptyRule = ['people_jobname']
                 let arr = helper.createTableToForm(people);
-
                 arr.forEach(value => {
                     if (noNeedEmptyRule.indexOf(value.key) == -1) {
                         value.rule = notEmpty;
@@ -215,8 +213,7 @@
                     if (res.data.errno == 0) {
                         this.$message({message: '删除成功', type: 'success'})
                         this.deleteDialog = false;
-                        let index = this.clickRowData.index;
-
+                        this.tableData.splice(this.clickRowData.index);
                     } else {
                         this.deleteDialog = false;
                         this.$message({message: '删除失败', type: 'error'})
