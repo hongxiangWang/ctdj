@@ -6,12 +6,12 @@
                 size="large"
                 :before-close="handleClose">
             <span slot="title">
-                <span>个人信息&nbsp;&nbsp;<el-button size="small" @click="editModeBtn">编辑模式</el-button></span>
+                <span>个人信息&nbsp;&nbsp;<el-button size="small" @click="editModeBtn" :class="{editMode:editMode}">{{editTips}}</el-button><small class="editModeTips" v-show="editMode">点击每项标题，弹出修改项</small></span>
             </span>
             <span>
             <cell-arr
                     :cellDate="cellDate"
-                    :editMode="true"
+                    :editMode="editMode"
                     @edit="editCell">
             </cell-arr>
             </span>
@@ -107,6 +107,9 @@
                 cell: {},
                 editDialog: false,
 
+                editTips:'进入编辑模式',
+                editMode:false,
+
                 addDialog: false,
                 dataArr: [],
                 selectArr: selectArr,
@@ -130,6 +133,12 @@
             },
             //打开编辑
             editModeBtn() {
+                this.editMode = !this.editMode;
+                if(this.editMode){
+                    this.editTips = '退出编辑模式'
+                }else{
+                    this.editTips = '进入编辑模式'
+                }
 
             },
             //添加用户
@@ -196,24 +205,12 @@
                 let params = {};
                 console.log('id--',this.clickRowData);
                 params.id = this.clickRowData.id;
-                let index = 2;
-                this.deleteDialog = false;
-                this.tableData.filter((v,i)=>{
-                    return v.id!=index;
-                });
-                let ages = [32, 33, 16, 40];
-                function ageschange(age,index) {
-                    return age>20;
-                }
-                ages.filter(ageschange);
-                console.log('filter3232332----',ages);
-                return;
                 this.$ajax.post('/people/delteteuser',params).then(res=>{
                     console.log('res---', res)
                     if (res.data.errno == 0) {
                         this.$message({message: '删除成功', type: 'success'})
                         this.deleteDialog = false;
-                        this.tableData.splice(this.clickRowData.index);
+                        this.tableData.splice(this.clickRowData.index,1);
                     } else {
                         this.deleteDialog = false;
                         this.$message({message: '删除失败', type: 'error'})
@@ -226,6 +223,8 @@
             },
             //关闭详细信息弹出
             handleClose() {
+                this.editMode = false;
+                this.editTips = '进入编辑模式'
                 this.infoDialog = false;
             },
             //关闭添加弹窗
@@ -342,4 +341,15 @@
     }
 
 </script>
+
+<style>
+    .editMode{
+        border:#FFAB91 1px solid;
+        color: orangered;
+    }
+    .editModeTips{
+        color: #BBB;
+        margin-left: 1rem;
+    }
+</style>
 

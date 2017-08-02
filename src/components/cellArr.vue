@@ -4,7 +4,7 @@
               v-for="ce in cellDate"
               :cell="ce"
               :key="ce.text"
-              :editMode="true"
+              :editMode="editMode"
               @edit ="edit"
               @adjustHeight="adjustHeight">
         </cell>

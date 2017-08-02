@@ -33,9 +33,11 @@
                     address: '上海市普陀区金沙江路 1516 弄'
                 }], //需要向table填写的数据
                 tdArr: [{lable: '时间', prop: 'date', width: '180'},
+                    {lable: '姓名', prop: 'name', width: '280'},
                     {lable: '姓名', prop: 'name', width: '280'}],
                     //td 显示的列
                 operate: [{lable: '查看', type: 'primary', clickFun: 'info', size: "small"},
+                    {lable: '编辑', type: 'primary', clickFun: 'edit', size: "small"},
                     {lable: '编辑', type: 'primary', clickFun: 'edit', size: "small"}],
                 //操作的方法
 
