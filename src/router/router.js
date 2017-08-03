@@ -10,7 +10,7 @@ const cellMode = r => require.ensure([], () => r(require('../components/cellMode
 const editDialogMode = r => require.ensure([], () => r(require('../components/editDialogMode.vue')), 'editDialogMode');
 const formMode = r => require.ensure([], () => r(require('../components/formMode.vue')), 'formMode');
 
-export default [{
+export default {
     path: '/',
     component: App,
     children: [
@@ -53,4 +53,3 @@ export default [{
         }
     ]
 }
-]
