@@ -5,14 +5,24 @@
               :cell="ce"
               :key="ce.text"
               :editMode="true"
-              @edit ="edit"
+              @edit="edit"
               @adjustHeight="adjustHeight">
         </cell>
+
+        <hr>
+
+        <cell-arr
+                :cellDate = "cellDate"
+                :editMode="true"
+                @edit="edit">
+        </cell-arr>
+
     </div>
 </template>
 
 <script>
     import cell from './cell.vue'
+    import cellArr from './cellArr.vue'
 
     export default {
         data() {
@@ -56,7 +66,7 @@
             }
         },
         components: {
-            cell
+            cell, cellArr
         },
         methods: {
             //调节后一个cell的高度，勿动
@@ -69,8 +79,8 @@
                 }
             },
 
-            edit(cell){
-                console.log('cell---',cell)
+            edit(cell) {
+                console.log('cell---', cell)
             }
         }
     }
