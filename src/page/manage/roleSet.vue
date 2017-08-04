@@ -21,8 +21,8 @@
             return {
                 tableData: [{
                     date: '2016-05-02',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1518 弄 44444444'
+                    name: '王小虎555555555555',
+                    address: '上海市普陀区金沙江路 1518 弄 666666----'
                 }], //需要向table填写的数据
                 tdArr: [
                     {lable: '角色名称', prop: 'name', width: '200', align: 'center'},
