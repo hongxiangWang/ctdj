@@ -53,6 +53,9 @@
             },
             edit(index, row){
                 console.log('edit----',index, row);
+            },
+            delete(index, row){
+                console.log('delete----',index, row);
             }
         }
     }
