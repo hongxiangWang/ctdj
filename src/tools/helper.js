@@ -4,7 +4,6 @@ function createTableArr(oJsonArr,row) {
     let outArr = [];
     oJsonArr.forEach(value=>{
         let json = {};
-
         for(let k in value){
             if(k!='type'){
                 json.label = value[k];
@@ -36,5 +35,21 @@ function createTableToForm(oJsonArr) {
     return outArr;
 }
 
+
+
+//select数据处理
+function selectDataShow(selectProps, selectArr,cell) {
+    selectProps.forEach(v => {
+        if (cell.key == v) {
+            selectArr[v].forEach(value => {
+                if (value.value == cell.value) {
+                    cell.value = value.label;
+                }
+            });
+        }
+    })
+}
+
 module.exports.createTableArr = createTableArr;
 module.exports.createTableToForm = createTableToForm;
+module.exports.selectDataShow = selectDataShow;

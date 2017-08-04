@@ -24,6 +24,7 @@ Vue.prototype.$jquery = jquery;
 Vue.prototype.$localStore = localStore;
 
 
+
 const router = new VueRouter({
     routes: [
         routes,
@@ -31,10 +32,9 @@ const router = new VueRouter({
     ]
 })
 
-new Vue({
+let app = new Vue({
     el: '#app',
     router,
     vueStore,
     render: h => h(App)
 })
-
