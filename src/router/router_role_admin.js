@@ -1,5 +1,5 @@
 /**
- * Created by cometlj on 2017/8/3.ffffff
+ * Created by cometlj on 2017/8/3.
  */
 import App from '../App.vue'
 const roleManage = r => require.ensure([], () => r(require('../page/manage/roleSet.vue')), 'roleManage');
