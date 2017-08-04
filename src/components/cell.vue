@@ -13,7 +13,7 @@
                                 placement="bottom"
                                 width="200"
                                 title="标题">
-                             <p>这是一段内容这是一段内容确定删除吗？</p>
+                             <p>显示的数据</p>
                             <div style="text-align: right; margin: 0">
                                 <el-button size="mini" type="text" @click="filePopover = false">取消</el-button>
                                 <el-button type="primary" size="mini" @click="filePopover = false">确定</el-button>

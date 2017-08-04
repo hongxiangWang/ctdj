@@ -4,13 +4,14 @@ const home = r => require.ensure([], () => r(require('../page/home/index.vue')),
 const login = r => require.ensure([], () => r(require('../page/login/index.vue')), 'login');
 const userManage = r => require.ensure([], () => r(require('../page/manage/userSet.vue')), 'userManage');
 const permissionSet = r => require.ensure([], () => r(require('../page/manage/permissionSetting.vue')), 'permissionSet');
+const organizedSet = r => require.ensure([], () => r(require('../page/manage/organizedSet.vue')), 'organizedSet');
 
 const table1Mode = r => require.ensure([], () => r(require('../components/table1Mode.vue')), 'table1Mode');
 const cellMode = r => require.ensure([], () => r(require('../components/cellMode.vue')), 'cellMode');
 const editDialogMode = r => require.ensure([], () => r(require('../components/editDialogMode.vue')), 'editDialogMode');
 const formMode = r => require.ensure([], () => r(require('../components/formMode.vue')), 'formMode');
 
-export default [{
+export default {
     path: '/',
     component: App,
     children: [
@@ -26,6 +27,10 @@ export default [{
                 {
                     path: 'permissionSet',
                     component: permissionSet
+                },
+                {
+                    path: 'organizedSet',
+                    component: organizedSet
                 },
                 {
                     path: 'table1Mode',
@@ -53,4 +58,3 @@ export default [{
         }
     ]
 }
-]

@@ -4,7 +4,7 @@
             <svg class="icon" aria-hidden="true">
                 <use xlink:href="#icon-dianxin"></use>
             </svg>
-            新疆电信数字党建
+            新疆电信数字党建Beta 1.1
         </p>
         <div id="login-box">
             <el-card class="box-card">

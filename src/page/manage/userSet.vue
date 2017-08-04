@@ -94,9 +94,9 @@
                     {lable: '出生年月', prop: 'people_birthday', width: '180', align: 'center'},
                     {lable: '性别', prop: 'people_gender', width: '80', align: 'center'}],
                 //操作的方法，clickFun为父组件向子组件传递的事件
-                operate: [{lable: '查看', type: '', clickFun: 'info', size: "small"},
+                operate: [{lable: '查看/编辑', type: '', clickFun: 'info', size: "small"},
                     {lable: '添加', type: '', clickFun: 'add', size: "small"},
-                    {lable: '删除', type: '', clickFun: 'delete', size: "small"}],
+                    {lable: '删除', type: 'danger', clickFun: 'delete', size: "small"}],
 
                 tableLoading: false,
 
@@ -289,6 +289,7 @@
 
         //获取用户列表
         mounted() {
+            this.tableLoading =true;
             this.$ajax.post('/people/userlist', {}).then(res => {
                 console.log('----', res)
                 if (res.data.errno == 0) {
