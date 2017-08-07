@@ -1,5 +1,5 @@
 <template>
-    <el-form ref="form" :model="form" label-width="80px">
+    <el-form ref="form" :model="form" label-width="100px">
         <el-form-item
                 v-if="it.type != 'text'"
                 class="formItem"
@@ -11,12 +11,13 @@
 
             <el-input v-if="it.type == 'input'" v-model="it.value"></el-input>
 
-            <el-select v-if="it.type == 'select'" v-model="it.value" placeholder="请选择">
+            <el-select v-if="it.type == 'select'" v-model="it.value" placeholder="请选择" @change="selectClick(it)">
                 <el-option
                         v-for="op in selectArr[it.key]"
                         :label="op.label"
-                        :key = "op.label"
-                        :value="op.label"></el-option>
+                        :key="op.label"
+                        :value="op.label"
+                        ></el-option>
             </el-select>
 
             <el-date-picker
@@ -25,6 +26,15 @@
                     placeholder="选择日期"
                     v-model="it.value"
                     style="width: 40%;"></el-date-picker>
+
+            <el-cascader
+                    v-if="it.type == 'cascader'"
+                    expand-trigger="hover"
+                    :props="it.props"
+                    :options="it.cascaderOptions"
+                    v-model="it.value"
+                    @change="cascaderChange">
+            </el-cascader>
         </el-form-item>
     </el-form>
 </template>
@@ -36,7 +46,8 @@
         },
         props: {
             dataArr: Array,
-            selectArr:{}
+            selectArr: {},
+
         },
         computed: {
             form() {
@@ -48,6 +59,16 @@
                 return jsonArr;
             }
         },
+        methods:{
+            cascaderChange(call){
+                this.$emit('cascaderChange',call)
+            },
+            selectClick(it){
+                if(it.selectClick!=undefined){
+                   this.$emit(it.selectClick,it)
+                }
+            }
+        },
         mounted() {
 
         }
@@ -56,7 +77,7 @@
 
 <style lang="less">
     .formItem {
-        width:49%;
+        width: 49%;
         display: inline-block;
         margin: 0 auto;
         border: 1px #ECDBD6 solid;
@@ -78,11 +99,13 @@
     .el-form-item {
         margin-bottom: 0px;
     }
-    .el-input, .el-input__inner{
+
+    .el-input, .el-input__inner {
         display: block;
         width: 99%;
         margin-left: 3px;
     }
+
     }
 
 

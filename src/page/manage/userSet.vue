@@ -46,7 +46,7 @@
             <span>删除该用户？</span>
             <span slot="footer">
                 <el-button @click="deleteDialog = false">取 消</el-button>
-                <el-button type="primary" @click="sureDelete">确 定</el-button>
+                <el-button type="danger" @click="sureDelete">确 定</el-button>
             </span>
         </el-dialog>
 
