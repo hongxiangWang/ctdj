@@ -34,7 +34,7 @@
 
                         <el-submenu index="3">
                             <template slot="title">管理</template>
-                            <el-menu-item index="/home/userManage">用户管理</el-menu-item>
+                            <el-menu-item index="/home/userManage">成员管理</el-menu-item>
                             <el-menu-item index="/home/roleManage">角色管理</el-menu-item>
                             <el-menu-item index="/home/organizedSet">组织管理</el-menu-item>
                         </el-submenu>

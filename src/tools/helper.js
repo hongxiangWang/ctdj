@@ -50,6 +50,10 @@ function selectDataShow(selectProps, selectArr,cell) {
     })
 }
 
+
+
+
+
 module.exports.createTableArr = createTableArr;
 module.exports.createTableToForm = createTableToForm;
 module.exports.selectDataShow = selectDataShow;
