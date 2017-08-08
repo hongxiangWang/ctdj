@@ -5,17 +5,31 @@ body {
 #login {
   padding: 0;
   margin: 0 auto;
-  height: 800px;
+  min-height: 640px;
+  height: 100%;
   width: 100%;
-  //background: url(../images/login.png) no-repeat;
+  background: url(../images/djbg.png) no-repeat;
   background-position: top left;
   background-size: 100% auto;
   #login-box {
-    width: 350px;
-    height: 300px;
-    position: absolute;
-    top: 45%;
-    left: 50%;
+    width: 650px;
+    margin: 0 auto;
+    background-color: rgba(255,255,255,.3);
+  }
+  .el-card.box-card {
+    background: transparent;
+    padding-top: 0px;
+  }
+
+  .el-card{
+
+    border:none;
+  }
+  .el-button--primary {
+    color: #fff;
+    background-color: rgba(255, 43, 36, 0.5);
+    border-color: #f89d67;
+    border: none;
   }
   p {
     font-size: 30px;

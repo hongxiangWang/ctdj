@@ -24,7 +24,7 @@
                              mode="horizontal"
                              @select="handleSelect"
                              :router="true">
-                        <el-menu-item index="/">首页</el-menu-item>
+                        <el-menu-item index="/home/main">首页</el-menu-item>
 
                         <el-submenu index="2">
                             <template slot="title">活动/建设</template>
@@ -116,6 +116,9 @@
                 //Do something with response error
                 return Promise.reject(err);
             })
+        },
+        mounted(){
+            this.$router.replace('/home/main')
         }
     }
 
