@@ -1,6 +1,7 @@
 import App from '../App.vue'
 
 const home = r => require.ensure([], () => r(require('../page/home/index.vue')), 'home');
+const main = r => require.ensure([], () => r(require('../page/home/main.vue')), 'main');
 const login = r => require.ensure([], () => r(require('../page/login/index.vue')), 'login');
 const userManage = r => require.ensure([], () => r(require('../page/manage/userSet.vue')), 'userManage');
 const permissionSet = r => require.ensure([], () => r(require('../page/manage/permissionSetting.vue')), 'permissionSet');
@@ -19,6 +20,11 @@ export default {
             path: '/home',
             component: home,
             children: [
+                {
+                    path: 'main',
+                    // 使用vue-route + Webpack 的 code splitting feature 把组件按组分块
+                    component: main
+                },
                 {
                     path: 'userManage',
                     // 使用vue-route + Webpack 的 code splitting feature 把组件按组分块

@@ -4,17 +4,30 @@ body {
 #login {
   padding: 0;
   margin: 0 auto;
-  height: 800px;
+  min-height: 640px;
+  height: 100%;
   width: 100%;
+  background: url(../images/djbg.png) no-repeat;
   background-position: top left;
   background-size: 100% auto;
 }
 #login #login-box {
-  width: 350px;
-  height: 300px;
-  position: absolute;
-  top: 45%;
-  left: 50%;
+  width: 650px;
+  margin: 0 auto;
+  background-color: rgba(255, 255, 255, 0.3);
+}
+#login .el-card.box-card {
+  background: transparent;
+  padding-top: 0px;
+}
+#login .el-card {
+  border: none;
+}
+#login .el-button--primary {
+  color: #fff;
+  background-color: rgba(255, 43, 36, 0.5);
+  border-color: #f89d67;
+  border: none;
 }
 #login p {
   font-size: 30px;

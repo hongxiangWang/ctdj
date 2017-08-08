@@ -1,38 +1,32 @@
 <template>
     <div id="login">
-        <p>
-            <svg class="icon" aria-hidden="true">
-                <use xlink:href="#icon-dianxin"></use>
-            </svg>
-            新疆电信数字党建Beta 1.1
-        </p>
         <div id="login-box">
             <el-card class="box-card">
                 <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" label-width="0" label-position="left"
                          class="demo-ruleForm">
-                    <el-form-item prop="phone">
-                        <el-input type="phone" v-model="ruleForm2.phone" auto-complete="on"
-                                  placeholder="协同账号"></el-input>
-                    </el-form-item>
-                    <el-form-item prop="checkPass">
-                        <el-row>
-                            <el-col :span="24">
+                    <el-row gutter="20">
+                        <el-col :span="8">
+                            <el-form-item prop="phone">
+                                <el-input type="phone" v-model="ruleForm2.phone" auto-complete="on"
+                                          placeholder="协同账号"></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="8">
+                            <el-form-item prop="checkPass">
                                 <el-input type="password" v-model="ruleForm2.checkPass" auto-complete="off"
                                           placeholder="协同密码"></el-input>
-                            </el-col>
-                            <!--<el-col :span="9" :offset="3">-->
-                            <!--<el-button id="getSecurityBtn" @click="getSecurity('ruleForm2')" type="primary" :disabled='isDisabled'>{{time}}</el-button>-->
-                            <!--</el-col>-->
-                        </el-row>
-                    </el-form-item>
-                    <el-form-item>
-                        <el-row type="flex" class="row-bg" justify="center">
-                            <el-col :span="16">
-                                <el-button id="entry" size="large" type="primary" @click="submitForm('ruleForm2')">登录
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="8">
+                            <el-form-item>
+                                <el-button id="entry"  type="primary" @click="submitForm('ruleForm2')">登录
                                 </el-button>
-                            </el-col>
-                        </el-row>
-                    </el-form-item>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
+
+
+
                 </el-form>
             </el-card>
         </div>
@@ -113,7 +107,7 @@
             resetForm(formName) {
                 this.$refs[formName].resetFields();
             },
-            getSecurity(){
+            getSecurity() {
                 this.$ajax.post('/user/sendmsg', {phs_number: this.ruleForm2.phone}).then(response => {
                     if (response.data.data === '00') {
                         let count = 30;
@@ -132,7 +126,7 @@
                 })
             }
         },
-        mounted(){
+        mounted() {
             let account = GetQueryString('account');
             let token = GetQueryString('token');
             let params = {
@@ -143,7 +137,7 @@
                 return;
             }
             this.$ajax.post('/user/logintoken', params).then(response => {
-                console.log('sssss',response.errno)
+                console.log('sssss', response.errno)
                 switch (Number(response.errno)) {
                     case 0 :
                         getAccount(this, response.data.data);
@@ -190,13 +184,15 @@
 //        json.role_code = data.access_list[0].role_code;
         vm.$localStore.set('account', json);
     }
+
     //获取URL参数
     function GetQueryString(name) {
         var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
         var r = window.location.search.substr(1).match(reg);
-        if (r != null)return unescape(r[2]);
+        if (r != null) return unescape(r[2]);
         return null;
     }
+
     import '../../assets/style/login.less'
     import '../../assets/elCss/input.css'
 </script>
