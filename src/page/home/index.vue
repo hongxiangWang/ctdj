@@ -1,4 +1,4 @@
-<template>
+<template ref="">
     <div>
         <div id="topMeun">
             <el-row id="top">
@@ -95,7 +95,7 @@
         },
         created() {
             let vm = this;
-            let axios = this.$ajax.interceptors.request.use(function (config) {
+             this.$ajax.interceptors.request.use(function (config) {
                 //在请求发出之前进行一些操作
                 let token = vm.$localStore.get('token');
                 if (token) {
@@ -120,7 +120,7 @@
             })
         },
         mounted(){
-            this.$router.replace('/home/main')
+           // this.$router.replace('/home/main');
         }
     }
 
