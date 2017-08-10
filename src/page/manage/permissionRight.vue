@@ -46,13 +46,14 @@
                     } else {
                         c = forEachChild(n, vm.$store.state.roleFun);
                     }
-                    console.log(c);
+                    console.log("c===>",c);
                     this.$refs.tree.setCheckedKeys(c);
                 })
                 return child;
             }
         },
         methods: {
+            //保存修改后节点
             getCheckedNodes(){
                 let role_code = this.$store.state.permission.chooseTreeNodeRoleCode;
                 if (role_code == -1) {
@@ -84,6 +85,14 @@
         },
         mounted(){
             this.$ajax.post('/node/node_list').then(response => {
+                response.data.data.forEach(value=>{
+                   value.label = value.label+"--->"+value.id;
+                   if(value.children.length>0){
+                       value.children.forEach(value2=>{
+                           value2.label = value2.label+"--->"+value2.id;
+                       });
+                   }
+                });
                 this.$store.commit('GET_ALL_FUN', response.data.data)
                 allNodeId = [];
                 allNodeId = getAllFunAllID(response.data.data, allNodeId);
@@ -95,7 +104,7 @@
     //遍历子节点
     function forEachChild(child, arr) {
         if (arr.length == 0) {
-            return []
+            return [];
         }
         arr.forEach(function (value, index, self) {
 //      if (value.children.length > 0 && value.node_status == 0) {
@@ -107,13 +116,14 @@
 //      }
 
             if (value.node_status == 1) {
-                child.push(value.node_id);
+                if(value.children.length == 0){
+                    child.push(value.node_id);
+                }
                 if (value.children.length > 0) {
                     forEachChild(child, value.children);
                 }
             }
-
-        })
+        });
 
         return child;
     }
@@ -121,8 +131,8 @@
     function forEachParent(funArr, arr, terrParent) {
         arr.forEach(function (value, index, self) {
             if (terrParent.indexOf(value.pid) < 0) {
-                terrParent.push(value.pid)
-                forEachParentPid(funArr, value.pid, terrParent)
+                terrParent.push(value.pid);
+                forEachParentPid(funArr, value.pid, terrParent);
             }
             if (value.children.length > 0) {
                 forEachParent(funArr, value.children, terrParent);
@@ -135,10 +145,10 @@
         //alert(JSON.stringify(vm.$store.state.allFun))
         arr.forEach(function (value, index, self) {
             if (value.id == pid && value.pid != 0) {
-                terrParent.push(value.pid)
+                terrParent.push(value.pid);
             }
             if (value.children.length > 0) {
-                forEachParentPid(value.children, pid, terrParent)
+                forEachParentPid(value.children, pid, terrParent);
             }
         })
     }
@@ -157,9 +167,9 @@
         allNodeId.forEach((value, index, self) => {
             let json = {};
             if (sureNode.indexOf(value) >= 0) {
-                json.node_status = 0
+                json.node_status = 1;
             } else {
-                json.node_status = 1
+                json.node_status = 0;
             }
             //json.role_code = role_code;
             json.node_id = value;
