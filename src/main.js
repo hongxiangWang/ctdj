@@ -1,3 +1,4 @@
+
 import Vue from 'vue'
 import App from './App.vue'
 import VueRouter from 'vue-router'
@@ -11,13 +12,14 @@ import './assets/font/iconfont.js'
 
 import axios from 'axios'
 import config from './api/config'
+
 const localStore = require('store'); //解决IE9 的loacalstore问题
 const jquery = require('jquery');
 const axiosInit = axios.create(config);
 
 
-Vue.use(VueRouter)
-Vue.use(ElementUI)
+Vue.use(VueRouter);
+Vue.use(ElementUI);
 
 
 Vue.prototype.$ajax = axiosInit;
@@ -31,11 +33,11 @@ const router = new VueRouter({
         routes,
         router_role_admin
     ]
-})
+});
 
 let app = new Vue({
     el: '#app',
     router,
-    vueStore,
+    store,
     render: h => h(App)
-})
+});
