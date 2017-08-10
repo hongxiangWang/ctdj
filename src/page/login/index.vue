@@ -4,29 +4,29 @@
             <el-card class="box-card">
                 <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" label-width="0" label-position="left"
                          class="demo-ruleForm">
-                    <el-row gutter="20">
+                    <el-row :gutter="20">
                         <el-col :span="8">
-                            <el-form-item prop="phone">
-                                <el-input type="phone" v-model="ruleForm2.phone" auto-complete="on"
-                                          placeholder="协同账号"></el-input>
-                            </el-form-item>
+
+                                <el-form-item prop="phone">
+                                    <el-input type="phone" v-model="ruleForm2.phone" auto-complete="on"
+                                              placeholder="协同账号"></el-input>
+                                </el-form-item>
+
                         </el-col>
                         <el-col :span="8">
-                            <el-form-item prop="checkPass">
-                                <el-input type="password" v-model="ruleForm2.checkPass" auto-complete="off"
-                                          placeholder="协同密码"></el-input>
-                            </el-form-item>
+
+                                <el-form-item prop="checkPass">
+                                    <el-input type="password" v-model="ruleForm2.checkPass" auto-complete="off"
+                                              placeholder="协同密码"></el-input>
+                                </el-form-item>
                         </el-col>
                         <el-col :span="8">
                             <el-form-item>
-                                <el-button id="entry"  type="primary" @click="submitForm('ruleForm2')">登录
+                                <el-button id="entry" type="primary" @click="submitForm('ruleForm2')">登录
                                 </el-button>
                             </el-form-item>
                         </el-col>
                     </el-row>
-
-
-
                 </el-form>
             </el-card>
         </div>
@@ -82,8 +82,8 @@
                             userpwd: this.ruleForm2.checkPass
                         }
 
-                        this.$ajax.post('admin/login', params).then(response => {
-                            console.log(response.data.data.token);
+                        this.$ajax.post('/admin/login', params).then(response => {
+                            console.log(response);
                             switch (Number(response.data.errno)) {
                                 case 0 :
                                     getAccount(this, response.data.data);
