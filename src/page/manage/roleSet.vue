@@ -150,7 +150,7 @@
         },
         methods: {
             getRoleListByName(){
-                this.$ajax.post('/role/searchrolebyname', {rolename:this.filters.name}).then(res => {
+                this.$ajax.post('/role/role_search_by_name', {rolename:this.filters.name}).then(res => {
                     let result = res.data;
                     if (result.errno == 0) {
                         //如果为空，处理为空JSON数组
@@ -168,7 +168,7 @@
                 });
             },
             getRoleList(){
-                this.$ajax.post('/role/rolelist', {}).then(res => {
+                this.$ajax.post('/role/role_list', {}).then(res => {
                     let result = res.data;
                     console.log(result);
                     if (result.errno == 0) {
@@ -188,7 +188,7 @@
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    this.$ajax.post('/role/deleterole', {roleid:scope.row.id}).then(res => {
+                    this.$ajax.post('/role/role_delete', {roleid:scope.row.id}).then(res => {
                         let result = res.data;
                         if (result.errno == 0) {
                             this.$message({message:'删除成功',type:'success'});
@@ -247,7 +247,7 @@
                             status:para.status
                         };
 
-                        this.$ajax.post('role/addrole',{roleinfo:roleinfo}).then(response => {
+                        this.$ajax.post('role/role_add',{roleinfo:roleinfo}).then(response => {
                             let result = response.data;
                             this.addLoading = false;
                             if(result.errno==0)
@@ -292,7 +292,7 @@
                                 remark:para.remark,
                                 status:para.status
                             }
-                            this.$ajax.post('role/updaterole',{roleid:para.id,roledata:roledata}).then(response => {
+                            this.$ajax.post('role/role_edit',{roleid:para.id,roledata:roledata}).then(response => {
                                 let result = response.data;
                                 this.editLoading = false;
                                 if(result.errno==0)

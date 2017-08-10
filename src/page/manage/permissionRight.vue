@@ -1,10 +1,8 @@
 <template>
     <div>
-        <h2>权限管理--{{itemTile}}
-            <el-button style="float: right; margin-right: 2rem" type="primary"
-                       @click="getCheckedNodes">保存
-            </el-button>
-        </h2>
+        <div><el-button style="float: right; margin-right: 2rem" type="primary" @click="getCheckedNodes">
+            保存
+        </el-button></div>
         <el-tree
                 :data="data"
                 show-checkbox
@@ -14,7 +12,7 @@
                 highlight-current
                 :props="defaultProps">
         </el-tree>
-        <p>{{checkednode}}</p>
+        <p>TEST checknode:{{checkednode}}</p>
     </div>
 </template>
 
@@ -33,11 +31,12 @@
         },
         computed: {
             data(){
-                return this.$store.state.allFun
+                return this.$store.state.allFun;
             },
             checkednode(){
                 let vm = this;
                 let child = vm.$store.state.roleFun.length;
+                console.log('roleFun----',vm.$store.state.roleFun);
                 vm.$nextTick(function () {
                     let v = vm.$store.state.roleFun.length;
                     let n = [];
@@ -47,16 +46,10 @@
                     } else {
                         c = forEachChild(n, vm.$store.state.roleFun);
                     }
-
-                    console.log(c)
-                    this.$refs.tree.setCheckedKeys(c)
-
-
+                    console.log(c);
+                    this.$refs.tree.setCheckedKeys(c);
                 })
-                return child
-            },
-            itemTile(){
-                return this.$store.state.permission.treeTile;
+                return child;
             }
         },
         methods: {
@@ -69,35 +62,34 @@
                 let terrParent = [];
                 terrParent = forEachParent(this.$store.state.allFun, this.$refs.tree.getCheckedNodes(), terrParent);
                 let terrNode = this.$refs.tree.getCheckedKeys();
-                let sureNode = terrNode.concat(terrParent)
+                let sureNode = terrNode.concat(terrParent);
                 console.log('sureNode', JSON.stringify(sureNode));
                 let accessData = saveAjaxJson(role_code, sureNode, allNodeId);
                 let params = {
-                    role_code: role_code,
-                    access_data: accessData
+                    role_id: role_code,
+                    accessdata: accessData
                 }
                 console.log('allNodeId', JSON.stringify(params));
 
-                this.$ajax.post('/access/updateaccess', params).then(response => {
-                    if (Number(response.data.data.flg) == 0) {
+                this.$ajax.post('/access/access_edit', params).then(response => {
+                    if (response.data.errno == 0) {
                         this.$message({message: '保存成功', type: 'success'})
                     } else {
                         this.$message({message: '保存失败', type: 'error'})
                     }
                 }).catch(error => {
-                    console.log(JSON.stringify(error.message))
-                })
-
+                    console.log(JSON.stringify(error.message));
+                });
             }
         },
         mounted(){
-            this.$ajax.post('/node/funlist').then(response => {
-                this.$store.commit('GET_ALL_FUN', response.data.data.list)
+            this.$ajax.post('/node/node_list').then(response => {
+                this.$store.commit('GET_ALL_FUN', response.data.data)
                 allNodeId = [];
-                allNodeId = getAllFunAllID(response.data.data.list, allNodeId);
+                allNodeId = getAllFunAllID(response.data.data, allNodeId);
             }).catch(error => {
                 this.$message({message: '获取信息失败' + error.message, type: 'error'})
-            })
+            });
         }
     };
     //遍历子节点
@@ -114,8 +106,8 @@
 //        //console.log('length',value.children.length)
 //      }
 
-            if (value.node_status == 0) {
-                child.push(value.id);
+            if (value.node_status == 1) {
+                child.push(value.node_id);
                 if (value.children.length > 0) {
                     forEachChild(child, value.children);
                 }
@@ -134,9 +126,8 @@
             }
             if (value.children.length > 0) {
                 forEachParent(funArr, value.children, terrParent);
-
             }
-        })
+        });
         return terrParent;
     }
     //追寻父节点PID
@@ -172,7 +163,7 @@
             }
             //json.role_code = role_code;
             json.node_id = value;
-            jsonArr.push(json)
+            jsonArr.push(json);
         })
         return jsonArr;
     }
