@@ -59,7 +59,7 @@
         </edit-dialog>
         <label>选择查询类型</label>
         <el-select ref="select" v-model="chooseVulue" multiple placeholder="请选择" @change="selectChange"
-        style="width: auto;">
+                   style="width: auto;">
             <el-option
                     v-for="item in selectArr.type_name"
                     :key="item.value"
@@ -67,14 +67,14 @@
                     :value="item.value">
             </el-option>
         </el-select>
-        <span @keyup.enter="handleIconClick">
+        <span @keyup.enter="queryClick">
            <el-input
                    style=" width: auto"
                    v-if="isShowInput"
                    placeholder="请输入内容"
                    icon="search"
                    v-model="inputCon"
-                   :on-icon-click="handleIconClick">
+                   :on-icon-click="queryClick">
         </el-input>
         </span>
 
@@ -90,16 +90,16 @@
                 @delete="deletePeople"
         ></table1>
 
-        <div class="block" >
+        <div class="block">
             <el-pagination
                     style="margin: 0 auto;text-align: center;margin-top: 30px"
                     @size-change="paginationSizeChange"
-                    @current-change="paginationCurrentChange"
+                    @current-change="currentChange"
                     :current-page.sync="currentPage"
                     :page-sizes="[2, 3, 4, 1]"
-                    :page-size="2"
+                    :page-size="pageSize"
                     layout="sizes, prev, pager, next"
-                    :total="1000">
+                    :total="tableDataTotal">
             </el-pagination>
         </div>
 
@@ -155,10 +155,12 @@
 
                 chooseVulue: [],
                 chooseArray: selectArr.type_name.push({label: '姓名查询', value: '3'}),
-                isShowInput:false,
-                inputCon:'',
+                isShowInput: false,
+                inputCon: '',
 
-                currentPage:1
+                currentPage: 1,
+                tableDataTotal: 0,
+                pageSize:2,
 
 
             }
@@ -340,21 +342,24 @@
 //                            s.splice(i, 1);
 //                        }
 //                    })
-                  //  this.$refs.select.visible = false;
+                    //  this.$refs.select.visible = false;
                     this.isShowInput = true;
-                }else {
+                } else {
                     this.isShowInput = false;
                 }
                 console.log(this.chooseVulue);
             },
-            handleIconClick(call){
+            queryClick(call) {
                 console.log(call)
             },
-            paginationSizeChange(){
-
+            paginationSizeChange(call) {
+                this.pageSize = call;
+                let params = { page:this.currentPage,count:this.pageSize}
+                getUserList(this,params);
             },
-            paginationCurrentChange(){
-
+            currentChange(call) {
+                let params = { page:call,count:this.pageSize}
+                getUserList(this,params);
             }
         },
         components: {
@@ -363,24 +368,30 @@
 
         //获取用户列表
         mounted() {
-            this.tableLoading = true;
-            this.$ajax.post('/people/user_list', {}).then(res => {
-                console.log('----', res)
-                if (res.data.errno == 0) {
-                    this.tableData = res.data.data;
-                    this.tableLoading = false;
-                } else {
-                    this.tableLoading = false;
-                }
-            }).catch(err => {
-                this.tableLoading = false;
-                this.$message({message: '抱歉，获取数据失败，请重试', type: 'error'})
-                console.log('----', err)
-            });
+            let params = { page:1,count:2}
+            getUserList(this,params);
+
         },
         computed: {}
     }
-
+    //获取成员列表
+    function getUserList(vm,params) {
+        vm.tableLoading = true;
+        vm.$ajax.post('/people/user_list', params).then(res => {
+            console.log('----', res)
+            if (res.data.errno == 0) {
+                vm.tableData = res.data.data.data;
+                vm.tableDataTotal = res.data.data.count;
+                vm.tableLoading = false;
+            } else {
+                vm.tableLoading = false;
+            }
+        }).catch(err => {
+            vm.tableLoading = false;
+            vm.$message({message: '抱歉，获取数据失败，请重试', type: 'error'})
+            console.log('----', err)
+        });
+    }
     //差异化数据处理
     function differenceDataParams(cell, params, selectProps) {
         if (cell.key == "type_name") {
