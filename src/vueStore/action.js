@@ -8,6 +8,7 @@ export default {
 
     },
     getRoleFun({commit, state}, prop) {
+
         axiosInit.post('/access/access_list_by_roleid', {'role_id': prop},{headers:{token:require('store').get('token')}}).then(res => {
             let flg = res.data.errno;
             switch (flg) {
