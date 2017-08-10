@@ -10,7 +10,7 @@
 </template>
 <script>
     import '../../assets/style/buttons.css'
-    import '../../assets/style/left-meun.css'
+    import '../../assets/style/left-meun.less'
     export default {
         data() {
             return {
