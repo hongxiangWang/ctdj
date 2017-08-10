@@ -6,6 +6,7 @@ import routes from './router/router.js'
 import router_role_admin from './router/router_role_admin.js'
 import vueStore from './vueStore/index.js'
 import 'element-ui/lib/theme-default/index.css'
+import './assets/font/font-awesome.css'
 import './assets/font/iconfont.js'
 
 import axios from 'axios'

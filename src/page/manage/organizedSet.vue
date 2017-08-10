@@ -115,7 +115,7 @@
                         })
                     }
                 })
-                this.$ajax.post('/department/searchdeptbyId', {dept_id: call[1]}).then(res => {
+                this.$ajax.post('/department/dept_search_by_id', {dept_id: call[1]}).then(res => {
                     console.log('res------', res)
                     let arr = helper.createTableArr(deptment, res.data.data[0]);
                     arr.forEach(value => {
@@ -184,7 +184,7 @@
                         let params = {};
                         params.deptdata = form;
                         console.log('params------', params);
-                        this.$ajax.post('/department/adddept', params).then(res => {
+                        this.$ajax.post('/department/dept_add', params).then(res => {
                             console.log('res------', res.data)
                             if (res.data.errno == 0) {
                                 this.$message({message: '添加成功', type: 'success'});
@@ -211,7 +211,7 @@
 
             },
             sureDelete() {
-                this.$ajax.post('/department/deldept', {dept_id: this.selectValue[1]}).then(res => {
+                this.$ajax.post('/department/dept_delete', {dept_id: this.selectValue[1]}).then(res => {
                     console.log('res------', res.data)
                     if (res.data.errno == 0) {
                         this.$message({message: '删除成功', type: 'success'});
@@ -233,7 +233,7 @@
             cellArr, form1
         },
         mounted() {
-            this.$ajax.post('/department/getdepttree', {}).then(res => {
+            this.$ajax.post('/department/dept_list_to_tree', {}).then(res => {
                 if (res.data.errno == 0) {
                     res.data.data[0].children.forEach(value => {
                         let json = {};

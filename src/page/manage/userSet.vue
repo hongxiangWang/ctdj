@@ -6,7 +6,8 @@
                 size="large"
                 :before-close="handleClose">
             <span slot="title">
-                <span>个人信息&nbsp;&nbsp;<el-button size="small" @click="editModeBtn" :class="{editMode:editMode}">{{editTips}}</el-button><small class="editModeTips" v-show="editMode">点击每项标题，弹出修改项</small></span>
+                <span>个人信息&nbsp;&nbsp;<el-button size="small" @click="editModeBtn" :class="{editMode:editMode}">{{editTips}}</el-button><small
+                        class="editModeTips" v-show="editMode">点击每项标题，弹出修改项</small></span>
             </span>
             <span>
             <cell-arr
@@ -28,7 +29,6 @@
                         ref="form1"
                         :dataArr="dataArr"
                         :selectArr="selectArr">
-
                 </form1>
             </span>
             <div slot="footer">
@@ -57,7 +57,30 @@
                 @closeDia="closeDia"
                 @sureEdit="sureEdit">
         </edit-dialog>
+        <label>选择查询类型</label>
+        <el-select ref="select" v-model="chooseVulue" multiple placeholder="请选择" @change="selectChange"
+        style="width: auto;">
+            <el-option
+                    v-for="item in selectArr.type_name"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
+            </el-option>
+        </el-select>
+        <span @keyup.enter="handleIconClick">
+           <el-input
+                   style=" width: auto"
+                   v-if="isShowInput"
+                   placeholder="请输入内容"
+                   icon="search"
+                   v-model="inputCon"
+                   :on-icon-click="handleIconClick">
+        </el-input>
+        </span>
+
+
         <table1
+                style="margin-top: 10px"
                 :operates="operate"
                 :tableData="tableData"
                 :tdArr="tdArr"
@@ -66,6 +89,19 @@
                 @add="addPeople"
                 @delete="deletePeople"
         ></table1>
+
+        <div class="block" >
+            <el-pagination
+                    style="margin: 0 auto;text-align: center;margin-top: 30px"
+                    @size-change="paginationSizeChange"
+                    @current-change="paginationCurrentChange"
+                    :current-page.sync="currentPage"
+                    :page-sizes="[2, 3, 4, 1]"
+                    :page-size="2"
+                    layout="sizes, prev, pager, next"
+                    :total="1000">
+            </el-pagination>
+        </div>
 
     </div>
 </template>
@@ -107,15 +143,23 @@
                 cell: {},
                 editDialog: false,
 
-                editTips:'进入编辑模式',
-                editMode:false,
+                editTips: '进入编辑模式',
+                editMode: false,
 
                 addDialog: false,
                 dataArr: [],
                 selectArr: selectArr,
 
-                deleteDialog:false,
-                clickRowData:{}
+                deleteDialog: false,
+                clickRowData: {},
+
+                chooseVulue: [],
+                chooseArray: selectArr.type_name.push({label: '姓名查询', value: '3'}),
+                isShowInput:false,
+                inputCon:'',
+
+                currentPage:1
+
 
             }
         },
@@ -134,9 +178,9 @@
             //打开编辑
             editModeBtn() {
                 this.editMode = !this.editMode;
-                if(this.editMode){
+                if (this.editMode) {
                     this.editTips = '退出编辑模式'
-                }else{
+                } else {
                     this.editTips = '进入编辑模式'
                 }
 
@@ -174,7 +218,7 @@
                             }
                         })
                         params.userinfo = form;
-                        this.$ajax.post('/people/adduser', params).then(res => {
+                        this.$ajax.post('/people/user_add', params).then(res => {
                             console.log('res---', res)
                             if (res.data.errno == 0) {
                                 this.$message({message: '添加成功', type: 'success'})
@@ -201,21 +245,21 @@
                 this.clickRowData = row;
             },
             //确定删除用户
-            sureDelete(){
+            sureDelete() {
                 let params = {};
-                console.log('id--',this.clickRowData);
+                console.log('id--', this.clickRowData);
                 params.id = this.clickRowData.id;
-                this.$ajax.post('/people/delteteuser',params).then(res=>{
+                this.$ajax.post('/people/user_delete', params).then(res => {
                     console.log('res---', res)
                     if (res.data.errno == 0) {
                         this.$message({message: '删除成功', type: 'success'})
                         this.deleteDialog = false;
-                        this.tableData.splice(this.clickRowData.index,1);
+                        this.tableData.splice(this.clickRowData.index, 1);
                     } else {
                         this.deleteDialog = false;
                         this.$message({message: '删除失败', type: 'error'})
                     }
-                }).catch(err=>{
+                }).catch(err => {
                     console.log('err---', err)
                     this.deleteDialog = false;
                     this.$message({message: '删除失败', type: 'error'})
@@ -231,8 +275,8 @@
             addHandleClose() {
                 this.addDialog = false;
             },
-            deleteHandleClose(){
-                this.deleteDialog =false;
+            deleteHandleClose() {
+                this.deleteDialog = false;
             },
             //更改信息
             editCell(cell) {
@@ -266,7 +310,7 @@
                     params.value = time;
                 }
                 console.log(params);
-                this.$ajax.post('/people/updateuser', params).then(res => {
+                this.$ajax.post('/people/user_edit', params).then(res => {
                     if (res.data.errno == 0) {
                         this.$message({message: '修改成功', type: 'success'});
                         differenceDataShow(['type_name', 'people_race', 'people_residence'], cell, form);
@@ -281,6 +325,36 @@
                     console.log(err);
                     this.$message({message: '修改失败，请重试', type: 'error'})
                 })
+            },
+            //查询下拉选项改变的触发器
+            selectChange(call) {
+                let isName = false;
+                call.forEach((v, i, s) => {
+                    if (Number(v) == 3) {
+                        isName = true;
+                    }
+                });
+                if (isName) {
+//                    this.chooseVulue.forEach((v, i, s) => {
+//                        if (Number(v) != 3) {
+//                            s.splice(i, 1);
+//                        }
+//                    })
+                  //  this.$refs.select.visible = false;
+                    this.isShowInput = true;
+                }else {
+                    this.isShowInput = false;
+                }
+                console.log(this.chooseVulue);
+            },
+            handleIconClick(call){
+                console.log(call)
+            },
+            paginationSizeChange(){
+
+            },
+            paginationCurrentChange(){
+
             }
         },
         components: {
@@ -289,8 +363,8 @@
 
         //获取用户列表
         mounted() {
-            this.tableLoading =true;
-            this.$ajax.post('/people/userlist', {}).then(res => {
+            this.tableLoading = true;
+            this.$ajax.post('/people/user_list', {}).then(res => {
                 console.log('----', res)
                 if (res.data.errno == 0) {
                     this.tableData = res.data.data;
@@ -344,13 +418,18 @@
 </script>
 
 <style>
-    .editMode{
-        border:#FFAB91 1px solid;
+    .editMode {
+        border: #FFAB91 1px solid;
         color: orangered;
     }
-    .editModeTips{
+
+    .editModeTips {
         color: #BBB;
         margin-left: 1rem;
+    }
+
+    div.el-select__tags {
+        max-width: 600px;
     }
 </style>
 
