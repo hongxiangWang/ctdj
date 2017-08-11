@@ -3,14 +3,17 @@
         <el-row>
             <el-col :span="14">
                 <label>选择党支部</label>
-                <el-cascader
-                        ref="cascader"
-                        expand-trigger="hover"
-                        :options="options"
-                        :props="props"
-                        v-model="selectValue"
-                        @change="cascaderChange">
-                </el-cascader>
+                <!--<el-cascader-->
+                        <!--ref="cascader"-->
+                        <!--expand-trigger="hover"-->
+                        <!--:options="options"-->
+                        <!--:props="props"-->
+                        <!--v-model="selectValue"-->
+                        <!--@change="cascaderChange">-->
+                <!--</el-cascader>-->
+                <organized-cascader
+                    @cascaderChange="cascaderChange">
+                </organized-cascader>
                 <span style="color: #FF8A65">{{selcectTitle}}</span>
             </el-col>
             <el-col :span="10">
@@ -74,7 +77,7 @@
 <script>
     import cellArr from '../../components/cellArr.vue'
     import form1 from '../../components/form.vue'
-
+    import organizedCascader from '../../components/organizedCascader.vue'
     const helper = require('../../tools/helper.js');
     import {deptment, selectArr, cascaderArr, cascaderProps} from '../../assets/kvword.js';
     import {notEmpty} from '../../assets/rules.js'
@@ -230,28 +233,28 @@
             }
         },
         components: {
-            cellArr, form1
+            cellArr, form1,organizedCascader
         },
         mounted() {
-            this.$ajax.post('/department/dept_list_to_tree', {}).then(res => {
-                if (res.data.errno == 0) {
-                    res.data.data[0].children.forEach(value => {
-                        let json = {};
-                        json.label = value.dept_name;
-                        json.value = value.id;
-                        this.groupArr.push(json);
-                        value.children.forEach(v => {
-                            delete v.children;
-                        })
-                    })
-                    this.options = res.data.data[0].children;
-                    return;
-                }
-                this.$message({message: '数据获取失败,请重试', type: 'error'})
-            }).catch(err => {
-                this.$message({message: '数据获取失败,请重试', type: 'error'})
-                console.log('res------', err)
-            })
+//            this.$ajax.post('/department/dept_list_to_tree', {}).then(res => {
+//                if (res.data.errno == 0) {
+//                    res.data.data[0].children.forEach(value => {
+//                        let json = {};
+//                        json.label = value.dept_name;
+//                        json.value = value.id;
+//                        this.groupArr.push(json);
+//                        value.children.forEach(v => {
+//                            delete v.children;
+//                        })
+//                    })
+//                    this.options = res.data.data[0].children;
+//                    return;
+//                }
+//                this.$message({message: '数据获取失败,请重试', type: 'error'})
+//            }).catch(err => {
+//                this.$message({message: '数据获取失败,请重试', type: 'error'})
+//                console.log('res------', err)
+//            })
         }
 
     }

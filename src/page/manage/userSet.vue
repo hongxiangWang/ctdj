@@ -57,26 +57,34 @@
                 @closeDia="closeDia"
                 @sureEdit="sureEdit">
         </edit-dialog>
-        <label>选择查询类型</label>
-        <el-select ref="select" v-model="chooseVulue" multiple placeholder="请选择" @change="selectChange"
-                   style="width: auto;">
-            <el-option
-                    v-for="item in selectArr.type_name"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value">
-            </el-option>
-        </el-select>
-        <span @keyup.enter="queryClick">
-           <el-input
-                   style=" width: auto"
-                   v-if="isShowInput"
-                   placeholder="请输入内容"
-                   icon="search"
-                   v-model="inputCon"
-                   :on-icon-click="queryClick">
-        </el-input>
-        </span>
+        <el-row>
+            <el-col :span="22">
+                <label>选择查询类型</label>
+                <el-select ref="select" v-model="chooseVulue" multiple placeholder="请选择" @change="selectChange"
+                           style="width: 300px;">
+                    <el-option
+                            v-for="item in chooseArray"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                    </el-option>
+                </el-select>
+
+                <span @keyup.enter="queryClick">
+                       <el-input
+                               style=" width: auto"
+                               v-if="isShowInput"
+                               placeholder="请输入内容"
+                               icon="search"
+                               v-model="inputCon"
+                               :on-icon-click="queryClick">
+                    </el-input>
+                 </span>
+            </el-col>
+            <el-col :span="1" :push="0">
+                <el-button @click="addPeople">添加</el-button>
+            </el-col>
+        </el-row>
 
 
         <table1
@@ -86,7 +94,6 @@
                 :tdArr="tdArr"
                 :tableLoading="tableLoading"
                 @info="info"
-                @add="addPeople"
                 @delete="deletePeople"
         ></table1>
 
@@ -96,7 +103,7 @@
                     @size-change="paginationSizeChange"
                     @current-change="currentChange"
                     :current-page.sync="currentPage"
-                    :page-sizes="[2, 3, 4, 1]"
+                    :page-sizes="[10, 2, 3, 4,5]"
                     :page-size="pageSize"
                     layout="sizes, prev, pager, next"
                     :total="tableDataTotal">
@@ -112,7 +119,7 @@
     import cellArr from '../../components/cellArr.vue'
     import editDialog from '../../components/editDialog.vue'
     import form1 from '../../components/form.vue';
-    import {people, selectArr} from '../../assets/kvword.js';
+    import {people, selectArr,peopleQuerySelect} from '../../assets/kvword.js';
     import {notEmpty} from '../../assets/rules.js'
 
     const helper = require('../../tools/helper.js')
@@ -130,9 +137,10 @@
                     {lable: '出生年月', prop: 'people_birthday', width: '180', align: 'center'},
                     {lable: '性别', prop: 'people_gender', width: '80', align: 'center'}],
                 //操作的方法，clickFun为父组件向子组件传递的事件
-                operate: [{lable: '查看/编辑', type: '', clickFun: 'info', size: "small"},
-                    {lable: '添加', type: '', clickFun: 'add', size: "small"},
-                    {lable: '删除', type: 'danger', clickFun: 'delete', size: "small"}],
+                operate: [
+                    {lable: '查看/编辑', type: '', clickFun: 'info', size: "small"},
+                    {lable: '删除', type: 'danger', clickFun: 'delete', size: "small"}
+                ],
 
                 tableLoading: false,
 
@@ -154,13 +162,15 @@
                 clickRowData: {},
 
                 chooseVulue: [],
-                chooseArray: selectArr.type_name.push({label: '姓名查询', value: '3'}),
+                chooseArray: peopleQuerySelect,
                 isShowInput: false,
                 inputCon: '',
 
                 currentPage: 1,
                 tableDataTotal: 0,
-                pageSize:2,
+                pageSize: 10,
+
+                upParams: ''
 
 
             }
@@ -331,35 +341,45 @@
             //查询下拉选项改变的触发器
             selectChange(call) {
                 let isName = false;
-                call.forEach((v, i, s) => {
-                    if (Number(v) == 3) {
-                        isName = true;
+                let params = {
+                    people_gender: '0',
+                    people_type: '1',
+                    people_name: ''
+                }
+                call.forEach((v) => {
+                    switch (Number(v)) {
+                        case 1:
+                            params.people_type = 1
+                            break;
+                        case 2:
+                            params.people_type = 2
+                            break;
+                        case 3:
+                            params.people_name = this.inputCon;
+                            isName = true;
+                            break;
                     }
                 });
+                this.upParams = params;
                 if (isName) {
-//                    this.chooseVulue.forEach((v, i, s) => {
-//                        if (Number(v) != 3) {
-//                            s.splice(i, 1);
-//                        }
-//                    })
-                    //  this.$refs.select.visible = false;
                     this.isShowInput = true;
                 } else {
                     this.isShowInput = false;
+                    getQueryResult(this);
                 }
                 console.log(this.chooseVulue);
             },
             queryClick(call) {
-                console.log(call)
+                getQueryResult(this);
             },
             paginationSizeChange(call) {
                 this.pageSize = call;
-                let params = { page:this.currentPage,count:this.pageSize}
-                getUserList(this,params);
+                let params = {page: this.currentPage, count: this.pageSize}
+                getUserList(this, params);
             },
             currentChange(call) {
-                let params = { page:call,count:this.pageSize}
-                getUserList(this,params);
+                let params = {page: call, count: this.pageSize}
+                getUserList(this, params);
             }
         },
         components: {
@@ -368,14 +388,14 @@
 
         //获取用户列表
         mounted() {
-            let params = { page:1,count:2}
-            getUserList(this,params);
-
+            let params = {page: 1, count: 10}
+            getUserList(this, params);
         },
         computed: {}
     }
+
     //获取成员列表
-    function getUserList(vm,params) {
+    function getUserList(vm, params) {
         vm.tableLoading = true;
         vm.$ajax.post('/people/user_list', params).then(res => {
             console.log('----', res)
@@ -392,6 +412,16 @@
             console.log('----', err)
         });
     }
+
+    //查询获取
+    function getQueryResult(vm) {
+        vm.$ajax.post('/people/user_query', vm.upParams).then(res => {
+            console.log('user_query-----', res.data)
+        }).catch(err => {
+            console.log('user_query--err---', err)
+        })
+    }
+
     //差异化数据处理
     function differenceDataParams(cell, params, selectProps) {
         if (cell.key == "type_name") {

@@ -22,6 +22,10 @@ const selectArr = {
     dept_status:[{label:'有效',value:'1'},{label:'无效',value:'0'}],
 }
 
+const peopleQuerySelect = [
+    {label:'普通党员',value:'2'},{label:'支部书记',value:'1'},{label: '姓名查询', value: '3'}
+]
+
 const cascaderArr = {
     prov_latn_id:dealCity(city)
 }
@@ -41,7 +45,7 @@ const deptment = [
 ]
 
 export {
-    people,selectArr,deptment,cascaderArr,cascaderProps
+    people,selectArr,deptment,cascaderArr,cascaderProps,peopleQuerySelect
 }
 
 function dealCity(arr) {

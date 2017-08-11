@@ -6,19 +6,20 @@
                          class="demo-ruleForm">
                     <el-row :gutter="20">
                         <el-col :span="8">
-
+                            <span @keyup.enter="submitForm('ruleForm2')">
                                 <el-form-item prop="phone">
                                     <el-input type="phone" v-model="ruleForm2.phone" auto-complete="on"
                                               placeholder="协同账号"></el-input>
                                 </el-form-item>
-
+                            </span>
                         </el-col>
                         <el-col :span="8">
-
+                            <span @keyup.enter="submitForm('ruleForm2')">
                                 <el-form-item prop="checkPass">
                                     <el-input type="password" v-model="ruleForm2.checkPass" auto-complete="off"
                                               placeholder="协同密码"></el-input>
                                 </el-form-item>
+                            </span>
                         </el-col>
                         <el-col :span="8">
                             <el-form-item>
@@ -171,18 +172,9 @@
     }
 
     function getAccount(vm, data) {
-        //let list = data.access_list;
-        let json = {};
-//        list.forEach(value => {
-//            json[value.node_id] = value.node_status
-//        })
         vm.$localStore.set('token', data.token);
-//        json.name = data.people_name;
-        json.username = data.username;
-//        json.dept_id = data.dept_id;
-//        json.dept_name = data.dept_name;
-//        json.role_code = data.access_list[0].role_code;
-        vm.$localStore.set('account', json);
+        vm.$localStore.set('people_info', data.people_info);
+        vm.$localStore.set('user_access_list', data.user_access_list);
     }
 
     //获取URL参数
