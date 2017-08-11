@@ -99,7 +99,7 @@
                 formData: [],
                 selectArr: selectArr,
                 formCascader: '',
-                groupArr: [],
+
 
                 deleteDialog: false
             }
@@ -235,26 +235,12 @@
         components: {
             cellArr, form1,organizedCascader
         },
+        computed:{
+            groupArr(){
+                return this.$store.state.organized.groupArray;
+            }
+        },
         mounted() {
-//            this.$ajax.post('/department/dept_list_to_tree', {}).then(res => {
-//                if (res.data.errno == 0) {
-//                    res.data.data[0].children.forEach(value => {
-//                        let json = {};
-//                        json.label = value.dept_name;
-//                        json.value = value.id;
-//                        this.groupArr.push(json);
-//                        value.children.forEach(v => {
-//                            delete v.children;
-//                        })
-//                    })
-//                    this.options = res.data.data[0].children;
-//                    return;
-//                }
-//                this.$message({message: '数据获取失败,请重试', type: 'error'})
-//            }).catch(err => {
-//                this.$message({message: '数据获取失败,请重试', type: 'error'})
-//                console.log('res------', err)
-//            })
         }
 
     }

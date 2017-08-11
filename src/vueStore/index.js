@@ -6,27 +6,15 @@ import actions from './action';
 
 Vue.use(Vuex);
 const state = {
-    recored_step: 1,
-    permission: 1,
-    manage_system_meun: true,
-    manage_process_meun: false,
-    answerid: {},
-    changeMeunSetFunData: [],
-    itemDetail: {},
-    roleFun: [],
-    allFun: [],
-    account: {},
     permission: {
         treeTile: '',
-        chooseTreeNodeRoleCode: -1
+        chooseTreeNodeRoleCode: -1,
+        roleFun:[],
+        allFun:[]
     },
-    recordTable: {
-        business_type: -2,
-        fillTable: {},
-        upLoadFiles: {},
-        submitData: {},
-        clientData: {},
-    },
+    organized:{
+        groupArray:[]
+    }
 };
 
 export default new Vuex.Store({

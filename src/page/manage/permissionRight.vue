@@ -31,20 +31,20 @@
         },
         computed: {
             data(){
-                return this.$store.state.allFun;
+                return this.$store.state.permission.allFun;
             },
             checkednode(){
                 let vm = this;
-                let child = vm.$store.state.roleFun.length;
-                console.log('roleFun----',vm.$store.state.roleFun);
+                let child = vm.$store.state.permission.roleFun.length;
+                console.log('roleFun----',vm.$store.state.permission.roleFun);
                 vm.$nextTick(function () {
-                    let v = vm.$store.state.roleFun.length;
+                    let v = vm.$store.state.permission.roleFun.length;
                     let n = [];
                     let c = [];
-                    if (vm.$store.state.roleFun.length == 0) {
+                    if (vm.$store.state.permission.roleFun.length == 0) {
 
                     } else {
-                        c = forEachChild(n, vm.$store.state.roleFun);
+                        c = forEachChild(n, vm.$store.state.permission.roleFun);
                     }
                     console.log("c===>",c);
                     this.$refs.tree.setCheckedKeys(c);
@@ -61,7 +61,7 @@
                     return;
                 }
                 let terrParent = [];
-                terrParent = forEachParent(this.$store.state.allFun, this.$refs.tree.getCheckedNodes(), terrParent);
+                terrParent = forEachParent(this.$store.state.permission.allFun, this.$refs.tree.getCheckedNodes(), terrParent);
                 let terrNode = this.$refs.tree.getCheckedKeys();
                 let sureNode = terrNode.concat(terrParent);
                 console.log('sureNode', JSON.stringify(sureNode));
@@ -70,8 +70,6 @@
                     role_id: role_code,
                     accessdata: accessData
                 }
-                console.log('allNodeId', JSON.stringify(params));
-
                 this.$ajax.post('/access/access_edit', params).then(response => {
                     if (response.data.errno == 0) {
                         this.$message({message: '保存成功', type: 'success'})
@@ -107,20 +105,11 @@
             return [];
         }
         arr.forEach(function (value, index, self) {
-//      if (value.children.length > 0 && value.node_status == 0) {
-//        forEachChild(child, value.children);
-//      }
-//      if (value.node_status == 0 && value.children.length ==0) {
-//        child.push(value.id);
-//        //console.log('length',value.children.length)
-//      }
-
             if (value.node_status == 1) {
-                if(value.children.length == 0){
-                    child.push(value.node_id);
-                }
                 if (value.children.length > 0) {
                     forEachChild(child, value.children);
+                }else {
+                    child.push(value.node_id);
                 }
             }
         });
