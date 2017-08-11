@@ -9,7 +9,7 @@ const CHANGE_TREENODE_ROLECODE = 'CHANGE_TREENODE_ROLECODE'//改变左侧树角�
 /*
 * organizedSet
 * */
-const ORGANIZED_ARRAY = 'ORGANIZED_ARRAY' // 组织数组 organizedSet
+const ORGANIZED_PARTY = 'ORGANIZED_PARTY' // 组织数组 organizedSet
 export default {
      /*
     * permissionSet
@@ -29,8 +29,8 @@ export default {
     /*
     * organizedSet
     * */
-    [ORGANIZED_ARRAY](state, payload) {
-        state.organized.groupArray = payload;
+    [ORGANIZED_PARTY](state, payload) {
+        state.organized.party = payload;
     }
 
 }

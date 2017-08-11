@@ -80,6 +80,12 @@
                                :on-icon-click="queryClick">
                     </el-input>
                  </span>
+
+                <span>
+                    <organized-cascader
+                            @cascaderChange="cascaderChange">
+                    </organized-cascader>
+                </span>
             </el-col>
             <el-col :span="1" :push="0">
                 <el-button @click="addPeople">添加</el-button>
@@ -119,7 +125,8 @@
     import cellArr from '../../components/cellArr.vue'
     import editDialog from '../../components/editDialog.vue'
     import form1 from '../../components/form.vue';
-    import {people, selectArr,peopleQuerySelect} from '../../assets/kvword.js';
+    import organizedCascader from '../../components/organizedCascader.vue'
+    import {people, selectArr, peopleQuerySelect} from '../../assets/kvword.js';
     import {notEmpty} from '../../assets/rules.js'
 
     const helper = require('../../tools/helper.js')
@@ -380,10 +387,13 @@
             currentChange(call) {
                 let params = {page: call, count: this.pageSize}
                 getUserList(this, params);
+            },
+            cascaderChange(call){
+
             }
         },
         components: {
-            table1, cellArr, editDialog, form1
+            table1, cellArr, editDialog, form1,organizedCascader
         },
 
         //获取用户列表

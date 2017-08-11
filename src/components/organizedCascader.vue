@@ -24,7 +24,6 @@
         },
         methods:{
             cascaderChange(call){
-                console.log('cascaderChange-----',call);
                 this.$emit('cascaderChange',call)
             }
         },
@@ -33,17 +32,30 @@
                 console.log('res------', res.data)
                 let groupArr = [];
                 if (res.data.errno == 0) {
-                    res.data.data[0].children.forEach(value => {
+                    if(res.data.data.length==1 ){
+                        if(res.data.data[0].children==undefined){
+                            this.options = res.data.data
+                            return;
+                        }
+                        let parent = res.data.data[0];
                         let json = {};
-                        json.label = value.dept_name;
-                        json.value = value.id;
+                        json.label = parent.dept_name;
+                        json.value = parent.id;
                         groupArr.push(json);
-                        value.children.forEach(v => {
-                            delete v.children;
+                        this.options = res.data.data;
+                    }else{
+                        res.data.data[0].children.forEach(value => {
+                            let json = {};
+                            json.label = value.dept_name;
+                            json.value = value.id;
+                            groupArr.push(json);
+                            value.children.forEach(v => {
+                                delete v.children;
+                            })
                         })
-                    })
-                    this.$store.commit('ORGANIZED_ARRAY',groupArr);
-                    this.options = res.data.data[0].children;
+                        this.options = res.data.data[0].children;
+                    }
+                    this.$store.commit('ORGANIZED_PARTY',groupArr);
                     return;
                 }
                 this.$message({message: '数据获取失败,请重试', type: 'error'})

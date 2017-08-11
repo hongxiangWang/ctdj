@@ -5,7 +5,6 @@ import {app} from '../main.js'
 
 export default {
     getRoleFun({commit, state}, prop) {
-
         axiosInit.post('/access/access_list_by_roleid', {'role_id': prop},{headers:{token:require('store').get('token')}}).then(res => {
             let flg = res.data.errno;
             switch (flg) {
@@ -24,9 +23,5 @@ export default {
             alert(error)
         })
     },
-
-    initializeData({commit}) {
-        commit('INITIALIZE_DATA')
-    }
 
 }
