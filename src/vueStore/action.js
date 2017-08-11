@@ -4,9 +4,6 @@ const axiosInit = axios.create(config);
 import {app} from '../main.js'
 
 export default {
-    addNum({commit, state}, id) {
-
-    },
     getRoleFun({commit, state}, prop) {
 
         axiosInit.post('/access/access_list_by_roleid', {'role_id': prop},{headers:{token:require('store').get('token')}}).then(res => {

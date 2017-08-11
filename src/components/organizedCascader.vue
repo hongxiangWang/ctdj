@@ -31,16 +31,18 @@
         mounted(){
             this.$ajax.post('/department/dept_list_to_tree', {}).then(res => {
                 console.log('res------', res.data)
+                let groupArr = [];
                 if (res.data.errno == 0) {
                     res.data.data[0].children.forEach(value => {
                         let json = {};
                         json.label = value.dept_name;
                         json.value = value.id;
-                       // this.groupArr.push(json);
+                        groupArr.push(json);
                         value.children.forEach(v => {
                             delete v.children;
                         })
                     })
+                    this.$store.commit('ORGANIZED_ARRAY',groupArr);
                     this.options = res.data.data[0].children;
                     return;
                 }

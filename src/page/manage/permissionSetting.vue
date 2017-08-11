@@ -17,9 +17,10 @@
 </template>
 
 <script>
+    import '../../assets/elCss/tree.css'
+    import '../../assets/elCss/checkbox.css'
     import permissionTree from './permissionTree.vue'
     import permissionRight from './permissionRight.vue'
-
     export default{
         name: 'meunFunSet',
         data(){
