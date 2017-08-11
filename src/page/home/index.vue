@@ -15,7 +15,7 @@
                             <use xlink:href="#icon-party"></use>
                         </svg>
                     </span>
-                        中国电信新疆公司党建LOGO {{}}
+                        中国电信新疆公司党建
                     </header>
                 </el-col>
                 <el-col :span="16">
@@ -85,7 +85,6 @@
             return {
                 activeIndex: '1',
                 activeIndex2: '1',
-
             };
         },
         methods: {

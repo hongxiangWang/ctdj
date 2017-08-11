@@ -16,7 +16,7 @@
     </div>
 </template>
 
-<script>
+<scriptå>
     import permissionTree from './permissionTree.vue'
     import permissionRight from './permissionRight.vue'
 
@@ -36,7 +36,7 @@
             }
         }
     }
-</script>
+</scriptå>
 <style lang="less">
     #permissionSet {
         margin-top: 100px;
