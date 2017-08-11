@@ -36,6 +36,7 @@
                             <template slot="title">管理</template>
                             <el-menu-item index="/home/roleManage">角色管理</el-menu-item>
                             <el-menu-item index="/home/permissionSet">权限管理</el-menu-item>
+                            <el-menu-item index="/home/adminSet">管理员管理</el-menu-item>
 
                             <el-menu-item index="/home/organizedSet">组织管理</el-menu-item>
                             <el-menu-item index="/home/userManage">成员管理</el-menu-item>

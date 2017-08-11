@@ -5,20 +5,20 @@
         <el-col :span="24" class="toolbar" style="padding-bottom: 0px;text-align:center;">
             <el-form :inline="true" :model="filters">
                 <el-form-item>
-                    <!--<el-select v-model="role_select" placeholder="请选择">-->
-                        <!--<el-option-->
-                                <!--v-for="item in role_list"-->
-                                <!--:key="item.value"-->
-                                <!--:label="item.label"-->
-                                <!--:value="item.value">-->
-                        <!--</el-option>-->
-                    <!--</el-select>-->
+                    <el-select v-model="role_select" placeholder="请选择">
+                        <el-option
+                                v-for="item in role_list"
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item.id">
+                        </el-option>
+                    </el-select>
                 </el-form-item>
                 <el-form-item>
                     <el-input v-model="filters.name" placeholder="管理员名称"></el-input>
                 </el-form-item>
                 <el-form-item>
-                    <el-button type="primary" @click="getRoleListByName">查询</el-button>
+                    <el-button type="primary" @click="getAdminListByName">查询</el-button>
                 </el-form-item>
                 <el-form-item>
                     <el-button type="primary" @click="addRole">新增</el-button>
@@ -36,9 +36,13 @@
                     type="index"
                     width="50">
             </el-table-column>
-            <el-table-column prop="name" label="姓名" width="250" align="center">
+            <el-table-column prop="account" label="登录账号" width="250" align="center">
             </el-table-column>
-            <el-table-column prop="remark" label="备注" width="300" align="center">
+            <el-table-column prop="username" label="姓名" width="250" align="center">
+            </el-table-column>
+            <el-table-column prop="prov_latn_name" label="本地网" width="100" align="center">
+            </el-table-column>
+            <el-table-column prop="dept_name" label="所在部门" width="200" align="center">
             </el-table-column>
             <el-table-column prop="status" label="状态" width="100" align="center">
                 <template scope="scope">
@@ -49,25 +53,26 @@
                 <template scope="scope">
                     <el-button size="small" @click="editRole(scope.$index, scope.row)">编辑</el-button>
                     <el-button type="danger" size="small" @click="deleteRole(scope)">删除</el-button>
-                    <!--删除弹出框-->
-                    <!--<el-popover-->
-                            <!--ref="popover1"-->
-                            <!--placement="top"-->
-                            <!--width="200"-->
-                            <!--v-model="deltip">-->
-                        <!--<p>确定删除吗？对应的角色下用户将无上级角色!</p>-->
-                        <!--<div style="text-align: right; margin: 0">-->
-                            <!--<el-button size="mini" type="text" @click="deltip = false">取消</el-button>-->
-                            <!--<el-button type="primary" size="mini" @click="confirm_delete">确定</el-button>-->
-                        <!--</div>-->
-                    <!--</el-popover>-->
                 </template>
             </el-table-column>
         </el-table>
+        <div class="block">
+            <el-pagination
+                    style="margin: 0 auto;text-align: center;margin-top: 30px"
+                    @size-change="paginationSizeChange"
+                    @current-change="currentChange"
+                    :current-page.sync="currentPage"
+                    :page-sizes="[1,2,3,4]"
+                    :page-size="pageSize"
+                    layout="sizes, prev, pager, next"
+                    :total="tableDataTotal">
+            </el-pagination>
+        </div>
+
         <!--新增界面-->
         <el-dialog title="新增" v-model="addFormVisible" :close-on-click-modal="false">
             <el-form :model="addForm" label-width="80px" :rules="addFormRules" ref="addForm">
-                <el-form-item label="角色名称" prop="name">
+                <el-form-item label="登陆账号" prop="account">
                     <el-input v-model="addForm.name" auto-complete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="备注说明">
@@ -118,10 +123,14 @@
         data() {
             return {
                 tableData: [{
-                    name:'',
-                    remark:'',
+                    account:'',
+                    username:'',
+                    prov_latn_name:'',
+                    dept_name:'',
                     status:-1
                 }], //需要向table填写的数据
+                role_select:'',
+                role_list:[],
                 //操作的方法
                 tableLoading: true,
                 filters: {
@@ -156,24 +165,37 @@
                     remark:'',
                     status:-1
                 },
+                //分页查询相关
+                currentPage: 1,
+                tableDataTotal: 0,
+                pageSize:2,
             }
         },
         methods: {
-            getRoleListByName(){
-                this.$ajax.post('/role/role_search_by_name', {rolename:this.filters.name}).then(res => {
-                    let result = res.data;
-                    if (result.errno == 0) {
-                        //如果为空，处理为空JSON数组
-                        if(result.data==null)
-                        {
-                            this.tableData = [];
-                        }
-                        this.tableData = result.data;
-                        this.tableLoading = false;
+            paginationSizeChange(call) {
+                this.pageSize = call;
+                let params = { page:this.currentPage,count:this.pageSize}
+                this.getPagedAdminList(this,params);
+            },
+            currentChange(call) {
+                let params = { page:call,count:this.pageSize}
+                this.getPagedAdminList(this,params);
+            },
+            //分页查询管理员信息
+            getPagedAdminList(vm,params){
+                vm.tableLoading = true;
+                vm.$ajax.post('/admin/admin_list', params).then(res => {
+                    console.log('----', res)
+                    if (res.data.errno == 0) {
+                        vm.tableData = res.data.data.data;
+                        vm.tableDataTotal = res.data.data.count;
+                        vm.tableLoading = false;
+                    } else {
+                        vm.tableLoading = false;
                     }
                 }).catch(err => {
-                    this.tableLoading = false;
-                    this.$message({message: '抱歉，获取数据失败，请重试', type: 'error'})
+                    vm.tableLoading = false;
+                    vm.$message({message: '抱歉，获取数据失败，请重试', type: 'error'})
                     console.log('----', err)
                 });
             },
@@ -182,59 +204,17 @@
                     let result = res.data;
                     console.log(result);
                     if (result.errno == 0) {
-                        this.tableData = result.data;
-                        this.tableLoading = false;
+                        this.role_list = result.data;
                     }
                 }).catch(err => {
-                    this.tableLoading = false;
+//                    this.tableLoading = false;
                     this.$message({message: '抱歉，获取数据失败，请重试', type: 'error'})
                     console.log('----', err)
                 });
             },
-            deleteRole(scope){
-                this.deltip = true;
-                this.$confirm('确定删除吗？对应的角色下用户将无上级角色!', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                }).then(() => {
-                    this.$ajax.post('/role/role_delete', {roleid:scope.row.id}).then(res => {
-                        let result = res.data;
-                        if (result.errno == 0) {
-                            this.$message({message:'删除成功',type:'success'});
-                            this.tableData.splice(scope.$index,1);
-                        }
-                        else{
-                            this.$message({message:'删除失败',type:'error'});
-                        }
-                    }).catch(err => {
-                            this.tableLoading = false;
-                            this.$message({message: '抱歉，获取数据失败，请重试', type: 'error'})
-                            console.log('----', err)
-                    });
-                }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: '已取消删除'
-                    });
-                });
+            getAdminListByName(){
+
             },
-//            confirm_delete(){
-//                let id = this.temp_del_id;
-//                this.$ajax.post('/role/deleterole', {roleid:id}).then(res => {
-//                    let result = res.data;
-//                    if (result.errno == 0) {
-//                        this.$message({message:'删除成功',type:'success'});
-//                    }
-//                    else{
-//                        this.$message({message:'删除失败',type:'error'});
-//                    }
-//                }).catch(err => {
-//                    this.tableLoading = false;
-//                    this.$message({message: '抱歉，获取数据失败，请重试', type: 'error'})
-//                    console.log('----', err)
-//                });
-//            },
             //显示新增界面
             addRole: function () {
                 this.addFormVisible = true;
@@ -335,9 +315,12 @@
 
         },
 
-        //获取用户列表
+        //获取管理员列表
         mounted() {
             this.getRoleList();
+
+            let params = { page:1,count:2}
+            this.getPagedAdminList(this,params);
         },
         computed: {}
     }
