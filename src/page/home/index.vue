@@ -47,9 +47,11 @@
                         <svg class="icon" aria-hidden="true">
                             <use xlink:href="#icon-yonghu"></use>
                         </svg></span></template>
-                            <el-menu-item index="4-1">账户：王洪翔6</el-menu-item>
-                            <el-menu-item index="4-2">账户：王洪翔6</el-menu-item>
-                            <el-menu-item index="4-3">账户：王洪翔6</el-menu-item>
+                            <el-menu-item index="#">您好，{{account.people_name}}</el-menu-item>
+                            <el-menu-item index="#">{{roleType}}</el-menu-item>
+                            <el-menu-item index="#" @click="exit">
+                                <i class="fa fa-sign-out"></i>退出
+                            </el-menu-item>
                         </el-submenu>
 
                         <el-submenu index="5">
@@ -58,6 +60,7 @@
                             <el-menu-item index="/home/cellMode">cellMode</el-menu-item>
                             <el-menu-item index="/home/editDialogMode">editDialogMode</el-menu-item>
                             <el-menu-item index="/home/formMode">formMode</el-menu-item>
+                            <el-menu-item index="/home/organizedCascaderMode">organizedCascaderMode</el-menu-item>
                         </el-submenu>
                     </el-menu>
                 </el-col>
@@ -86,11 +89,46 @@
             return {
                 activeIndex: '1',
                 activeIndex2: '1',
+                account:require('store').get('people_info')[0]
             };
         },
         methods: {
             handleSelect(key, keyPath) {
                 console.log(key, keyPath);
+            },
+            exit(){
+                this.$confirm('是否退出当前账号['+this.account.username+']?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.$message({
+                        type: 'success',
+                        message: '退出成功!'
+                    });
+                    require('store').clearAll();
+                    this.$router.replace('/')
+                }).catch(() => {
+                });
+            }
+        },
+        computed:{
+            roleType(){
+                let roleName=''
+                switch(this.account.role_id){
+                    case 1:
+                        roleName = '一级管理员'
+                        break;
+                    case 2:
+                        roleName = '党群管理员'
+                        break;
+                    case 3:
+                        roleName = '党支部管理员'
+                        break;
+                    default:
+                        roleName = '未知'
+                }
+                return roleName;
             }
         },
         created() {
@@ -120,7 +158,7 @@
             })
         },
         mounted(){
-           // this.$router.replace('/home/main');
+            //this.$router.replace('/home/main');
         }
     }
 

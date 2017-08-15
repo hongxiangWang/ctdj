@@ -82,7 +82,6 @@
                             username: this.ruleForm2.phone,
                             userpwd: this.ruleForm2.checkPass
                         }
-
                         this.$ajax.post('/admin/login', params).then(response => {
                             console.log(response);
                             switch (Number(response.data.errno)) {

@@ -52,6 +52,7 @@
 
 
         <edit-dialog
+                ref="editDialog"
                 :cell="cell"
                 :editDialog="editDialog"
                 @closeDia="closeDia"
@@ -80,6 +81,12 @@
                                :on-icon-click="queryClick">
                     </el-input>
                  </span>
+
+                <span>
+                    <organized-cascader
+                            @cascaderChange="cascaderChange">
+                    </organized-cascader>
+                </span>
             </el-col>
             <el-col :span="1" :push="0">
                 <el-button @click="addPeople">添加</el-button>
@@ -119,7 +126,8 @@
     import cellArr from '../../components/cellArr.vue'
     import editDialog from '../../components/editDialog.vue'
     import form1 from '../../components/form.vue';
-    import {people, selectArr,peopleQuerySelect} from '../../assets/kvword.js';
+    import organizedCascader from '../../components/organizedCascader.vue'
+    import {people, selectArr, peopleQuerySelect} from '../../assets/kvword.js';
     import {notEmpty} from '../../assets/rules.js'
 
     const helper = require('../../tools/helper.js')
@@ -184,6 +192,9 @@
                     value.oType = value.type;
                     value.type = value.type != 'file' ? 'text' : 'file';
                     value.tableIndex = index;
+                    if(value.key == 'depart_id'){
+                        value.value = value.value == null || row['dept_name'] == null? '无':row['dept_name']
+                    }
                 })
                 this.cellDate = arr;
             },
@@ -207,7 +218,17 @@
                     if (noNeedEmptyRule.indexOf(value.key) == -1) {
                         value.rule = notEmpty;
                     }
+                   if(value.key =='depart_id'){
+                        value.props = {
+                            label: "dept_name",
+                            value: "id",
+                            children: "children"
+                        }
+                        value.value=[];
+                        value.cascaderOptions = this.organized_data;
+                   }
                 })
+
                 console.log('arr----', arr)
                 this.dataArr = arr;
             },
@@ -229,7 +250,14 @@
                                 form.people_type = Number(value.value);
                             }
                         })
+
+
+                        if(form.depart_id.length>0){
+                            form.depart_id = form.depart_id[form.depart_id.length-1];
+                        }
+
                         params.userinfo = form;
+                        console.log('res---', params.userinfo);
                         this.$ajax.post('/people/user_add', params).then(res => {
                             console.log('res---', res)
                             if (res.data.errno == 0) {
@@ -298,6 +326,9 @@
                 if (cell.oType == 'data' && cell.value == '无') {
                     cell.value = new Date()
                 }
+                if (cell.oType == 'cascader' ) {
+                    cell.value = [];
+                }
                 this.editDialog = true;
             },
             //关闭修改信息弹窗
@@ -321,13 +352,24 @@
                     let time = date.getFullYear() + '-' + dealDate(date.getMonth() + 1) + '-' + dealDate(date.getDate());
                     params.value = time;
                 }
-                console.log(params);
+
+                if(params.key=='depart_id'){
+                    params.value = params.value[params.value.length-1];
+                }
                 this.$ajax.post('/people/user_edit', params).then(res => {
+                    console.log('res----',this.$refs.editDialog.$refs.cascader.currentLabels);
                     if (res.data.errno == 0) {
                         this.$message({message: '修改成功', type: 'success'});
                         differenceDataShow(['type_name', 'people_race', 'people_residence'], cell, form);
                         this.tableData[cell.tableIndex][cell.key] = form.value;
-                        this.cell.value = form.value;
+                        if(cell.key =='depart_id'){
+                            this.cell.value = this.$refs.editDialog.$refs.cascader.currentLabels;
+                            let currentLabels = this.$refs.editDialog.$refs.cascader.currentLabels;
+                            this.tableData[cell.tableIndex].dept_name =  currentLabels[currentLabels.length-1];
+                        }else{
+                            this.cell.value = form.value;
+                        }
+
                         this.editDialog = false;
                     } else {
                         console.log(res.data);
@@ -380,10 +422,13 @@
             currentChange(call) {
                 let params = {page: call, count: this.pageSize}
                 getUserList(this, params);
+            },
+            cascaderChange(call){
+
             }
         },
         components: {
-            table1, cellArr, editDialog, form1
+            table1, cellArr, editDialog, form1,organizedCascader
         },
 
         //获取用户列表
@@ -391,7 +436,11 @@
             let params = {page: 1, count: 10}
             getUserList(this, params);
         },
-        computed: {}
+        computed: {
+            organized_data() {
+                return this.$store.state.organized.cascader_data;
+            }
+        }
     }
 
     //获取成员列表

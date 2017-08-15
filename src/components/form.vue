@@ -17,6 +17,7 @@
                         :label="op.label"
                         :key="op.label"
                         :value="op.label"
+                        :disabled="op.disabled"
                         ></el-option>
             </el-select>
 

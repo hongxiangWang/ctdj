@@ -4,15 +4,15 @@
             <el-col :span="14">
                 <label>选择党支部</label>
                 <!--<el-cascader-->
-                        <!--ref="cascader"-->
-                        <!--expand-trigger="hover"-->
-                        <!--:options="options"-->
-                        <!--:props="props"-->
-                        <!--v-model="selectValue"-->
-                        <!--@change="cascaderChange">-->
+                <!--ref="cascader"-->
+                <!--expand-trigger="hover"-->
+                <!--:options="options"-->
+                <!--:props="props"-->
+                <!--v-model="selectValue"-->
+                <!--@change="cascaderChange">-->
                 <!--</el-cascader>-->
                 <organized-cascader
-                    @cascaderChange="cascaderChange">
+                        @cascaderChange="cascaderChange">
                 </organized-cascader>
                 <span style="color: #FF8A65">{{selcectTitle}}</span>
             </el-col>
@@ -78,6 +78,7 @@
     import cellArr from '../../components/cellArr.vue'
     import form1 from '../../components/form.vue'
     import organizedCascader from '../../components/organizedCascader.vue'
+
     const helper = require('../../tools/helper.js');
     import {deptment, selectArr, cascaderArr, cascaderProps} from '../../assets/kvword.js';
     import {notEmpty} from '../../assets/rules.js'
@@ -100,8 +101,9 @@
                 selectArr: selectArr,
                 formCascader: '',
 
+                deleteDialog: false,
 
-                deleteDialog: false
+                account: require('store').get('people_info')[0]
             }
         },
         methods: {
@@ -162,7 +164,7 @@
                     type: 'select'
                 }
                 if (call.value == '党支部' && this.formData.pid == undefined) {
-                    this.selectArr.pid = this.groupArr
+                    this.selectArr.pid = this.groupArr;
                 } else {
                     this.formData.forEach((value, index, self) => {
                         if (value.key == 'pid') {
@@ -171,9 +173,9 @@
                     })
                     return;
                 }
-
+                //this.selectArr.dept_type[1].disabled = true;
                 this.formData.push(pid);
-                console.log('deptmentTypeChange-----', this.selectArr)
+                console.log('deptmentTypeChange-----', call)
             },
             cascaderChangeFrom(call) {
                 this.formCascader = call[0] + '/' + call[1];
@@ -233,14 +235,19 @@
             }
         },
         components: {
-            cellArr, form1,organizedCascader
+            cellArr, form1, organizedCascader
         },
-        computed:{
-            groupArr(){
-                return this.$store.state.organized.groupArray;
+        computed: {
+            groupArr() {
+                return this.$store.state.organized.party;
             }
         },
         mounted() {
+            if(this.account.role_id==2){
+                this.selectArr.dept_type[1].disabled = true;
+            }else {
+                this.selectArr.dept_type[1].disabled = false;
+            }
         }
 
     }

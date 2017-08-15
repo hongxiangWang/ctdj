@@ -8,7 +8,8 @@
                 border>
             <el-table-column
                     type="index"
-                    width="50">
+                    align="center"
+                    width="60">
             </el-table-column>
             <el-table-column
                     v-for="td in tdArr"
@@ -68,5 +69,9 @@
 <style>
     .el-table th > .cell {
         text-align: center;
+    }
+    .el-table .cell{
+        padding-left: 5px;
+        padding-right: 5px;
     }
 </style>

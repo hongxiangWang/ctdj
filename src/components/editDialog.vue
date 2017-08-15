@@ -25,6 +25,19 @@
                     </el-select>
                 </el-form-item>
 
+
+                <el-form-item
+                        v-if="cell.oType =='cascader'"
+                        :label="cell.label">
+                    <el-cascader
+                            ref="cascader"
+                            expand-trigger="hover"
+                            :props="cascaderProps"
+                            :options="cascaderArr"
+                            v-model="cell.value">
+                    </el-cascader>
+                </el-form-item>
+
                 <el-form-item
                         v-if="cell.oType=='date'"
                         :label="cell.label">
@@ -60,16 +73,17 @@
 </template>
 
 <script>
-    import {selectArr} from '../assets/kvword.js'
+    import {selectArr, cascaderArr,cascaderProps} from '../assets/kvword.js'
 
     export default {
         data() {
             return {
+
             }
         },
         props: {
             cell: {},
-            editDialog : Boolean,
+            editDialog: Boolean,
 
         },
         methods: {
@@ -77,17 +91,27 @@
                 this.$emit('closeDia')
             },
             sureEdit() {
-                this.$emit('sureEdit', this.form,this.cell)
+                this.$emit('sureEdit', this.form, this.cell)
             },
             switchChange() {
 
             }
         },
         computed: {
-            selectArray(){
+            selectArray() {
                 return selectArr[this.cell.key]
             },
-            form(){
+            cascaderArr(){
+                let arr= selectArr[this.cell.key];
+                if(this.cell.key=='depart_id'){
+                    arr = this.$store.state.organized.cascader_data
+                }
+                return arr;
+            },
+            cascaderProps(){
+                return cascaderProps[this.cell.key]
+            },
+            form() {
                 return {
                     label: this.cell.label,
                     value: this.cell.value
@@ -100,7 +124,7 @@
 </script>
 
 <style lang="less">
-    .noedit{
+    .noedit {
         color: #FFAB91;
     }
 </style>

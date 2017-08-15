@@ -13,7 +13,8 @@ const state = {
         allFun:[]
     },
     organized:{
-        groupArray:[]
+        party:[],
+        cascader_data:[]
     }
 };
 
