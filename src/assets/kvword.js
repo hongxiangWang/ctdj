@@ -9,7 +9,7 @@ const people = [
     {people_enter_party_time: "入党时间", type: 'date'},
     {people_enter_work_time: "工作时间", type: 'date'},
     {people_jobname: "现任职务", type: 'input'},
-    {depart_id: "部门id", type: 'text'},
+    {depart_id: "部门id", type: 'cascader'},
 ]
 import {nation,province,city} from './staticData'
 const selectArr = {
@@ -27,13 +27,19 @@ const peopleQuerySelect = [
 ]
 
 const cascaderArr = {
-    prov_latn_id:dealCity(city)
+    prov_latn_id:dealCity(city),
+    depart_id:[],
 }
 const cascaderProps= {
     prov_latn_id:{
         label:'label',
         value:'label',
         children:'children'
+    },
+    depart_id:{
+        label: "dept_name",
+        value: "id",
+        children: "children"
     }
 }
 

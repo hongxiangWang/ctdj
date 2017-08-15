@@ -32,9 +32,10 @@
                 console.log('res------', res.data)
                 let groupArr = [];
                 if (res.data.errno == 0) {
-                    if(res.data.data.length==1 ){
-                        if(res.data.data[0].children==undefined){
-                            this.options = res.data.data
+                    if(res.data.data.length==1 && res.data.data[0].id!=1 ){
+                        if(res.data.data[0].children==undefined ){
+                            this.options = res.data.data;
+                            this.$store.commit('ORGANIZED_CASCADER_DATA',res.data.data);
                             return;
                         }
                         let parent = res.data.data[0];
@@ -43,6 +44,7 @@
                         json.value = parent.id;
                         groupArr.push(json);
                         this.options = res.data.data;
+                        this.$store.commit('ORGANIZED_CASCADER_DATA',res.data.data);
                     }else{
                         res.data.data[0].children.forEach(value => {
                             let json = {};
@@ -54,6 +56,7 @@
                             })
                         })
                         this.options = res.data.data[0].children;
+                        this.$store.commit('ORGANIZED_CASCADER_DATA',res.data.data[0].children);
                     }
                     this.$store.commit('ORGANIZED_PARTY',groupArr);
                     return;

@@ -245,6 +245,8 @@
         mounted() {
             if(this.account.role_id==2){
                 this.selectArr.dept_type[1].disabled = true;
+            }else {
+                this.selectArr.dept_type[1].disabled = false;
             }
         }
 

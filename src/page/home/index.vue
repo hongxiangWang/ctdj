@@ -104,7 +104,7 @@
                 }).then(() => {
                     this.$message({
                         type: 'success',
-                        message: '删除成功!'
+                        message: '退出成功!'
                     });
                     require('store').clearAll();
                     this.$router.replace('/')
@@ -158,7 +158,7 @@
             })
         },
         mounted(){
-            this.$router.replace('/home/main');
+            //this.$router.replace('/home/main');
         }
     }
 
