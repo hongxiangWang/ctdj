@@ -4,6 +4,9 @@
             expand-trigger="hover"
             :options="options"
             :props="props"
+            :clearable="true"
+            :show-all-levels="true"
+            placeholder="选择党支部"
             v-model="selectValue"
             @change="cascaderChange">
     </el-cascader>
@@ -25,6 +28,9 @@
         methods:{
             cascaderChange(call){
                 this.$emit('cascaderChange',call)
+            },
+            cascaderClear(){
+
             }
         },
         mounted(){
