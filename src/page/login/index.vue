@@ -91,7 +91,7 @@
                                     break;
                                 default:
                                     console.log(response.data)
-                                    this.$message({message: response.data.data.msg, type: 'error'})
+                                    this.$message({message: response.data.errmsg, type: 'error'})
                             }
                             //console.log(response.data.data.flg)
                         }).catch(error => {

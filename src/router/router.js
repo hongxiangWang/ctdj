@@ -6,7 +6,7 @@ const login = r => require.ensure([], () => r(require('../page/login/index.vue')
 const userManage = r => require.ensure([], () => r(require('../page/manage/userSet.vue')), 'userManage');
 const permissionSet = r => require.ensure([], () => r(require('../page/manage/permissionSetting.vue')), 'permissionSet');
 const organizedSet = r => require.ensure([], () => r(require('../page/manage/organizedSet.vue')), 'organizedSet');
-const activityAdd = r => require.ensure([], () => r(require('../page/activity/add.vue')), 'activityAdd');
+const recordAdd = r => require.ensure([], () => r(require('../page/activity/recordAdd.vue')), 'recordAdd');
 
 
 const table1Mode = r => require.ensure([], () => r(require('../components/table1Mode.vue')), 'table1Mode');
@@ -41,8 +41,8 @@ export default {
                     component: organizedSet
                 },
                 {
-                    path: 'activityAdd',
-                    component: activityAdd
+                    path: 'recordAdd',
+                    component: recordAdd
                 },
                 {
                     path: 'table1Mode',
