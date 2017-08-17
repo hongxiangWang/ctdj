@@ -20,6 +20,7 @@ const selectArr = {
     people_culture:[{label:'高中及以下',value:'高中及以下'},{label:'本科',value:'本科'},{label:'硕士',value:'硕士'},{label:'博士及以上',value:'博士及以上'}],
     dept_type:[{label:'党支部',value:'1'},{label:'党群',value:'2'}],
     dept_status:[{label:'有效',value:'1'},{label:'无效',value:'0'}],
+    record_type:[{label:'每周一学习',value:'1'},{label:'经营部情况交流会',value:'2'},{label:'重要事情沟通会',value:'3'},{label:'员工思想恳谈会',value:'4'},{label:'经验分享课',value:'5'},{label:'其他',value:'6'},{label:'支局文化建设',value:'7'}]
 }
 
 const peopleQuerySelect = [

@@ -1,7 +1,11 @@
 <template>
-    <organized-cascader
-            @cascaderChange="cascaderChange">
-    </organized-cascader>
+    <div>
+        <label>请选择</label>
+        <organized-cascader
+                @cascaderChange="cascaderChange">
+        </organized-cascader>
+    </div>
+
 </template>
 <script>
     import organizedCascader from './organizedCascader.vue'

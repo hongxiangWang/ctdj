@@ -6,7 +6,7 @@
             :props="props"
             :clearable="true"
             :show-all-levels="true"
-            placeholder="选择党支部"
+            placeholder="请选择党支部"
             v-model="selectValue"
             @change="cascaderChange">
     </el-cascader>
@@ -34,6 +34,12 @@
             }
         },
         mounted(){
+            let $ = this.$jquery;
+            let cascaderDom = this.$refs.cascader.$el;
+            let boxW = $(cascaderDom).width();
+            $(cascaderDom).click(_=>{
+                $('.el-cascader-menus:first .el-cascader-menu__item').css({width:boxW+'px'})
+            })
             this.$ajax.post('/department/dept_list_to_tree', {}).then(res => {
                 console.log('res------', res.data)
                 let groupArr = [];
@@ -65,6 +71,7 @@
                         this.$store.commit('ORGANIZED_CASCADER_DATA',res.data.data[0].children);
                     }
                     this.$store.commit('ORGANIZED_PARTY',groupArr);
+
                     return;
                 }
                 this.$message({message: '数据获取失败,请重试', type: 'error'})
@@ -75,3 +82,8 @@
         }
     }
 </script>
+<style >
+    div.el-cascader-menu{
+        left: 0px;
+    }
+</style>
