@@ -5,6 +5,7 @@ import App from '../App.vue'
 const roleManage = r => require.ensure([], () => r(require('../page/manage/roleSet.vue')), 'roleManage');
 const permissionSet = r => require.ensure([], () => r(require('../page/manage/permissionSetting.vue')), 'permissionSet');
 const adminSet = r => require.ensure([], () => r(require('../page/manage/adminSet.vue')), 'adminSet');
+const test = r => require.ensure([], () => r(require('../page/manage/test.vue')), 'test');
 const home = r => require.ensure([], () => r(require('../page/home/index.vue')), 'home');
 export default {
     path: '/',
@@ -28,6 +29,11 @@ export default {
                     path: 'adminSet',
                     // 使用vue-route + Webpack 的 code splitting feature 把组件按组分块
                     component: adminSet
+                },
+                {
+                    path: 'test',
+                    // 使用vue-route + Webpack 的 code splitting feature 把组件按组分块
+                    component: test
                 }
             ]
         }
