@@ -5,7 +5,7 @@
             <el-col :span="24" class="toolbar" style="padding-bottom: 0px;text-align:center;">
                 <el-form :inline="true" :model="filters">
                     <el-form-item>
-                        <el-select v-model="filters.role_select" clearable="true" placeholder="请选择">
+                        <el-select v-model="filters.role_select" clearable placeholder="请选择">
                             <el-option
                                     v-for="item in select_role_list"
                                     :key="item.id"
@@ -15,7 +15,10 @@
                         </el-select>
                     </el-form-item>
                     <el-form-item>
-                        <el-input v-model="filters.name" placeholder="管理员名称"></el-input>
+                        <el-input v-model="filters.username" placeholder="登陆账号"></el-input>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-input v-model="filters.people_name" placeholder="党员姓名"></el-input>
                     </el-form-item>
                     <el-form-item>
                         <el-button type="primary" @click="getAdminListQuery">查询</el-button>
@@ -198,7 +201,8 @@
                 //操作的方法
                 tableLoading: true,
                 filters: {
-                    name: '',
+                    username: '',
+                    people_name:'',
                     role_select: ''
                 },
                 deltip: false,
@@ -328,8 +332,16 @@
                     console.log('----', err)
                 });
             },
+            //顶部多条件查询
             getAdminListQuery(){
-
+                let params = {
+                    page:1,
+                    count:10,
+                    username:this.filters.username,
+                    people_name:this.filters.people_name,
+                    role_id:this.filters.role_select
+                }
+                this.getPagedAdminList(this, params);
             },
             //显示新增界面
             addAdmin: function () {
