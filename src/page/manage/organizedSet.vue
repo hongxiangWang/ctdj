@@ -112,18 +112,18 @@
                             }
                         })
                     }
-                })
+                });
                 this.$ajax.post('/department/dept_search_by_id', {dept_id: call[1]}).then(res => {
-                    console.log('res------', res)
+                    console.log('res------', res);
                     let arr = helper.createTableArr(deptment, res.data.data[0]);
                     arr.forEach(value => {
                         value.oType = value.type;
                         value.type = value.type != 'file' ? 'text' : 'file';
-                        helper.selectDataShow(['dept_status', 'dept_type'], selectArr, value)
-                    })
+                        helper.selectDataShow(['dept_status', 'dept_type'], selectArr, value);
+                    });
                     this.cellDate = arr;
                 }).catch(err => {
-                    console.log('res------', err)
+                    console.log('res------', err);
                 })
             },
             handleIconClick() {
