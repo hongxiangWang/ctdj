@@ -28,9 +28,9 @@
 
                         <el-submenu index="2">
                             <template slot="title">活动/建设</template>
-                            <el-menu-item index="/home/recordAdd">新增</el-menu-item>
-                            <el-menu-item index="2-2">上传</el-menu-item>
-                            <el-menu-item index="2-3">检查</el-menu-item>
+                            <el-menu-item index="/home/recordAdd">新增活动</el-menu-item>
+                            <el-menu-item index="/home/planAdd">新增计划</el-menu-item>
+                            <el-menu-item index="/home/recordList">活动列表</el-menu-item>
                         </el-submenu>
 
                         <el-submenu index="3">
