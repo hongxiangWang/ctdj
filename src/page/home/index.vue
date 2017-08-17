@@ -28,8 +28,9 @@
 
                         <el-submenu index="2">
                             <template slot="title">活动/建设</template>
-                            <el-menu-item index="2-1">上传</el-menu-item>
-                            <el-menu-item index="2-2">检查</el-menu-item>
+                            <el-menu-item index="/home/activityAdd">新增</el-menu-item>
+                            <el-menu-item index="2-2">上传</el-menu-item>
+                            <el-menu-item index="2-3">检查</el-menu-item>
                         </el-submenu>
 
                         <el-submenu index="3">
@@ -48,7 +49,7 @@
                             <use xlink:href="#icon-yonghu"></use>
                         </svg></span></template>
                             <el-menu-item index="#">您好，{{account.people_name}}</el-menu-item>
-                            <el-menu-item index="#">{{roleType}}</el-menu-item>
+                            <el-menu-item index="#">角色类型：{{roleType}}</el-menu-item>
                             <el-menu-item index="#" @click="exit">
                                 <i class="fa fa-sign-out"></i>退出
                             </el-menu-item>

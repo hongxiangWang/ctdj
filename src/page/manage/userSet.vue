@@ -62,7 +62,7 @@
             <el-col :span="22">
                 <label>选择查询类型</label>
                 <el-select ref="select" v-model="chooseVulue" multiple placeholder="请选择" @change="selectChange"
-                           style="width: 300px;">
+                           style="width: 300px;" @remove-tag="removeTag">
                     <el-option
                             v-for="item in chooseArray"
                             :key="item.value"
@@ -75,7 +75,7 @@
                        <el-input
                                style=" width: auto"
                                v-if="isShowInput"
-                               placeholder="请输入内容"
+                               placeholder="输入姓名"
                                icon="search"
                                v-model="inputCon"
                                :on-icon-click="queryClick">
@@ -178,7 +178,11 @@
                 tableDataTotal: 0,
                 pageSize: 10,
 
-                upParams: ''
+                upParams: {
+                    people_type: '',
+                    people_name: '',
+                    depart_id:''
+                }
 
 
             }
@@ -357,7 +361,6 @@
                     params.value = params.value[params.value.length-1];
                 }
                 this.$ajax.post('/people/user_edit', params).then(res => {
-                    console.log('res----',this.$refs.editDialog.$refs.cascader.currentLabels);
                     if (res.data.errno == 0) {
                         this.$message({message: '修改成功', type: 'success'});
                         differenceDataShow(['type_name', 'people_race', 'people_residence'], cell, form);
@@ -369,7 +372,6 @@
                         }else{
                             this.cell.value = form.value;
                         }
-
                         this.editDialog = false;
                     } else {
                         console.log(res.data);
@@ -382,49 +384,63 @@
             },
             //查询下拉选项改变的触发器
             selectChange(call) {
-                let isName = false;
-                let params = {
-                    people_gender: '0',
-                    people_type: '1',
-                    people_name: ''
-                }
+                let isName,isT1,isT2 = false;
                 call.forEach((v) => {
                     switch (Number(v)) {
                         case 1:
-                            params.people_type = 1
+                            this.upParams.people_type = 1;
+                            isT1=true;
                             break;
                         case 2:
-                            params.people_type = 2
+                            this.upParams.people_type = 2;
+                            isT2=true;
                             break;
                         case 3:
-                            params.people_name = this.inputCon;
+                            this.upParams.people_name = this.inputCon;
                             isName = true;
                             break;
+                        default:
+                            this.upParams.people_type=''
                     }
                 });
-                this.upParams = params;
+                if(call.length==0){
+                    this.upParams.people_type=''
+                }
+                if(isT1&&isT2){
+                    this.upParams.people_type='';
+                }
                 if (isName) {
                     this.isShowInput = true;
                 } else {
                     this.isShowInput = false;
                     getQueryResult(this);
+
                 }
-                console.log(this.chooseVulue);
+
+                console.log('chooseVulue------',this.chooseVulue);
+            },
+            removeTag(call){
+                console.log('removeTag---',this.chooseVulue)
             },
             queryClick(call) {
+                this.upParams.people_name = this.inputCon
                 getQueryResult(this);
             },
+            //分页页数改变
             paginationSizeChange(call) {
                 this.pageSize = call;
                 let params = {page: this.currentPage, count: this.pageSize}
                 getUserList(this, params);
             },
+            //选择的当前页
             currentChange(call) {
                 let params = {page: call, count: this.pageSize}
                 getUserList(this, params);
             },
+            //多联菜单发生改变
             cascaderChange(call){
-
+                this.upParams.depart_id = call[call.length-1];
+                getQueryResult(this);
             }
         },
         components: {
@@ -464,10 +480,19 @@
 
     //查询获取
     function getQueryResult(vm) {
+        vm.tableLoading = true;
+        console.log('user_query--params---', vm.upParams)
         vm.$ajax.post('/people/user_query', vm.upParams).then(res => {
             console.log('user_query-----', res.data)
+            if (res.data.errno == 0) {
+                vm.tableData = res.data.data;
+                vm.tableLoading = false;
+            } else {
+                vm.tableLoading = false;
+            }
         }).catch(err => {
-            console.log('user_query--err---', err)
+
+            console.log('----', err)
         })
     }
 

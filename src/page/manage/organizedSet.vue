@@ -3,14 +3,7 @@
         <el-row>
             <el-col :span="14">
                 <label>选择党支部</label>
-                <!--<el-cascader-->
-                <!--ref="cascader"-->
-                <!--expand-trigger="hover"-->
-                <!--:options="options"-->
-                <!--:props="props"-->
-                <!--v-model="selectValue"-->
-                <!--@change="cascaderChange">-->
-                <!--</el-cascader>-->
+
                 <organized-cascader
                         @cascaderChange="cascaderChange">
                 </organized-cascader>
@@ -108,7 +101,7 @@
         },
         methods: {
             cascaderChange(call) {
-                let title = ''
+                let title = '';
                 this.options.forEach(value => {
                     if (value.id == call[0]) {
                         title = value.label;
