@@ -9,12 +9,14 @@ const organizedSet = r => require.ensure([], () => r(require('../page/manage/org
 const recordAdd = r => require.ensure([], () => r(require('../page/activity/recordAdd.vue')), 'recordAdd');
 const planAdd = r => require.ensure([], () => r(require('../page/activity/planAdd.vue')), 'planAdd');
 const recordList = r => require.ensure([], () => r(require('../page/activity/recordList.vue')), 'recordList');
+const planList = r => require.ensure([], () => r(require('../page/activity/planList.vue')), 'planList');
 
 const table1Mode = r => require.ensure([], () => r(require('../components/table1Mode.vue')), 'table1Mode');
 const cellMode = r => require.ensure([], () => r(require('../components/cellMode.vue')), 'cellMode');
 const editDialogMode = r => require.ensure([], () => r(require('../components/editDialogMode.vue')), 'editDialogMode');
 const formMode = r => require.ensure([], () => r(require('../components/formMode.vue')), 'formMode');
 const organizedCascaderMode = r => require.ensure([], () => r(require('../components/organizedCascaderMode.vue')), 'organizedCascaderMode');
+
 export default {
     path: '/',
     component: App,
@@ -46,12 +48,16 @@ export default {
                     component: recordAdd
                 },
                 {
+                    path: 'recordList',
+                    component: recordList
+                },
+                {
                     path: 'planAdd',
                     component: planAdd
                 },
                 {
-                    path: 'recordList',
-                    component: recordList
+                    path: 'planList',
+                    component: planList
                 },
                 {
                     path: 'table1Mode',
