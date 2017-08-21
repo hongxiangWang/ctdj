@@ -1,6 +1,6 @@
 <template>
     <div style="padding: 0 60px">
-        <el-form ref="form" :model="form" label-width="80px">
+        <el-form ref="form" :model="form" label-width="100px">
             <el-row justify="center" type="flex">
                 <el-col :span="8">
                     <el-form-item label="选择党支部"
@@ -31,21 +31,25 @@
                                       :rules="notEmpty"
                                       prop="activity_start_time">
 
-                            <el-date-picker type="date" placeholder="开始日期" v-model="form.activity_start_time"
+                            <el-date-picker type="date" format="yyyy-MM-dd" placeholder="开始日期" v-model="form.activity_start_time"
                                             style="width: 100%;"></el-date-picker>
                         </el-form-item>
                     </el-col>
                     <el-col :span="2" style="text-align: center; height: 36px; line-height: 36px">
                         -
                     </el-col>
-                    <el-col :span="9">
+                    <el-col :span="4">
                         <el-form-item
+                                label-width="0px"
+
                                 :rules="activity_end_time"
                                 prop="activity_end_time">
                             <el-date-picker type="date"
+                                            style="width: 230%"
                                             placeholder="结束时间"
+                                            format="yyyy-MM-dd"
                                             v-model="form.activity_end_time"
-                                            style="width: 100%;"></el-date-picker>
+                                            ></el-date-picker>
                         </el-form-item>
                     </el-col>
 
@@ -123,8 +127,8 @@
             </el-row>
 
             <el-row>
-                <el-col :span="1">
-                    <label>附件：</label>
+                <el-col :span="2" style="text-align: right">
+                    <label >附件：</label>
                 </el-col>
                 <el-col :span="22">
                     <el-upload
@@ -157,7 +161,6 @@
     import organizedCascader from '../../components/organizedCascader.vue'
     import {selectArr} from '../../assets/kvword.js'
     import ElRow from "element-ui/packages/row/src/row";
-
     export default {
         data() {
             return {
@@ -173,7 +176,7 @@
                     activity_place: '',
                     record_subtitle: '',
                     record_content: '',
-                    file_id_list: []
+                    file_id_arr: []
                 },
                 typeArray: selectArr.record_type,
                 dialogImageUrl: '',
@@ -228,7 +231,7 @@
             },
             uploadRemove(file, fileList) {
                 console.log(file, fileList);
-                this.form.file_id_list.forEach((v,i,s)=>{
+                this.form.file_id_arr.forEach((v,i,s)=>{
                     if(v == file.response.data){
                         s.splice(i,1);
                     }
@@ -240,21 +243,39 @@
             },
             uploadSuccess(res) {
                 if(res.errno==0){
-                    this.form.file_id_list.push(res.data)
+                    this.form.file_id_arr.push(res.data)
                 }
                 console.log('res-----',res)
             },
+
             submitForm(){
                 this.$refs.form.validate(valid=>{
                     if(valid){
                         let params = {};
                         params = this.form;
                         params.attend_user_id=dealFormArrayData(this.form.attend_user_arr);
-                        this.form.file_id_list=dealFormArrayData(this.form.file_id_list);
+                        params.file_id_list=dealFormArrayData(this.form.file_id_arr);
                         params.admin_id = require('store').get('people_info')[0].admin_id;
-                        console.log(params);
+                        params.activity_start_time = dealDateFormt(params.activity_start_time);
+                        params.activity_end_time = dealDateFormt(params.activity_end_time);
+                        this.$ajax.post('/activity_record/activity_record_add',{activityrecord_data:params}).then(res=>{
+                            console.log('activity_record_add------',res.data);
+                            if(res.data.errno==0){
+                                this.$message({message:'添加成功,2秒后跳转',type:'success'});
+                                setTimeout(_=>{
+                                    this.$router.replace('/home/recordList');
+                                },2000);
+                            }else{
+                                this.$message({message:'添加失败,请重试',type:'error'});
+                            }
+                        }).catch(err=>{
+                            console.log('activity_record_add---err---',err)
+                            this.$message({message:'添加失败,请重试'+err.message,type:'error'});
+                        })
                     }else {
-                        console.log()
+                       // this.form.activity_start_time = dealDateFormt(this.form.activity_start_time);
+                        console.log(this.form)
+                        this.$message({message:'请填写表格完整',type:'warning'});
                     }
                 })
             }
@@ -304,16 +325,21 @@
 
             }
         }).catch(err => {
-
             console.log('----', err)
         })
     }
 
     function dealFormArrayData(arr) {
         let temp ='';
-        arr.forEach(v=>{
-            temp+=v+'|';
-        });
+        if(arr instanceof Array){
+            arr.forEach(v=>{
+                temp+=v+'|';
+            });
+        }
         return temp;
+    }
+
+    function dealDateFormt(d) {
+        return d.Format('yyyy-MM-dd');
     }
 </script>
