@@ -29,8 +29,10 @@
                         <el-submenu index="2">
                             <template slot="title">活动/建设</template>
                             <el-menu-item index="/home/recordAdd">新增活动</el-menu-item>
-                            <el-menu-item index="/home/planAdd">新增计划</el-menu-item>
                             <el-menu-item index="/home/recordList">活动列表</el-menu-item>
+                            <el-menu-item index="/home/planAdd">新增计划</el-menu-item>
+                            <el-menu-item index="/home/planList">计划列表</el-menu-item>
+
                         </el-submenu>
 
                         <el-submenu index="3">
@@ -43,11 +45,11 @@
                             <el-menu-item index="/home/userManage">成员管理</el-menu-item>
                         </el-submenu>
 
-                        <el-submenu index="4">
+                        <el-submenu index="4" style="padding-right: 50px">
                             <template slot="title"><span>
                         <svg class="icon" aria-hidden="true">
                             <use xlink:href="#icon-yonghu"></use>
-                        </svg></span></template>
+                        </svg></span>&nbsp;&nbsp;账户</template>
                             <el-menu-item index="#">您好，{{account.people_name}}</el-menu-item>
                             <el-menu-item index="#">角色类型：{{roleType}}</el-menu-item>
                             <el-menu-item index="#" @click="exit">
@@ -55,7 +57,7 @@
                             </el-menu-item>
                         </el-submenu>
 
-                        <el-submenu index="5">
+                        <el-submenu index="5" v-if="false">
                             <template slot="title">组件测试</template>
                             <el-menu-item index="/home/table1Mode">table1</el-menu-item>
                             <el-menu-item index="/home/cellMode">cellMode</el-menu-item>
