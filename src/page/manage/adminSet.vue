@@ -420,7 +420,7 @@
                 });
             },
             //显示编辑界面
-            editAdmin: function (index, row,scope) {
+            editAdmin: function (index, row) {
                 this.editFormVisible = true;
                 this.is_seen = true;
                 this.now_select_people = row.people_name;
