@@ -16,7 +16,7 @@ const cellMode = r => require.ensure([], () => r(require('../components/cellMode
 const editDialogMode = r => require.ensure([], () => r(require('../components/editDialogMode.vue')), 'editDialogMode');
 const formMode = r => require.ensure([], () => r(require('../components/formMode.vue')), 'formMode');
 const organizedCascaderMode = r => require.ensure([], () => r(require('../components/organizedCascaderMode.vue')), 'organizedCascaderMode');
-
+const listMode = r => require.ensure([], () => r(require('../components/listMode.vue')), 'listMode');
 export default {
     path: '/',
     component: App,
@@ -78,6 +78,9 @@ export default {
                 {
                     path: 'organizedCascaderMode',
                     component: organizedCascaderMode
+                }, {
+                    path: 'listMode',
+                    component: listMode
                 },
             ]
         },

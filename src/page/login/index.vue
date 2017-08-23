@@ -87,7 +87,7 @@
                             switch (Number(response.data.errno)) {
                                 case 0 :
                                     getAccount(this, response.data.data);
-                                    this.$router.replace('/home');
+                                    this.$router.replace('/home/main');
                                     break;
                                 default:
                                     console.log(response.data)

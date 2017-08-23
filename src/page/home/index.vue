@@ -4,18 +4,18 @@
             <el-row id="top">
                 <el-col :span="8">
                     <header>
-                    <span>
-                        <svg class="icon" aria-hidden="true">
-                            <use xlink:href="#icon-dianxin"></use>
-                        </svg>
-                    </span>
-                        <span style="color: #ccc; font-weight: 100">|</span>
+                    <!--<span>-->
+                        <!--<svg class="icon" aria-hidden="true">-->
+                            <!--<use xlink:href="#icon-dianxin"></use>-->
+                        <!--</svg>-->
+                    <!--</span>-->
+                        <!--<span style="color: #ccc; font-weight: 100">|</span>-->
                         <span>
                         <svg class="icon" aria-hidden="true">
                             <use xlink:href="#icon-party"></use>
                         </svg>
                     </span>
-                        中国电信新疆公司党建
+                        中国电信新疆公司数字党建
                     </header>
                 </el-col>
                 <el-col :span="16">
@@ -23,6 +23,7 @@
                              class="el-menu-demo"
                              mode="horizontal"
                              @select="handleSelect"
+                             default-active="/home/main"
                              :router="true">
                         <el-menu-item index="/home/main">首页</el-menu-item>
 
@@ -57,13 +58,14 @@
                             </el-menu-item>
                         </el-submenu>
 
-                        <el-submenu index="5" v-if="false">
+                        <el-submenu index="5" v-if="true">
                             <template slot="title">组件测试</template>
                             <el-menu-item index="/home/table1Mode">table1</el-menu-item>
                             <el-menu-item index="/home/cellMode">cellMode</el-menu-item>
                             <el-menu-item index="/home/editDialogMode">editDialogMode</el-menu-item>
                             <el-menu-item index="/home/formMode">formMode</el-menu-item>
                             <el-menu-item index="/home/organizedCascaderMode">organizedCascaderMode</el-menu-item>
+                            <el-menu-item index="/home/listMode">listMode</el-menu-item>
                         </el-submenu>
                     </el-menu>
                 </el-col>
