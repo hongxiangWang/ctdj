@@ -6,6 +6,7 @@
               :key="ce.text"
               :editMode="editMode"
               @edit ="edit"
+              @imageDialog="imageDialog"
               @adjustHeight="adjustHeight">
         </cell>
     </div>
@@ -37,6 +38,9 @@
             },
             edit(cell){
                 this.$emit('edit',cell);
+            },
+            imageDialog(file){
+                this.$emit('imageDialog',file);
             }
         }
     }
