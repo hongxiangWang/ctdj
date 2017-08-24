@@ -1,22 +1,26 @@
 <template>
     <div class="cell" ref="cell">
         <el-row :gutter="0">
-            <el-col :span="6" class="label"><span style="display: block" @click="edit" >{{cell.label}}</span></el-col>
+            <el-col :span="6" class="label"><span style="display: block" @click="edit">{{cell.label}}</span></el-col>
             <el-col :span="18" class="value">
                 <span v-if="cell.type == 'text'">{{cell.value}}</span>
                 <span v-if="cell.type == 'file'">
-                        <el-button ref="fileBtn" type="text" @click="fileClick">{{cell.value}}</el-button>
+                        <el-button ref="fileBtn"
+                                   v-for="file in fileArray"
+                                   :key="file.name"
+                                   type="text"
+                                   @click="fileClick(file)">{{file.name}}</el-button>
                         <el-popover
                                 ref="popover"
                                 class="popover"
                                 v-model="filePopover"
                                 placement="bottom"
                                 width="200"
-                                title="标题">
-                             <p>显示的数据</p>
+                                :title="oFile.name">
+                             <p>是否下载该文件</p>
                             <div style="text-align: right; margin: 0">
-                                <el-button size="mini" type="text" @click="filePopover = false">取消</el-button>
-                                <el-button type="primary" size="mini" @click="filePopover = false">确定</el-button>
+                                <el-button size="mini" type="text" @click="filePopover = false">算了</el-button>
+                                <el-button type="primary" size="mini" @click="downloadFile">是的</el-button>
                             </div>
                         </el-popover>
                 </span>
@@ -28,15 +32,18 @@
     export default {
         data() {
             return {
-                filePopover: false
+                filePopover: false,
+                imageVisible:false,
+                oFile:{}
+
             }
         },
         props: {
             cell: {},
-            editMode:Boolean
+            editMode: Boolean
         },
         methods: {
-            fileClick() {
+            fileClick(file) {
                 //调整pop位置
                 let $ = this.$jquery;
                 let popDom = this.$refs.popover.$el;
@@ -44,13 +51,39 @@
                 let labelHeight = $(cellDom).find('.label').height();
                 let valueWidth = $(cellDom).find('.value .el-button--text span').width();
                 $(popDom).css({top: '-' + (labelHeight / 2 - 12) + 'px', left: '-' + valueWidth + 'px'})
-                this.filePopover = true;
-            },
-            edit(){
-                if(this.editMode){
-                    this.$emit('edit',this.cell);
+                if(file.isImg){
+                    this.$emit('imageDialog',file)
+                }else{
+                    this.filePopover = true;
                 }
-
+                this.oFile =file;
+            },
+            edit() {
+                if (this.editMode) {
+                    this.$emit('edit', this.cell);
+                }
+            },
+            downloadFile(){
+                let httpUri = require('../value/string.js').fileread+this.oFile.uri;
+                require('../tools/helper').downloadFile(httpUri);
+            }
+        },
+        computed: {
+            fileArray() {
+                let arr = [];
+                console.log('cell.value----',this.cell.value);
+                this.cell.value.split('|').forEach(value => {
+                    if (value != null && value.length>3) {
+                        let json = {
+                            name: value.substr(value.indexOf('_') + 1),
+                            uri: value
+                        }
+                        json.isImg = isImage(json.name);
+                        arr.push(json);
+                    }
+                });
+                console.log('fileArray----',arr);
+                return arr;
             }
         },
         mounted() {
@@ -63,8 +96,19 @@
                 $(cellDom).find('.el-col.el-col-6').css({height: valueheight + 'px', lineHeight: valueheight + 'px'});
                 this.$emit('adjustHeight', $(cellDom).index(), valueheight)
             }
+        }
+    }
 
-            //
+    function isImage(name) {
+        let ext = name.substr(name.indexOf('.'));
+        let extArr = ['.jpg', '.png', '.jpeg', '.svg', '.gif', '.ico','.JPG','.PNG'];
+        let isExtImage = extArr.findIndex((value) => {
+            return value == ext;
+        })
+        if(isExtImage>=0){
+            return true;
+        }else {
+            return false;
         }
     }
 </script>

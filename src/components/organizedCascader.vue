@@ -1,4 +1,5 @@
 <template>
+    <span>
     <el-cascader
             ref="cascader"
             expand-trigger="hover"
@@ -10,6 +11,8 @@
             v-model="selectValue"
             @change="cascaderChange">
     </el-cascader>
+        <span v-show="false">{{setDefaultValue}}</span>
+    </span>
 </template>
 <script>
     export default {
@@ -25,13 +28,44 @@
 
             }
         },
+        props:{
+            cascderValue:Number
+        },
+        computed:{
+            setDefaultValue(){
+                if(this.cascderValue!=undefined && this.cascderValue!=0){
+                    let temp = this.cascderValue;
+                    let vArr = [];
+                    let arr = this.$store.state.organized.cascader_data;
+                    if(arr.length == 1){
+                        if(arr[0].children==undefined){
+                            vArr.push(temp)
+                        }else {
+                            vArr.push(arr[0].id);
+                            vArr.push(temp)
+                        }
+                    }else{
+                        arr.forEach(value=>{
+                            if(value.children.length>0){
+                                value.children.forEach(v=>{
+                                    if(v.id == temp){
+                                        vArr.push(value.id);
+                                        vArr.push(temp);
+                                        return;
+                                    }
+                                })
+                            }
+                        });
+                    }
+                    this.selectValue =vArr;
+                }
+            }
+        },
         methods:{
             cascaderChange(call){
                 this.$emit('cascaderChange',call)
             },
-            cascaderClear(){
 
-            }
         },
         mounted(){
             let $ = this.$jquery;
@@ -71,7 +105,6 @@
                         this.$store.commit('ORGANIZED_CASCADER_DATA',res.data.data[0].children);
                     }
                     this.$store.commit('ORGANIZED_PARTY',groupArr);
-
                     return;
                 }
                 this.$message({message: '数据获取失败,请重试', type: 'error'})

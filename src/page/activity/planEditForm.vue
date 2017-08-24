@@ -1,14 +1,15 @@
 <template>
     <div>
         <el-form :model="plan" ref="planEditForm" label-width="100px">
-            <!--<el-form-item label="选择党支部"-->
-                          <!--:rules="notEmpty"-->
-                          <!--prop="dept_id">-->
-                <!--<organized-cascader-->
-                        <!--ref="organizedCascader"-->
-                        <!--@cascaderChange="cascaderChange">-->
-                <!--</organized-cascader>-->
-            <!--</el-form-item>-->
+            <el-form-item label="选择党支部"
+                          :rules="notEmpty"
+                          prop="dept_id">
+                <organized-cascader
+                        ref="organizedCascader"
+                        :cascderValue="plan.dept_id"
+                        @cascaderChange="cascaderChange">
+                </organized-cascader>
+            </el-form-item>
              <el-row>
                  <el-col :span="12">
                      <el-form-item label="选择年/月"

@@ -111,6 +111,9 @@
                 <el-button type="primary" @click="editSure">确 定</el-button>
             </span>
         </el-dialog>
+
+
+
     </div>
 </template>
 <script>
@@ -154,7 +157,6 @@
 
                 editDialog: false,
                 plan:{},
-
             }
         },
         methods: {
@@ -186,6 +188,7 @@
 
 
             },
+
             editPlan(scope) {
                 let row = scope.row;
 
