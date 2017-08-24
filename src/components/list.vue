@@ -18,10 +18,10 @@
                     <el-col :span="2" class="index">
                         {{index+1}}
                     </el-col>
-                    <el-col :span="19" class="title">
+                    <el-col :span="16" class="title">
                         {{li.title}}
                     </el-col>
-                    <el-col :span="3" style="text-align: center">
+                    <el-col :span="6" style="text-align: center">
                         {{li.time}}
                     </el-col>
                 </el-row>

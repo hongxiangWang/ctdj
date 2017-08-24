@@ -62,11 +62,11 @@
             return {
                 notEmpty: [{required: true, message: '不许为空'}],
                 weekArray: [
-                    {label: '第一周', value: '1'},
-                    {label: '第二周', value: '2'},
-                    {label: '第三周', value: '3'},
-                    {label: '第四周', value: '4'},
-                    {label: '第五周', value: '5'}
+                    {label: '第一周', value: 1},
+                    {label: '第二周', value: 2},
+                    {label: '第三周', value: 3},
+                    {label: '第四周', value: 4},
+                    {label: '第五周', value: 5}
                 ],
             }
         },

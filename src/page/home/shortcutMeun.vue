@@ -1,7 +1,7 @@
 <template>
     <div id="leftMeun">
         <div class="cell" v-for="item in meuns" :key="item.label">
-            <button class="button button-box button-giant button-longshadow-left button-glow " :class="item.btnBg" >
+            <button class="button button-box button-giant button-longshadow-left" :class="item.btnBg" >
                 <i class='fa' :class="item.icon"></i>
             </button>
             <p>{{item.label}}</p>
@@ -18,6 +18,10 @@
                     label:'成员管理',icon:'fa-users',to:'userSet',btnBg:'button-action'
                 },{
                     label:'组织信息',icon:'fa-sitemap',to:'userSet',btnBg:'button-highlight'
+                },{
+                    label:'成员管理',icon:'fa-users',to:'userSet',btnBg:'button-royal'
+                },{
+                    label:'成员管理',icon:'fa-users',to:'userSet',btnBg:'button-royal'
                 },{
                     label:'成员管理',icon:'fa-users',to:'userSet',btnBg:'button-royal'
                 }]
