@@ -5,7 +5,8 @@
             <el-col :span="24" class="toolbar" style="padding-bottom: 0px;text-align:center;">
                 <el-form :inline="true" :model="filters">
                     <el-form-item label="选择党群" prop="big_dept_id" v-if="is_role_one">
-                        <el-select v-model="filters.big_dept_id" placeholder="请选择" clearable>
+                        <el-select v-model="filters.big_dept_id" placeholder="请选择"
+                                   @change="partyChange" clearable>
                             <el-option
                                     v-for="item in big_party_list"
                                     :key="item.value"
@@ -23,12 +24,13 @@
                         </organized-cascader>
                     </el-form-item>
                     <el-date-picker
+                            @change="pickerChange"
                             v-model="yearMonth"
                             type="month"
                             placeholder="选择年月">
                     </el-date-picker>
                     <el-form-item>
-                        <el-button type="primary" @click="getPlanListQuery">查询</el-button>
+                        <!--<el-button type="primary" @click="getPlanListQuery">查询</el-button>-->
                     </el-form-item>
                     <el-form-item>
                         <el-button type="primary" @click="addPlan">新增</el-button>
@@ -160,9 +162,16 @@
             }
         },
         methods: {
+            partyChange(){
+               this.getPlanListQuery();
+            },
             cascaderChange(call) {
                 console.log('plan---',call)
                 this.filters.small_dept_id = call[call.length - 1];
+                this.getPlanListQuery();
+            },
+            pickerChange(){
+                this.getPlanListQuery();
             },
             addPlan() {
                 this.$router.push({path: '/home/planAdd'});
