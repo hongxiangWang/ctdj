@@ -4,18 +4,20 @@ body {
   width: 100%;
 }
 #leftMeun {
-  width: 96px;
-  height: 80vh;
-  margin-top: -20px;
+  width: 100%;
+  height: auto;
+  margin: 0 auto;
+  text-align: justify;
+  margin-top: 0px;
   margin-bottom: -20px;
-  padding: 30px 0px;
-  box-shadow: 0 0px 2px 0 rgba(0, 0, 0, 0.5);
+  padding: 10px 0px;
   z-index: 1;
 }
 #leftMeun .cell {
   width: 96px;
   text-align: center;
-  margin-bottom: 20px;
+  display: inline-block;
+  margin-bottom: 10px;
 }
 #leftMeun .cell button {
   margin: 0 13px;
