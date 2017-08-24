@@ -5,7 +5,7 @@
             <el-col :span="24" class="toolbar" style="padding-bottom: 0px;text-align:center;">
                 <el-form :inline="true" :model="filters">
                     <el-form-item label="选择党群" prop="big_dept_id" v-if="is_role_one">
-                        <el-select v-model="filters.big_dept_id" placeholder="请选择" clearable>
+                        <el-select v-model="filters.big_dept_id" placeholder="请选择" @change="partyChange" clearable>
                             <el-option
                                     v-for="item in big_party_list"
                                     :key="item.value"
@@ -22,7 +22,8 @@
                                 @cascaderChange="cascaderChange">
                         </organized-cascader>
                     </el-form-item>
-                    <el-select label="选择党建类型" v-model="filters.record_type" placeholder="请选择" clearable>
+                    <el-select label="选择党建类型" v-model="filters.record_type" @change="typeChange" placeholder="请选择"
+                               clearable>
                         <el-option
                                 v-for="item in selectArr.record_type"
                                 :key="item.value"
@@ -72,7 +73,7 @@
             </el-table-column>
         </el-table>
 
-        <div class="block">
+        <div >
             <el-pagination
                     style="margin: 0 auto;text-align: center;margin-top: 30px"
                     @size-change="paginationSizeChange"
@@ -115,11 +116,12 @@
         </el-dialog>
 
         <el-dialog
-                    v-model="recordEditDialog"
-                    :size="recordEditDialogSize"
-                    :title="file.name">
+                v-model="recordEditDialog"
+                :size="recordEditDialogSize"
+                :title="file.name">
             <span slot="title">
-                <span>{{file.name}}<el-button type="text" @click="magnifyImage" style="margin-left: 1rem">{{btnTip}}</el-button></span>
+                <span>{{file.name}}<el-button type="text" @click="magnifyImage"
+                                              style="margin-left: 1rem">{{btnTip}}</el-button></span>
             </span>
             <img width="100%" :src="file.url" alt="">
         </el-dialog>
@@ -178,15 +180,22 @@
 
                 editDialog: false,
                 parentForm: {},
-                recordEditDialog:false,
-                file:{},
-                recordEditDialogSize:'tiny',
-                btnTip:'放大'
+                recordEditDialog: false,
+                file: {},
+                recordEditDialogSize: 'tiny',
+                btnTip: '放大'
             }
         },
         methods: {
+            partyChange() {
+                this.getRecordListQuery();
+            },
             cascaderChange(call) {
                 this.filters.small_dept_id = call[call.length - 1];
+                this.getRecordListQuery();
+            },
+            typeChange() {
+                this.getRecordListQuery();
             },
             addRecord() {
                 this.$router.push({path: '/home/recordAdd'});
@@ -244,7 +253,7 @@
             imageDialog(file) {
                 this.imageVisible = true;
                 this.imageFile = file;
-                this.imageFile.httpUri = require('../../value/string.js').fileread + file.uri;
+                this.imageFile.httpUri = require('../../value/string.js').fileread + (file.uri).replace(`file`, `ctdj/www/static`);
                 console.log('file--file--', this.imageFile.httpUri);
             },
             imageDownload() {
@@ -262,7 +271,7 @@
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    this.$ajax.post('/activity/activity_record_delete', {id: scope.row.id}).then(res => {
+                    this.$ajax.post('/activity_record/activity_record_delete', {activity_record_id: scope.row.id}).then(res => {
                         let result = res.data;
                         if (result.errno == 0) {
                             this.$message({message: '删除成功', type: 'success'});
@@ -332,16 +341,16 @@
                 });
             },
 
-            openImageFile(file){
+            openImageFile(file) {
                 this.recordEditDialog = true;
                 this.file = file;
             },
-            magnifyImage(){
-                if(this.recordEditDialogSize=='tiny'){
-                    this.recordEditDialogSize= 'large'
+            magnifyImage() {
+                if (this.recordEditDialogSize == 'tiny') {
+                    this.recordEditDialogSize = 'large'
                     this.btnTip = '缩小'
-                }else {
-                    this.recordEditDialogSize= 'tiny'
+                } else {
+                    this.recordEditDialogSize = 'tiny'
                     this.btnTip = '放大'
                 }
 
@@ -380,13 +389,13 @@
     }
 
     function dealVirguleData(data) {
-        let array = data.split('|');
+        let array = helper.stringToArray(data);
         let str = ''
         array.forEach((v, i, s) => {
-            if (v == '' || v == null) {
-                s.splice(i, 1);
-            } else {
-                str += v + ' ';
+            if (i < s.length - 1) {
+                str += v + '、';
+            }else {
+                str += v ;
             }
 
         })
