@@ -420,7 +420,13 @@
                 console.log('chooseVulue------',this.chooseVulue);
             },
             removeTag(call){
-                console.log('removeTag---',this.chooseVulue)
+                console.log('removeTag---',call)
+                if(call.currentValue == 3){
+                    this.inputCon = ''
+                    this.upParams.people_name = this.inputCon;
+                }
+
+                getQueryResult(this);
             },
             queryClick(call) {
                 this.upParams.people_name = this.inputCon

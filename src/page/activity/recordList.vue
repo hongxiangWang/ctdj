@@ -64,16 +64,18 @@
             </el-table-column>
             <el-table-column prop="activity_end_time" label="结束时间" width="150" align="center">
             </el-table-column>
-            <el-table-column label="操作" align="center">
+            <el-table-column label="操作" align="center" fixed="right" min-width="300">
                 <template scope="scope">
                     <el-button size="small" @click="infoRecord(scope)">详情</el-button>
                     <el-button size="small" @click="editRecord(scope.$index, scope.row)">编辑</el-button>
+                    <el-button size="small" @click="evaluateRecord(scope)">点评</el-button>
                     <el-button type="danger" size="small" @click="deleteRecord(scope)">删除</el-button>
+
                 </template>
             </el-table-column>
         </el-table>
 
-        <div >
+        <div>
             <el-pagination
                     style="margin: 0 auto;text-align: center;margin-top: 30px"
                     @size-change="paginationSizeChange"
@@ -99,7 +101,7 @@
                         :editMode="false"></cell-arr>
             </span>
         </el-dialog>
-
+        <!--编辑-->
         <el-dialog
                 title="编辑"
                 :visible.sync="editDialog"
@@ -114,7 +116,7 @@
 
             </span>
         </el-dialog>
-
+        <!--编辑图片-->
         <el-dialog
                 v-model="recordEditDialog"
                 :size="recordEditDialogSize"
@@ -125,7 +127,7 @@
             </span>
             <img width="100%" :src="file.url" alt="">
         </el-dialog>
-
+        <!--详情图片-->
         <el-dialog v-model="imageVisible" size="tiny">
             <span slot="title">
                 {{imageFile.name}}
@@ -135,12 +137,31 @@
             </span>
             <img width="100%" :src="imageFile.httpUri" alt="">
         </el-dialog>
+
+        <!--点评-->
+        <el-dialog
+                title="点评"
+                :visible.sync="evaluateDialog"
+                size="small"
+                :before-close="evaluateDialogClose">
+            <span>
+                <evaluate
+                :rate="rate"></evaluate>
+            </span>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="evaluateDialog = false">取 消</el-button>
+                <el-button type="primary" @click="evaluateSubmit">确 定</el-button>
+            </span>
+        </el-dialog>
+
+
     </div>
 </template>
 <script>
     import organizedCascader from '../../components/organizedCascader.vue';
     import recordEdit from './recordAdd.vue';
     import cellArr from '../../components/cellArr.vue'
+    import evaluate from './evaluate.vue';
     import '../../assets/elCss/table.css';
     import '../../assets/elCss/loading.css';
     import {selectArr, record} from '../../assets/kvword.js';
@@ -183,7 +204,11 @@
                 recordEditDialog: false,
                 file: {},
                 recordEditDialogSize: 'tiny',
-                btnTip: '放大'
+                btnTip: '放大',
+
+                //点评
+                evaluateDialog:false,
+                rate:{}
             }
         },
         methods: {
@@ -355,6 +380,20 @@
                 }
 
             },
+
+            evaluateRecord() {
+                this.rate = {
+                    grades:4,
+                    desc:''
+                }
+                this.evaluateDialog = true;
+            },
+            evaluateSubmit(){
+                console.log('aaaaa-----',this.rate)
+            },
+            evaluateDialogClose(){
+                this.evaluateDialog = false;
+            }
         },
         filters: {
             formatRecordType(record_type) {
@@ -369,7 +408,7 @@
             }
         },
         components: {
-            organizedCascader, cellArr, recordEdit
+            organizedCascader, cellArr, recordEdit,evaluate
         },
         mounted() {
             this.local_people_info = this.$localStore.get('people_info')[0];
@@ -394,8 +433,8 @@
         array.forEach((v, i, s) => {
             if (i < s.length - 1) {
                 str += v + '、';
-            }else {
-                str += v ;
+            } else {
+                str += v;
             }
 
         })
