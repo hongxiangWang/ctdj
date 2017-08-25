@@ -10,6 +10,12 @@ import 'element-ui/lib/theme-default/index.css'
 import './assets/font/font-awesome.css'
 import './assets/font/iconfont.js'
 
+import {macarons} from './assets/eChartsTheme/macarons.js';
+import oviliaGreen from './assets/eChartsTheme/oviliaGreen.json';
+import ECharts from 'vue-echarts/components/ECharts.vue'
+ECharts.registerTheme('macarons', macarons);
+ECharts.registerTheme('oviliaGreen',oviliaGreen);
+
 import axios from 'axios'
 import config from './api/config'
 
@@ -21,6 +27,7 @@ const axiosInit = axios.create(config);
 Vue.use(VueRouter);
 Vue.use(ElementUI);
 
+Vue.component('chart', ECharts);
 
 Vue.prototype.$ajax = axiosInit;
 Vue.prototype.$jquery = jquery;
