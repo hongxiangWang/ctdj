@@ -110,6 +110,7 @@
             <span>
                 <record-edit
                         ref="recordEdit"
+                        @closeEditDialid = "editDialogClose"
                         @openImageFile="openImageFile"
                         :parentForm="parentForm">
                 </record-edit>
@@ -242,6 +243,7 @@
                         record_title: row.record_title,
                         file_id_arr: helper.stringToArray(row.file_id_list),
                     },
+                    id:row.id,
                     cascderValue: row.dept_id,
                     real_attend_users: helper.stringToArray(row.attend_user_id),
                     real_attend_users_str: row.attend_user_id,
