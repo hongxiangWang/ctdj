@@ -148,8 +148,6 @@
                     <el-dialog v-model="dialogVisible" size="tiny" v-if="parentForm == undefined">
                         <img width="100%" :src="dialogImageUrl" alt="">
                     </el-dialog>
-
-
                 </el-col>
 
             </el-row>
@@ -293,20 +291,25 @@
                         params.activity_end_time = dealDateFormt(new Date(params.activity_end_time));
                         console.log('submit--params--', params)
                         return;
-                        this.$ajax.post('/activity_record/activity_record_add', {activityrecord_data: params}).then(res => {
-                            console.log('activity_record_add------', res.data);
-                            if (res.data.errno == 0) {
-                                this.$message({message: '添加成功,2秒后跳转', type: 'success'});
-                                setTimeout(_ => {
-                                    this.$router.replace('/home/recordList');
-                                }, 2000);
-                            } else {
-                                this.$message({message: '添加失败,请重试', type: 'error'});
-                            }
-                        }).catch(err => {
-                            console.log('activity_record_add---err---', err)
-                            this.$message({message: '添加失败,请重试' + err.message, type: 'error'});
-                        })
+                        if(this.parentForm==undefined){
+                            this.$ajax.post('/activity_record/activity_record_add', {activityrecord_data: params}).then(res => {
+                                console.log('activity_record_add------', res.data);
+                                if (res.data.errno == 0) {
+                                    this.$message({message: '添加成功,2秒后跳转', type: 'success'});
+                                    setTimeout(_ => {
+                                        this.$router.replace('/home/recordList');
+                                    }, 2000);
+                                } else {
+                                    this.$message({message: '添加失败,请重试', type: 'error'});
+                                }
+                            }).catch(err => {
+                                console.log('activity_record_add---err---', err)
+                                this.$message({message: '添加失败,请重试' + err.message, type: 'error'});
+                            })
+                        }else{
+
+                        }
+
                     } else {
                         // this.form.activity_start_time = dealDateFormt(this.form.activity_start_time);
                         console.log(this.form)
@@ -404,5 +407,22 @@
 
     function dealDateFormt(d) {
         return d.Format('yyyy-MM-dd');
+    }
+
+    function submitData(vm,params) {
+        vm.$ajax.post('/activity_record/activity_record_add', {activityrecord_data: params}).then(res => {
+            console.log('activity_record_add------', res.data);
+            if (res.data.errno == 0) {
+                vm.$message({message: '添加成功,2秒后跳转', type: 'success'});
+                setTimeout(_ => {
+                    this.$router.replace('/home/recordList');
+                }, 2000);
+            } else {
+                vm.$message({message: '添加失败,请重试', type: 'error'});
+            }
+        }).catch(err => {
+            console.log('activity_record_add---err---', err)
+            vm.$message({message: '添加失败,请重试' + err.message, type: 'error'});
+        })
     }
 </script>
