@@ -1,5 +1,5 @@
 <template>
-    <div>通知详情{{msg}}</div>
+    <div class="example">notice列表</div>
 </template>
 <script>
     export default {
@@ -7,9 +7,6 @@
             return {
                 msg: 'Hello world!'
             }
-        },
-        created(){
-            console.log('=======>>=====',this.$route.params.id)
         }
     }
 </script>

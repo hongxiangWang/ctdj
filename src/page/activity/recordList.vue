@@ -341,7 +341,8 @@
                     page: this.currentPage,
                     count: this.pageSize,
                     big_dept_id: this.filters.big_dept_id,
-                    small_dept_id: this.filters.small_dept_id
+                    small_dept_id: this.filters.small_dept_id,
+                    record_type:this.filters.record_type
                 }
                 console.log(params);
                 this.getPagedRecordList(this, params);

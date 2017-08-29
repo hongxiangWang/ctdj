@@ -17,6 +17,7 @@
                             value="2">
                     </el-option>
                 </el-select>
+                <el-button class="more" type="text" @click="addNotice">添加</el-button>
             </div>
 
             <list :dataArray="list"
@@ -110,8 +111,11 @@
             }
         },
         methods: {
-            liClick(li) {
+            liClick(){
 
+            },
+            addNotice(){
+                this.$router.push('/home/noticeAdd')
             }
         },
         components: {

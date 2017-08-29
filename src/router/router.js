@@ -17,6 +17,8 @@ const editDialogMode = r => require.ensure([], () => r(require('../components/ed
 const formMode = r => require.ensure([], () => r(require('../components/formMode.vue')), 'formMode');
 const organizedCascaderMode = r => require.ensure([], () => r(require('../components/organizedCascaderMode.vue')), 'organizedCascaderMode');
 const listMode = r => require.ensure([], () => r(require('../components/listMode.vue')), 'listMode');
+const noticeInfo = r => require.ensure([], () => r(require('../page/notice/index.vue')), 'noticeInfo');
+const noticeAdd = r => require.ensure([], () => r(require('../page/notice/noticeAdd.vue')), 'noticeAdd');
 export default {
     path: '/',
     component: App,
@@ -81,6 +83,22 @@ export default {
                 }, {
                     path: 'listMode',
                     component: listMode
+                },
+
+                {
+                    path: 'noticeInfo',
+                    name:'noticeInfo',
+                    component: noticeInfo
+                },
+                {
+                    path: 'noticeInfo/:id',
+                    name:'noticeInfo',
+                    component: noticeInfo
+                },
+
+                {
+                    path: 'noticeAdd',
+                    component: noticeAdd
                 },
             ]
         },
