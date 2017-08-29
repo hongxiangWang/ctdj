@@ -15,7 +15,7 @@
                               :options="editorOption">
                 </quill-editor>
             </el-form-item>
-            <el-form-item label="活动名称">
+            <el-form-item label="附件">
                 <el-upload
                         :action="uploadUri"
                         list-type="picture-card"
