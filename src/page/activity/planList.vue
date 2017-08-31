@@ -110,7 +110,7 @@
 
             <span slot="footer" class="dialog-footer">
                 <el-button @click="editDialog = false">取 消</el-button>
-                <el-button type="primary" @click="editSure">确 定</el-button>
+                <el-button type="primary" @click="editSure" :disabled="sureBtn">确 定</el-button>
             </span>
         </el-dialog>
 
@@ -159,6 +159,7 @@
 
                 editDialog: false,
                 plan:{},
+                sureBtn:false,
             }
         },
         methods: {
@@ -200,7 +201,6 @@
 
             editPlan(scope) {
                 let row = scope.row;
-
                 let plan = {
                     dept_id:row.dept_id,
                     yearMonth:row.pub_year+'-'+dealDate(row.pub_month),
@@ -225,7 +225,32 @@
                        activity_content:plan.context,
                        activity_memo:plan.remarks
                    }
-                  console.log('plan---',params);
+                this.$refs.plans.$refs.planEditForm.validate(valid=>{
+                    if(valid){
+                        this.sureBtn = true;
+                        this.$ajax.post('activity_plan/activity_plan_edit',{activity_plan_id:plan.id,activity_plan_data:params}).then(res=>{
+                            if(res.data.errno==0){
+                                this.$message({message:'修改成功',type:'success'});
+
+                                setTimeout(_=>{
+                                    this.sureBtn = false;
+                                    window.location.reload();
+
+                                },1200)
+                            }else {
+                                this.sureBtn = false;
+                                this.$message({message:'修改失败,请重试',type:'error'})
+                            }
+                        }).catch(err=>{
+                            this.$message({message:'修改失败,请重试',type:'error'});
+                            this.sureBtn = false;
+                            console.log('err=====>---',err)
+                        })
+                    }else{
+                        this.$message({message:'数据未填完整',type:'warning'})
+                    }
+                })
+
             },
             deletePlan(scope) {
                 this.$confirm('确定删除改该条计划吗', '提示', {

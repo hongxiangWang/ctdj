@@ -148,8 +148,6 @@
                     <el-dialog v-model="dialogVisible" size="tiny" v-if="parentForm == undefined">
                         <img width="100%" :src="dialogImageUrl" alt="">
                     </el-dialog>
-
-
                 </el-col>
 
             </el-row>
@@ -157,7 +155,7 @@
             <el-row type="flex" justify="center">
                 <el-col :span="6" style=" text-align: center">
                     <el-button>撤销</el-button>
-                    <el-button @click="submitForm">提交</el-button>
+                    <el-button @click="submitForm" :disabled="submitBtn">提交</el-button>
                 </el-col>
             </el-row>
         </el-form>
@@ -200,7 +198,8 @@
 
                 cascderValue: 0,
                 message: {},
-                fileList: []
+                fileList: [],
+                submitBtn:false
             }
         },
         components: {
@@ -284,6 +283,7 @@
             submitForm() {
                 this.$refs.form.validate(valid => {
                     if (valid) {
+                        this.submitBtn = true;
                         let params = {};
                         params = this.form;
                         params.attend_user_id = dealFormArrayData(this.form.attend_user_arr);
@@ -291,22 +291,10 @@
                         params.admin_id = require('store').get('people_info')[0].admin_id;
                         params.activity_start_time = dealDateFormt(new Date(params.activity_start_time));
                         params.activity_end_time = dealDateFormt(new Date(params.activity_end_time));
-                        console.log('submit--params--', params)
-                        return;
-                        this.$ajax.post('/activity_record/activity_record_add', {activityrecord_data: params}).then(res => {
-                            console.log('activity_record_add------', res.data);
-                            if (res.data.errno == 0) {
-                                this.$message({message: '添加成功,2秒后跳转', type: 'success'});
-                                setTimeout(_ => {
-                                    this.$router.replace('/home/recordList');
-                                }, 2000);
-                            } else {
-                                this.$message({message: '添加失败,请重试', type: 'error'});
-                            }
-                        }).catch(err => {
-                            console.log('activity_record_add---err---', err)
-                            this.$message({message: '添加失败,请重试' + err.message, type: 'error'});
-                        })
+                        console.log('submit--params--', this.parentForm)
+                        submitData(this, params)
+
+
                     } else {
                         // this.form.activity_start_time = dealDateFormt(this.form.activity_start_time);
                         console.log(this.form)
@@ -404,5 +392,38 @@
 
     function dealDateFormt(d) {
         return d.Format('yyyy-MM-dd');
+    }
+
+    function submitData(vm, data) {
+        let params = {};
+        if (vm.parentForm == undefined) {
+            params.url = `/activity_record/activity_record_add`;
+            params.tips = '添加成功,2秒后跳转'
+        } else {
+            params.url = `/activity_record/activity_record_edit`;
+            params.tips = '修改成功,2秒后关闭';
+            params.activity_record_id = vm.parentForm.id;
+        }
+        params.activity_record_data = data;
+        vm.$ajax.post(params.url, params).then(res => {
+            if (res.data.errno == 0) {
+                vm.$message({message: params.tips, type: 'success'});
+                setTimeout(_ => {
+                    if(vm.parentForm == undefined){
+                        vm.$router.replace('/home/recordList');
+                    }else{
+                        vm.$emit('closeEditDialid');
+                        window.location.reload();
+                    }
+                    vm.submitBtn = false;
+                }, 2000);
+            } else {
+                vm.submitBtn = false;
+                vm.$message({message: '操作失败,请重试', type: 'error'});
+            }
+        }).catch(err => {
+            vm.submitBtn = false;
+            vm.$message({message: '操作失败,请重试' + err.message, type: 'error'});
+        })
     }
 </script>

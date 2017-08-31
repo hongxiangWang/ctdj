@@ -19,6 +19,8 @@ ECharts.registerTheme('oviliaGreen',oviliaGreen);
 import axios from 'axios'
 import config from './api/config'
 
+import VueQuillEditor from 'vue-quill-editor'
+
 const localStore = require('store'); //解决IE9 的loacalstore问题
 const jquery = require('jquery');
 const axiosInit = axios.create(config);
@@ -26,6 +28,7 @@ const axiosInit = axios.create(config);
 
 Vue.use(VueRouter);
 Vue.use(ElementUI);
+Vue.use(VueQuillEditor);
 
 Vue.component('chart', ECharts);
 

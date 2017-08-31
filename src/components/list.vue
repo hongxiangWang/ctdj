@@ -14,17 +14,19 @@
         <hr>
         <ul>
             <li v-for="(li,index) in dataArray">
-                <el-row>
-                    <el-col :span="2" class="index">
-                        {{index+1}}
-                    </el-col>
-                    <el-col :span="16" class="title">
-                        {{li.title}}
-                    </el-col>
-                    <el-col :span="6" style="text-align: center">
-                        {{li.time}}
-                    </el-col>
-                </el-row>
+                <router-link :to="'/home/noticeInfo/'+li.title">
+                    <el-row>
+                        <el-col :span="2" class="index">
+                            {{index+1}}
+                        </el-col>
+                        <el-col :span="16" class="title">
+                            {{li.title}}
+                        </el-col>
+                        <el-col :span="6" style="text-align: center">
+                            {{li.time}}
+                        </el-col>
+                    </el-row>
+                </router-link>
             </li>
         </ul>
     </div>
@@ -36,6 +38,11 @@
                 msg: 'Hello world!'
             }
         },
+        methods:{
+            linkTo(item){
+                return '/home/noticeInfo/'+item.title
+            }
+        },
         props: {
             dataArray: Array
         },
@@ -44,27 +51,36 @@
 </script>
 <style lang="less" scoped>
     #list-components {
-    @color:#FFAB91;
-    hr{
-        border-color: fade(@color,30%);
+    @color: #FFAB91;
+
+    hr {
+        border-color: fade(@color, 30%);
         width: 98%;
-       text-align: center;
+        text-align: center;
     }
+
     ul {
         list-style: none;
         -webkit-padding-start: 0;
-        li{
-            height: 36px;
-            line-height: 36px;
 
+    li {
+        a{
+            color: #222;
         }
-        li:hover{
-            color:#FFAB91;
-            cursor: pointer;
-        }
-        li:visited{
-            color: desaturate(@color,80%);
-        }
+        height: 36px;
+        line-height: 36px;
+
+    }
+
+    li a:hover {
+        color: #FFAB91;
+        cursor: pointer;
+    }
+
+    li a:visited {
+        /*color: desaturate(@color, 80%);*/
+    }
+
     }
 
     .title {
@@ -73,9 +89,10 @@
         white-space: nowrap;
         padding-right: 10px
     }
-    .index{
+
+    .index {
         text-align: center;
-        color:#999
+        color: #999
     }
 
     }
