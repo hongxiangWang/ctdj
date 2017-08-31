@@ -72,7 +72,7 @@
             let cascaderDom = this.$refs.cascader.$el;
             let boxW = $(cascaderDom).width();
             $(cascaderDom).click(_=>{
-                $('.el-cascader-menus:first .el-cascader-menu__item').css({width:boxW+'px'})
+                $('.el-cascader-menus:first .el-cascader-menu__item').css({minWidth:boxW+'px'})
             })
             this.$ajax.post('/department/dept_list_to_tree', {}).then(res => {
                 console.log('res------', res.data)
