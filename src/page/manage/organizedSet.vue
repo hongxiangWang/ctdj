@@ -20,7 +20,7 @@
                         </el-input>
                     </el-col>
                     <el-col :span="16" :offset="1">
-                        <el-button icon="edit">修改</el-button>
+                        <el-button icon="edit" @click="editBtn">修改</el-button>
                         <el-button icon="plus" @click="addBtn">增加</el-button>
                         <el-button icon="delete2" @click="deleteBtn">删除</el-button>
                     </el-col>
@@ -42,6 +42,23 @@
                 :before-close="addDialogClose">
             <form1 ref="form1"
                    :dataArr="formData"
+                   :selectArr="selectArr"
+                   @cascaderChange="cascaderChangeFrom"
+                   @deptmentTypeChange="deptmentTypeChange"></form1>
+            <span slot="footer">
+                <el-button @click="addDialog = false">取 消</el-button>
+                <el-button type="primary" @click="sureAdd">确 定</el-button>
+             </span>
+        </el-dialog>
+
+
+        <el-dialog
+                title="修改"
+                :visible.sync="editDialog"
+                size="large"
+                :before-close="editDialogClose">
+            <form1 ref="form1"
+                   :dataArr="editformData"
                    :selectArr="selectArr"
                    @cascaderChange="cascaderChangeFrom"
                    @deptmentTypeChange="deptmentTypeChange"></form1>
@@ -96,7 +113,10 @@
 
                 deleteDialog: false,
 
-                account: require('store').get('people_info')[0]
+                account: require('store').get('people_info')[0],
+                editDialog:false,
+                editformData:[]
+
             }
         },
         methods: {
@@ -134,19 +154,8 @@
             },
             addBtn() {
                 this.addDialog = true;
-                let arr = helper.createTableToForm(deptment);
-                arr.forEach(value => {
-                    if (value.type == 'cascader') {
-                        value.value = [];
-                        value.cascaderOptions = cascaderArr[value.key];
-                        value.props = cascaderProps[value.key];
-                    }
-                    if (value.key == 'dept_type') {
-                        value.selectClick = 'deptmentTypeChange'
-                    }
-                    value.rule = notEmpty;
-                })
-                this.formData = arr;
+
+                this.formData = getForm();
             },
             deptmentTypeChange(call) {
                 let pid = {
@@ -208,6 +217,11 @@
                 this.deleteDialog = true;
 
             },
+            editBtn(){
+                let noValueForm = getForm();
+                console.log('editBtn========',this.cellDate)
+                this.editDialog = true;
+            },
             sureDelete() {
                 this.$ajax.post('/department/dept_delete', {dept_id: this.selectValue[1]}).then(res => {
                     console.log('res------', res.data)
@@ -225,6 +239,9 @@
             },
             delDialogClose() {
                 this.deleteDialog = false;
+            },
+            editDialogClose(){
+                this.editDialog = false;
             }
         },
         components: {
@@ -261,5 +278,22 @@
             json.pid = 1
         }
 
+    }
+
+
+    function getForm() {
+        let arr = helper.createTableToForm(deptment);
+        arr.forEach(value => {
+            if (value.type == 'cascader') {
+                value.value = [];
+                value.cascaderOptions = cascaderArr[value.key];
+                value.props = cascaderProps[value.key];
+            }
+            if (value.key == 'dept_type') {
+                value.selectClick = 'deptmentTypeChange'
+            }
+            value.rule = notEmpty;
+        });
+        return arr;
     }
 </script>
