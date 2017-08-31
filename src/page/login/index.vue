@@ -136,7 +136,7 @@
             if (account == null) {
                 return;
             }
-            this.$ajax.post('/user/logintoken', params).then(response => {
+            this.$ajax.post('/user/login', params).then(response => {
                 console.log('sssss', response.errno)
                 switch (Number(response.errno)) {
                     case 0 :
