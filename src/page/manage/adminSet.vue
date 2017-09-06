@@ -37,7 +37,7 @@
                   style="width: 100%">
             <el-table-column
                     type="index"
-                    width="50">
+                    width="80">
             </el-table-column>
             <el-table-column prop="username" label="登录账号" width="250" align="center">
             </el-table-column>
