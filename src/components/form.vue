@@ -15,8 +15,8 @@
                 <el-option
                         v-for="op in selectArr[it.key]"
                         :label="op.label"
-                        :key="op.label"
-                        :value="op.label"
+                        :key="op.value"
+                        :value="op.value"
                         :disabled="op.disabled"
                         ></el-option>
             </el-select>

@@ -1,46 +1,46 @@
 const nation = [
     {
-        "value": "01",
+        "value": "汉族",
         "label": "汉族"
     },
     {
-        "value": "02",
+        "value": "蒙古族",
         "label": "蒙古族"
     },
     {
-        "value": "03",
+        "value": "回族",
         "label": "回族"
     },
     {
-        "value": "04",
+        "value": "藏族",
         "label": "藏族"
     },
     {
-        "value": "05",
+        "value": "维吾尔族",
         "label": "维吾尔族"
     },
     {
-        "value": "06",
+        "value": "苗族",
         "label": "苗族"
     },
     {
-        "value": "07",
+        "value": "彝族",
         "label": "彝族"
     },
     {
-        "value": "08",
+        "value": "壮族",
         "label": "壮族"
     },
     {
-        "value": "09",
+        "value": "布依族",
         "label": "布依族"
     },
     {
-        "value": "10",
+        "value": "朝鲜族",
         "label": "朝鲜族"
     },
     {
-        "value": "11",
+        "value": "满族",
         "label": "满族"
     },
     {
@@ -48,350 +48,350 @@ const nation = [
         "label": "侗族"
     },
     {
-        "value": "13",
+        "value": "瑶族",
         "label": "瑶族"
     },
     {
-        "value": "14",
+        "value": "白族",
         "label": "白族"
     },
     {
-        "value": "15",
+        "value": "土家族",
         "label": "土家族"
     },
     {
-        "value": "16",
+        "value": "哈尼族",
         "label": "哈尼族"
     },
     {
-        "value": "17",
+        "value": "哈萨克族",
         "label": "哈萨克族"
     },
     {
-        "value": "18",
+        "value": "傣族",
         "label": "傣族"
     },
     {
-        "value": "19",
+        "value": "黎族",
         "label": "黎族"
     },
     {
-        "value": "20",
+        "value": "傈僳族",
         "label": "傈僳族"
     },
     {
-        "value": "21",
+        "value": "佤族",
         "label": "佤族"
     },
     {
-        "value": "22",
+        "value": "畲族",
         "label": "畲族"
     },
     {
-        "value": "23",
+        "value": "高山族",
         "label": "高山族"
     },
     {
-        "value": "24",
+        "value": "拉祜族",
         "label": "拉祜族"
     },
     {
-        "value": "25",
+        "value": "水族",
         "label": "水族"
     },
     {
-        "value": "26",
+        "value": "东乡族",
         "label": "东乡族"
     },
     {
-        "value": "27",
+        "value": "纳西族",
         "label": "纳西族"
     },
     {
-        "value": "28",
+        "value": "景颇族",
         "label": "景颇族"
     },
     {
-        "value": "29",
+        "value": "柯尔克孜族",
         "label": "柯尔克孜族"
     },
     {
-        "value": "30",
+        "value": "土族",
         "label": "土族"
     },
     {
-        "value": "31",
+        "value": "达斡尔族",
         "label": "达斡尔族"
     },
     {
-        "value": "32",
+        "value": "仫佬族",
         "label": "仫佬族"
     },
     {
-        "value": "33",
+        "value": "羌族",
         "label": "羌族"
     },
     {
-        "value": "34",
+        "value": "布朗族",
         "label": "布朗族"
     },
     {
-        "value": "35",
+        "value": "撒拉族",
         "label": "撒拉族"
     },
     {
-        "value": "36",
+        "value": "毛难族",
         "label": "毛难族"
     },
     {
-        "value": "37",
+        "value": "仡佬族",
         "label": "仡佬族"
     },
     {
-        "value": "38",
+        "value": "锡伯族",
         "label": "锡伯族"
     },
     {
-        "value": "39",
+        "value": "阿昌族",
         "label": "阿昌族"
     },
     {
-        "value": "40",
+        "value": "普米族",
         "label": "普米族"
     },
     {
-        "value": "41",
+        "value": "塔吉克族",
         "label": "塔吉克族"
     },
     {
-        "value": "42",
+        "value": "怒族",
         "label": "怒族"
     },
     {
-        "value": "43",
+        "value": "乌孜别克族",
         "label": "乌孜别克族"
     },
     {
-        "value": "44",
+        "value": "俄罗斯族",
         "label": "俄罗斯族"
     },
     {
-        "value": "45",
+        "value": "鄂温克族",
         "label": "鄂温克族"
     },
     {
-        "value": "46",
+        "value": "崩龙族",
         "label": "崩龙族"
     },
     {
-        "value": "47",
+        "value": "保安族",
         "label": "保安族"
     },
     {
-        "value": "48",
+        "value": "裕固族",
         "label": "裕固族"
     },
     {
-        "value": "49",
+        "value": "京族",
         "label": "京族"
     },
     {
-        "value": "50",
+        "value": "塔塔尔族",
         "label": "塔塔尔族"
     },
     {
-        "value": "51",
+        "value": "独龙族",
         "label": "独龙族"
     },
     {
-        "value": "52",
+        "value": "鄂伦春族",
         "label": "鄂伦春族"
     },
     {
-        "value": "53",
+        "value": "赫哲族",
         "label": "赫哲族"
     },
     {
-        "value": "54",
+        "value": "门巴族",
         "label": "门巴族"
     },
     {
-        "value": "55",
+        "value": "珞巴族",
         "label": "珞巴族"
     },
     {
-        "value": "56",
+        "value": "基诺族",
         "label": "基诺族"
     }
 ]
 
 const province = [{
-    "value": 1,
+    "value": '北京市',
     "label": "北京市",
     "ProSort": 1,
     "ProRemark": "直辖市"
 }, {
-    "value": 2,
+    "value": '天津市',
     "label": "天津市",
     "ProSort": 2,
     "ProRemark": "直辖市"
 }, {
-    "value": 3,
+    "value": '河北省',
     "label": "河北省",
     "ProSort": 5,
     "ProRemark": "省份"
 }, {
-    "value": 4,
+    "value": '山西省',
     "label": "山西省",
     "ProSort": 6,
     "ProRemark": "省份"
 }, {
-    "value": 5,
+    "value": '内蒙古自治区',
     "label": "内蒙古自治区",
     "ProSort": 32,
     "ProRemark": "自治区"
 }, {
-    "value": 6,
+    "value": '辽宁省',
     "label": "辽宁省",
     "ProSort": 8,
     "ProRemark": "省份"
 }, {
-    "value": 7,
+    "value": '吉林省',
     "label": "吉林省",
     "ProSort": 9,
     "ProRemark": "省份"
 }, {
-    "value": 8,
+    "value": '黑龙江省',
     "label": "黑龙江省",
     "ProSort": 10,
     "ProRemark": "省份"
 }, {
-    "value": 9,
+    "value": '上海市',
     "label": "上海市",
     "ProSort": 3,
     "ProRemark": "直辖市"
 }, {
-    "value": 10,
+    "value": '江苏省',
     "label": "江苏省",
     "ProSort": 11,
     "ProRemark": "省份"
 }, {
-    "value": 11,
+    "value": '浙江省',
     "label": "浙江省",
     "ProSort": 12,
     "ProRemark": "省份"
 }, {
-    "value": 12,
+    "value": '安徽省',
     "label": "安徽省",
     "ProSort": 13,
     "ProRemark": "省份"
 }, {
-    "value": 13,
+    "value": '福建省',
     "label": "福建省",
     "ProSort": 14,
     "ProRemark": "省份"
 }, {
-    "value": 14,
+    "value": '江西省',
     "label": "江西省",
     "ProSort": 15,
     "ProRemark": "省份"
 }, {
-    "value": 15,
+    "value": '山东省',
     "label": "山东省",
     "ProSort": 16,
     "ProRemark": "省份"
 }, {
-    "value": 16,
+    "value": '河南省',
     "label": "河南省",
     "ProSort": 17,
     "ProRemark": "省份"
 }, {
-    "value": 17,
+    "value": '湖北省',
     "label": "湖北省",
     "ProSort": 18,
     "ProRemark": "省份"
 }, {
-    "value": 18,
+    "value": '湖南省',
     "label": "湖南省",
     "ProSort": 19,
     "ProRemark": "省份"
 }, {
-    "value": 19,
+    "value": '广东省',
     "label": "广东省",
     "ProSort": 20,
     "ProRemark": "省份"
 }, {
-    "value": 20,
+    "value": '海南省',
     "label": "海南省",
     "ProSort": 24,
     "ProRemark": "省份"
 }, {
-    "value": 21,
+    "value": '广西壮族自治区',
     "label": "广西壮族自治区",
     "ProSort": 28,
     "ProRemark": "自治区"
 }, {
-    "value": 22,
+    "value": '甘肃省',
     "label": "甘肃省",
     "ProSort": 21,
     "ProRemark": "省份"
 }, {
-    "value": 23,
+    "value": '陕西省',
     "label": "陕西省",
     "ProSort": 27,
     "ProRemark": "省份"
 }, {
-    "value": 24,
-    "label": "新 疆维吾尔自治区",
+    "value": '新疆维吾尔自治区',
+    "label": "新疆维吾尔自治区",
     "ProSort": 31,
     "ProRemark": "自治区"
 }, {
-    "value": 25,
+    "value": '青海省',
     "label": "青海省",
     "ProSort": 26,
     "ProRemark": "省份"
 }, {
-    "value": 26,
+    "value": '宁夏回族自治区',
     "label": "宁夏回族自治区",
     "ProSort": 30,
     "ProRemark": "自治区"
 }, {
-    "value": 27,
+    "value": '重庆市',
     "label": "重庆市",
     "ProSort": 4,
     "ProRemark": "直辖市"
 }, {
-    "value": 28,
+    "value": '四川省',
     "label": "四川省",
     "ProSort": 22,
     "ProRemark": "省份"
 }, {
-    "value": 29,
+    "value": '贵州省',
     "label": "贵州省",
     "ProSort": 23,
     "ProRemark": "省份"
 }, {
-    "value": 30,
+    "value": '云南省',
     "label": "云南省",
     "ProSort": 25,
     "ProRemark": "省份"
 }, {
-    "value": 31,
+    "value": '西藏自治区',
     "label": "西藏自治区",
     "ProSort": 29,
     "ProRemark": "自治区"
 }, {
-    "value": 32,
+    "value": '台湾省',
     "label": "台湾省",
     "ProSort": 7,
     "ProRemark": "省份"
 }, {
-    "value": 33,
+    "value": '澳门特别行政区',
     "label": "澳门特别行政区",
     "ProSort": 33,
     "ProRemark": "特别行政区"
 }, {
-    "value": 34,
+    "value": '香港特别行政区',
     "label": "香港特别行政区",
     "ProSort": 34,
     "ProRemark": "特别行政区"

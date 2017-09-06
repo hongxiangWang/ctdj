@@ -28,27 +28,27 @@
 
             }
         },
-        props:{
-            cascderValue:Number
+        props: {
+            cascderValue: Number
         },
-        computed:{
-            setDefaultValue(){
-                if(this.cascderValue!=undefined && this.cascderValue!=0){
+        computed: {
+            setDefaultValue() {
+                if (this.cascderValue != undefined && this.cascderValue != 0) {
                     let temp = this.cascderValue;
                     let vArr = [];
                     let arr = this.$store.state.organized.cascader_data;
-                    if(arr.length == 1){
-                        if(arr[0].children==undefined){
+                    if (arr.length == 1) {
+                        if (arr[0].children == undefined) {
                             vArr.push(temp)
-                        }else {
+                        } else {
                             vArr.push(arr[0].id);
                             vArr.push(temp)
                         }
-                    }else{
-                        arr.forEach(value=>{
-                            if(value.children.length>0){
-                                value.children.forEach(v=>{
-                                    if(v.id == temp){
+                    } else {
+                        arr.forEach(value => {
+                            if (value.children.length > 0) {
+                                value.children.forEach(v => {
+                                    if (v.id == temp) {
                                         vArr.push(value.id);
                                         vArr.push(temp);
                                         return;
@@ -57,31 +57,35 @@
                             }
                         });
                     }
-                    this.selectValue =vArr;
+                    this.selectValue = vArr;
                 }
             }
         },
-        methods:{
-            cascaderChange(call){
-                this.$emit('cascaderChange',call)
+        methods: {
+            cascaderChange(call) {
+                this.$emit('cascaderChange', call)
             },
 
         },
-        mounted(){
+        mounted() {
+            if (this.$store.state.organized.cascader_data.length > 0) {
+                this.options = this.$store.state.organized.cascader_data;
+                return;
+            }
             let $ = this.$jquery;
             let cascaderDom = this.$refs.cascader.$el;
             let boxW = $(cascaderDom).width();
-            $(cascaderDom).click(_=>{
-                $('.el-cascader-menus:first .el-cascader-menu__item').css({minWidth:boxW+'px'})
+            $(cascaderDom).click(_ => {
+                $('.el-cascader-menus:first .el-cascader-menu__item').css({minWidth: boxW + 'px'})
             })
             this.$ajax.post('/department/dept_list_to_tree', {}).then(res => {
-                console.log('res------', res.data)
                 let groupArr = [];
                 if (res.data.errno == 0) {
-                    if(res.data.data.length==1 && res.data.data[0].id!=1 ){
-                        if(res.data.data[0].children==undefined ){
+                    console.log('res------', '获取组织架构数据成功')
+                    if (res.data.data.length == 1 && res.data.data[0].id != 1) {
+                        if (res.data.data[0].children == undefined) {
                             this.options = res.data.data;
-                            this.$store.commit('ORGANIZED_CASCADER_DATA',res.data.data);
+                            this.$store.commit('ORGANIZED_CASCADER_DATA', res.data.data);
                             return;
                         }
                         let parent = res.data.data[0];
@@ -90,21 +94,21 @@
                         json.value = parent.id;
                         groupArr.push(json);
                         this.options = res.data.data;
-                        this.$store.commit('ORGANIZED_CASCADER_DATA',res.data.data);
-                    }else{
+                        this.$store.commit('ORGANIZED_CASCADER_DATA', res.data.data);
+                    } else {
                         res.data.data[0].children.forEach(value => {
                             let json = {};
                             json.label = value.dept_name;
-                            json.value = value.id;
+                            json.value = Number(value.id);
                             groupArr.push(json);
                             value.children.forEach(v => {
                                 delete v.children;
                             })
-                        })
+                        });
                         this.options = res.data.data[0].children;
-                        this.$store.commit('ORGANIZED_CASCADER_DATA',res.data.data[0].children);
+                        this.$store.commit('ORGANIZED_CASCADER_DATA', res.data.data[0].children);
                     }
-                    this.$store.commit('ORGANIZED_PARTY',groupArr);
+                    this.$store.commit('ORGANIZED_PARTY', groupArr);
                     return;
                 }
                 this.$message({message: '数据获取失败,请重试', type: 'error'})
@@ -115,8 +119,8 @@
         }
     }
 </script>
-<style >
-    div.el-cascader-menu{
+<style>
+    div.el-cascader-menu {
         left: 0px;
     }
 </style>
