@@ -349,6 +349,7 @@
                 //初始化重置now_select_people,并置为不可见
                 this.is_seen = false;
                 this.now_select_people ="";
+                this.bind_people="";
 
                 if (!this.bind_get_flag) {
                     //初始化加载bind_people_list
