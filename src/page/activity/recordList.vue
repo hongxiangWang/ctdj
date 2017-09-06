@@ -251,6 +251,7 @@
 
                 }
                 let file_list = [];
+
                 helper.stringToArray(row.file_id_list).forEach(value => {
                     let json = {
                         name: value.substr(value.indexOf("_") + 1),
@@ -259,6 +260,7 @@
                     file_list.push(json);
                 })
                 parentData.file_list = file_list;
+
                 this.parentForm = parentData;
                 this.editDialog = true;
             },

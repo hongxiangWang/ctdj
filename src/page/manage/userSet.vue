@@ -59,10 +59,17 @@
                 @sureEdit="sureEdit">
         </edit-dialog>
         <el-row>
-            <el-col :span="22">
-                <label>选择查询类型</label>
+            <el-col :span="22" :push="1">
+
+
+                <label></label>
+                <span>
+                    <organized-cascader
+                            @cascaderChange="cascaderChange">
+                    </organized-cascader>
+                </span>
                 <el-select ref="select" v-model="chooseVulue" multiple placeholder="请选择" @change="selectChange"
-                           style="width: 300px;" @remove-tag="removeTag">
+                           style="width: 300px;" @remove-tag="removeTag"  v-if="false">
                     <el-option
                             v-for="item in chooseArray"
                             :key="item.value"
@@ -74,7 +81,7 @@
                 <span @keyup.enter="queryClick">
                        <el-input
                                style=" width: auto"
-                               v-if="isShowInput"
+                               v-if="true"
                                placeholder="输入姓名"
                                icon="search"
                                v-model="inputCon"
@@ -82,11 +89,8 @@
                     </el-input>
                  </span>
 
-                <span>
-                    <organized-cascader
-                            @cascaderChange="cascaderChange">
-                    </organized-cascader>
-                </span>
+
+                <span>总共：{{tableDataTotal}}条数据</span>
             </el-col>
             <el-col :span="1" :push="0">
                 <el-button @click="addPeople">添加</el-button>
@@ -110,7 +114,7 @@
                     @size-change="paginationSizeChange"
                     @current-change="currentChange"
                     :current-page.sync="currentPage"
-                    :page-sizes="[10, 2, 3, 4,5]"
+                    :page-sizes="[10, 20, 30, 40,50]"
                     :page-size="pageSize"
                     layout="sizes, prev, pager, next"
                     :total="tableDataTotal">
@@ -139,11 +143,13 @@
                 tableData: [],
                 //td 显示的列
                 tdArr: [{lable: '姓名', prop: 'people_name', width: '180', align: 'center'},
-                    {lable: '党员类型', prop: 'type_name', width: '180', align: 'center'},
+                   // {lable: '党员类型', prop: 'type_name', width: '180', align: 'center'},
+                    {lable: '性别', prop: 'people_gender', width: '80', align: 'center'},
                     {lable: '民族', prop: 'people_race', width: '180', align: 'center'},
+                    {lable: '入党时间', prop: 'people_enter_party_time', width: '180', align: 'center'},
                     {lable: '籍贯', prop: 'people_residence', width: '180', align: 'center'},
                     {lable: '出生年月', prop: 'people_birthday', width: '180', align: 'center'},
-                    {lable: '性别', prop: 'people_gender', width: '80', align: 'center'}],
+                   ],
                 //操作的方法，clickFun为父组件向子组件传递的事件
                 operate: [
                     {lable: '查看/编辑', type: '', clickFun: 'info', size: "small"},
@@ -176,7 +182,7 @@
 
                 currentPage: 1,
                 tableDataTotal: 0,
-                pageSize: 10,
+                pageSize: 20,
 
                 upParams: {
                     people_type: '',
@@ -259,9 +265,11 @@
                         if(form.depart_id.length>0){
                             form.depart_id = form.depart_id[form.depart_id.length-1];
                         }
+                        //form.people_residence = helper.getSelectLabel(selectArr.people_residence,form.people_residence);
 
                         params.userinfo = form;
                         console.log('res---', params.userinfo);
+                        //return;
                         this.$ajax.post('/people/user_add', params).then(res => {
                             console.log('res---', res)
                             if (res.data.errno == 0) {
@@ -416,7 +424,6 @@
                     getQueryResult(this);
 
                 }
-
                 console.log('chooseVulue------',this.chooseVulue);
             },
             removeTag(call){
@@ -429,24 +436,26 @@
                 getQueryResult(this);
             },
             queryClick(call) {
-                this.upParams.people_name = this.inputCon
-                getQueryResult(this);
+                this.upParams.people_name = this.inputCon;
+                let params = {page_num: this.currentPage, page_cnt: this.pageSize,people_name:this.upParams.people_name,depart_id:this.upParams.depart_id}
+                getUserList(this, params);
             },
             //分页页数改变
             paginationSizeChange(call) {
                 this.pageSize = call;
-                let params = {page: this.currentPage, count: this.pageSize}
+                let params = {page_num: this.currentPage, page_cnt: this.pageSize,people_name:this.upParams.people_name,depart_id:this.upParams.depart_id}
                 getUserList(this, params);
             },
             //选择的当前页
             currentChange(call) {
-                let params = {page: call, count: this.pageSize}
+                let params = {page_num: call, page_cnt: this.pageSize,people_name:this.upParams.people_name,depart_id:this.upParams.depart_id}
                 getUserList(this, params);
             },
             //多联菜单发生改变
             cascaderChange(call){
                 this.upParams.depart_id = call[call.length-1];
-                getQueryResult(this);
+                let params = {page_num: this.currentPage, page_cnt: this.pageSize,people_name:this.upParams.people_name,depart_id:call[call.length-1]}
+                getUserList(this, params);
             }
         },
         components: {
@@ -455,7 +464,8 @@
 
         //获取用户列表
         mounted() {
-            let params = {page: 1, count: 10}
+            let params = {page_num: this.currentPage, page_cnt: this.pageSize,people_name:this.upParams.people_name,depart_id:this.upParams.depart_id}
+           // let params = {page: 1, count: 10}
             getUserList(this, params);
         },
         computed: {
@@ -469,10 +479,9 @@
     function getUserList(vm, params) {
         vm.tableLoading = true;
         vm.$ajax.post('/people/user_list', params).then(res => {
-            console.log('----', res)
             if (res.data.errno == 0) {
-                vm.tableData = res.data.data.data;
-                vm.tableDataTotal = res.data.data.count;
+                vm.tableData = res.data.data.result_list;
+                vm.tableDataTotal = res.data.data.totalCnt;
                 vm.tableLoading = false;
             } else {
                 vm.tableLoading = false;
@@ -483,25 +492,6 @@
             console.log('----', err)
         });
     }
-
-    //查询获取
-    function getQueryResult(vm) {
-        vm.tableLoading = true;
-        console.log('user_query--params---', vm.upParams)
-        vm.$ajax.post('/people/user_query', vm.upParams).then(res => {
-            console.log('user_query-----', res.data)
-            if (res.data.errno == 0) {
-                vm.tableData = res.data.data;
-                vm.tableLoading = false;
-            } else {
-                vm.tableLoading = false;
-            }
-        }).catch(err => {
-
-            console.log('----', err)
-        })
-    }
-
     //差异化数据处理
     function differenceDataParams(cell, params, selectProps) {
         if (cell.key == "type_name") {

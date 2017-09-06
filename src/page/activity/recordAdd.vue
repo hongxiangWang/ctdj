@@ -348,11 +348,9 @@
 
     function getQueryResult(vm, depart_id) {
         let params = {
-            people_type: '',
-            people_name: '',
             depart_id: depart_id
         }
-
+        console.log('user_query-----', params)
         vm.$ajax.post('/people/user_query', params).then(res => {
             console.log('user_query-----', res.data)
             if (res.data.errno == 0) {
