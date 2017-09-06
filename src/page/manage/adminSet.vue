@@ -45,6 +45,8 @@
             </el-table-column>
             <el-table-column prop="prov_latn_name" label="本地网" width="100" align="center">
             </el-table-column>
+            <el-table-column prop="role_type" label="管理级别" width="100" align="center">
+            </el-table-column>
             <el-table-column prop="dept_name" label="所在部门" width="200" align="center">
             </el-table-column>
             <el-table-column prop="status" label="状态" width="100" align="center">
@@ -271,7 +273,7 @@
                 var bind_people_list = this.bind_people_list;
                 var results = queryString ? bind_people_list.filter(this.createFilter(queryString)) : bind_people_list;
                 // 调用 callback 返回建议列表的数据
-                console.log(bind_people_list);
+//                console.log(bind_people_list);
                 cb(results);
             },
             createFilter(queryString) {
@@ -349,6 +351,7 @@
                 //初始化重置now_select_people,并置为不可见
                 this.is_seen = false;
                 this.now_select_people ="";
+                this.addForm.bind_people="";
 
                 if (!this.bind_get_flag) {
                     //初始化加载bind_people_list
