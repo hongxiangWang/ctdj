@@ -271,7 +271,7 @@
                 var bind_people_list = this.bind_people_list;
                 var results = queryString ? bind_people_list.filter(this.createFilter(queryString)) : bind_people_list;
                 // 调用 callback 返回建议列表的数据
-                console.log(bind_people_list);
+//                console.log(bind_people_list);
                 cb(results);
             },
             createFilter(queryString) {
