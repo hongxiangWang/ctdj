@@ -10,12 +10,14 @@
                         <!--</svg>-->
                     <!--</span>-->
                         <!--<span style="color: #ccc; font-weight: 100">|</span>-->
+                        <router-link to="/home/main" style="text-decoration: none;color:#444">
                         <span>
                         <svg class="icon" aria-hidden="true">
                             <use xlink:href="#icon-party"></use>
                         </svg>
                     </span>
                         中国电信新疆公司数字党建
+                        </router-link>
                     </header>
                 </el-col>
                 <el-col :span="16">
