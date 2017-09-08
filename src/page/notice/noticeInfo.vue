@@ -31,7 +31,6 @@
         },
         methods:{
             downLoadFile(file){
-
                 let httpUri = require('../../value/string.js').fileread+file.uri;
                 console.log(httpUri,'frssss---')
                 helper.downloadFile(httpUri);
