@@ -40,7 +40,6 @@
         },
         methods:{
             downLoadFile(file){
-
                 let httpUri = require('../../value/string.js').fileread+file.uri;
                 console.log(httpUri,'frssss---')
                 helper.downloadFile(httpUri);
@@ -72,6 +71,7 @@
         }
     }
 </script>
+
 <style>
     .ql-editor{
 
@@ -94,3 +94,4 @@
         margin:10px 0px;
     }
 </style>
+

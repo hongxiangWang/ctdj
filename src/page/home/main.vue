@@ -3,18 +3,18 @@
         <el-col :span="10" class="list">
             <div>
                 <label>{{noticelabel}}</label>
-                <el-select v-model="type" placeholder="请选择">
+                <el-select v-model="type" placeholder="请选择" @change="selsectChange">
                     <el-option
-                            label="通知广告/学习任务"
-                            value="3">
+                            label="全部"
+                            value=3>
                     </el-option>
                     <el-option
                             label="通知公告"
-                            value="1">
+                            value=1>
                     </el-option>
                     <el-option
                             label="学习任务"
-                            value="2">
+                            value=2>
                     </el-option>
                 </el-select>
                 <el-button class="more" type="text" @click="addNotice">添加</el-button>
@@ -93,7 +93,8 @@
                         data: [5, 20, 36, 10, 10, 20]
                     }],
 
-                }
+                },
+                notice_type:3
 
             }
         },
@@ -106,6 +107,11 @@
             },
             currentChange(call) {
                 this.currentPage = call;
+            },
+            selsectChange(call){
+                //console.log('selsectChange----',call);
+                this.notice_type = Number(call);
+                getNoticeList(this);
             }
         },
         components: {
@@ -120,7 +126,7 @@
         let params = {
             page: vm.currentPage,
             count: 18,
-            notice_type: 3
+            notice_type: vm.notice_type
         };
         vm.$ajax.post('/notice/notice_list', params).then(res => {
             console.log('res======', res.data);
