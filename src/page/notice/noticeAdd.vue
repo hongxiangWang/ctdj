@@ -86,7 +86,9 @@
                 },
 
                 options: selectArr.notice_type,
-                editorOption: {},
+                editorOption: {
+                    placeholder: '请输入内容',
+                },
                 previewDialog: false,
                 notEmpty: [{required: true, message: '不许为空'}],
                 uploadUri: require('../../value/string').uploadUrl,

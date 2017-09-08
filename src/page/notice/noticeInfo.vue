@@ -1,8 +1,17 @@
 <template>
     <div>
         <el-row>
+            <el-col style="margin-left: 1rem;height:30px;line-height: 30px;">
+                <el-breadcrumb separator="/">
+                    <el-breadcrumb-item :to="{ path: '/home/main' }"><i class="fa fa-home"></i>首页</el-breadcrumb-item>
+                    <el-breadcrumb-item>详情内容</el-breadcrumb-item>
+                </el-breadcrumb>
+            </el-col>
             <el-col :span="18" style="border:1px #ccc solid;padding: 1rem 2rem; margin-left: 1rem">
-                <h2 style="text-align: center">{{oData.title}}</h2>
+                <div class="notice_title">{{oData.title}}</div>
+                <div class="notice_action">
+                    <span>发布时间：{{oData.create_time}}</span>
+                </div>
                 <div v-html="oData.content" class="ql-editor"></div>
                 <br>
                 <label v-if="file_list.length>0">附件：</label>
@@ -63,3 +72,25 @@
         }
     }
 </script>
+<style>
+    .ql-editor{
+
+    }
+    .ql-editor p{
+        line-height:200%;
+    }
+    .notice_title{
+        text-align:center;
+        font-size:24px;
+        font-weight:bold;
+        height:60px;
+        line-height:60px;
+        border-bottom:1px solid red;
+        margin:0px 10px;
+    }
+    .notice_action{
+        text-align: center;
+        height:30px;
+        margin:10px 0px;
+    }
+</style>
