@@ -1,9 +1,9 @@
 <template>
-    <div style="padding: 0 20px">
+    <div style="padding: 0 80px">
+
         <el-row>
             <el-col :span="14">
                 <label>选择党支部</label>
-
                 <organized-cascader
                         @cascaderChange="cascaderChange">
                 </organized-cascader>
@@ -34,6 +34,16 @@
         <cell-arr
                 :cellDate="cellDate"
                 :editMode="false"></cell-arr>
+
+        <ZTree
+                ref='tree'
+                :treeData="treeData1"
+                :options="treeOptions"
+                @node-click="itemClick"
+                :key="2"
+                style="padding: 10px 16px"
+        />
+
 
         <el-dialog
                 title="添加一个新组织"
@@ -85,6 +95,9 @@
     </div>
 </template>
 <script>
+
+    import ZTree from 'vue2-lazy-tree'
+    import 'vue2-lazy-tree/dist/vue2-tree.min.css'
     import cellArr from '../../components/cellArr.vue'
     import form1 from '../../components/form.vue'
     import organizedCascader from '../../components/organizedCascader.vue'
@@ -118,6 +131,17 @@
                 oCellDate: [],
                 editDisabled:true,
 
+                treeOptions: {
+                    labelKey: 'name',
+                    showCheckbox: false,
+                    halfCheck: false,//控制父框是否需要半钩状态
+                    iconClass: {                        // custom icon class, Default
+                        close: 'icon-youjiantou',
+                        open: 'icon-xiajiantou',
+                        add: 'icon-add'
+                    },
+                },
+
             }
         },
         methods: {
@@ -134,29 +158,8 @@
                         })
                     }
                 });
-                this.$ajax.post('/department/dept_search_by_id', {dept_id: call[1]}).then(res => {
-                    console.log('res------', res.data.data[0]);
-                    if(res.data.errno==0){
-                        this.oCellDate = res.data.data[0];
-                        let arr = helper.createTableArr(deptment, res.data.data[0]);
-                        arr.forEach(value => {
-                            value.oType = value.type;
-                            value.type = value.type != 'file' ? 'text' : 'file';
-                            helper.selectDataShow(['dept_status', 'dept_type','prov_latn_id'], selectArr, value);
-                        });
-                        this.cellDate = arr;
-                        this.editDisabled = false;
-                    }else {
-                        this.$message({messge:'获取数据失败',type:'warning'});
-                        this.editDisabled = true;
-                    }
+                this.getNodeData(call[1])
 
-
-                }).catch(err => {
-                    this.$message({messge:'获取数据失败',type:'warning'});
-                    this.editDisabled = true;
-                    console.log('res------', err);
-                })
             },
             handleIconClick() {
 
@@ -318,14 +321,67 @@
                         this.$message({message: '请填写完整表单', type: 'warning'})
                     }
                 })
+            },
+            itemClick (node) {
+                console.log(node.id);
+                this.getNodeData(node.id);
+            },
+            getNodeData(id){
+                this.$ajax.post('/department/dept_search_by_id', {dept_id: id}).then(res => {
+                    console.log('res------', res.data.data[0]);
+                    if(res.data.errno==0){
+                        this.oCellDate = res.data.data[0];
+                        let arr = helper.createTableArr(deptment, res.data.data[0]);
+                        arr.forEach(value => {
+                            value.oType = value.type;
+                            value.type = value.type != 'file' ? 'text' : 'file';
+                            helper.selectDataShow(['dept_status', 'dept_type','prov_latn_id'], selectArr, value);
+                        });
+                        this.cellDate = arr;
+                        this.editDisabled = false;
+                    }else {
+                        this.$message({messge:'获取数据失败',type:'warning'});
+                        this.editDisabled = true;
+                    }
+
+                }).catch(err => {
+                    this.$message({messge:'获取数据失败',type:'warning'});
+                    this.editDisabled = true;
+                    console.log('res------', err);
+                })
             }
         },
         components: {
-            cellArr, form1, organizedCascader
+            cellArr, form1, organizedCascader,ZTree
         },
         computed: {
             groupArr() {
                 return this.$store.state.organized.party;
+            },
+            treeData1(){
+                let oArr = this.$store.state.organized.cascader_data;
+                let arr = [];
+                oArr.forEach(v=>{
+                    let parent  = {
+                        id:v.id,
+                        name:v.dept_name
+                    };
+
+                    if(v.children.length>0){
+                        let children = [];
+                        v.children.forEach(value=>{
+                            children.push({
+                                id:value.id,
+                                name:value.dept_name
+                            })
+                        })
+                        parent.name = parent.name + ' ('+v.children.length+')';
+                        parent.children = children;
+                    }
+                    arr.push(parent)
+                })
+                this.$jquery('.root').text('区党委')
+                return arr
             }
         },
         mounted() {
@@ -373,3 +429,7 @@
         return arr;
     }
 </script>
+
+<style>
+
+</style>
