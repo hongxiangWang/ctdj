@@ -16,6 +16,10 @@ import ECharts from 'vue-echarts/components/ECharts.vue'
 ECharts.registerTheme('macarons', macarons);
 ECharts.registerTheme('oviliaGreen',oviliaGreen);
 
+
+
+
+
 import axios from 'axios'
 import config from './api/config'
 

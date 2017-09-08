@@ -109,7 +109,6 @@
                 this.currentPage = call;
             },
             selsectChange(call){
-                //console.log('selsectChange----',call);
                 this.notice_type = Number(call);
                 getNoticeList(this);
             }
