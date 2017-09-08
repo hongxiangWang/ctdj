@@ -99,6 +99,19 @@
                         :cellDate="cellData"
                         @imageDialog="imageDialog"
                         :editMode="false"></cell-arr>
+
+                <div v-for="item in commentList"
+                     :key="item.id"
+                     class="comment-list">
+                    <div><label>得分：</label>
+                        <b>{{item.comment_score}}</b>
+                        <small>
+                            <i class="fa fa-user"></i>
+                            &nbsp;{{item.people_name}}&nbsp;<i class="deptment">({{item.big_dept_name}}/{{item.small_dept_name}})</i>&nbsp;
+                        </small> <small>
+                            <i class="fa fa-clock-o"></i>&nbsp;{{item.create_time}}</small></div>
+                    <div><label>评价：</label>{{item.comment_content}}</div>
+                </div>
             </span>
         </el-dialog>
         <!--编辑-->
@@ -110,7 +123,7 @@
             <span>
                 <record-edit
                         ref="recordEdit"
-                        @closeEditDialid = "editDialogClose"
+                        @closeEditDialid="editDialogClose"
                         @openImageFile="openImageFile"
                         :parentForm="parentForm">
                 </record-edit>
@@ -147,7 +160,7 @@
                 :before-close="evaluateDialogClose">
             <span>
                 <evaluate
-                :rate="rate"></evaluate>
+                        :rate="rate"></evaluate>
             </span>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="evaluateDialog = false">取 消</el-button>
@@ -208,8 +221,10 @@
                 btnTip: '放大',
 
                 //点评
-                evaluateDialog:false,
-                rate:{}
+                evaluateDialog: false,
+                rate: {},
+
+                commentList: [],
             }
         },
         methods: {
@@ -243,7 +258,7 @@
                         record_title: row.record_title,
                         file_id_arr: helper.stringToArray(row.file_id_list),
                     },
-                    id:row.id,
+                    id: row.id,
                     cascderValue: row.dept_id,
                     real_attend_users: helper.stringToArray(row.attend_user_id),
                     real_attend_users_str: row.attend_user_id,
@@ -274,16 +289,19 @@
                     if (value.key == 'attend_people_name') {
                         value.value = dealVirguleData(value.value)
                     }
+                    if (value.key == 'record_type') {
+                        value.value = helper.getSelectLabel(selectArr.record_type,value.value);
+                    }
                 })
                 this.infoDialog = true;
                 console.log('arr----', arr);
                 this.cellData = arr;
+                getCommentList(this, row.id);
             },
             imageDialog(file) {
                 this.imageVisible = true;
                 this.imageFile = file;
                 this.imageFile.httpUri = require('../../value/string.js').fileread + (file.uri).replace(`file`, `ctdj/www/static`);
-                console.log('file--file--', this.imageFile.httpUri);
             },
             imageDownload() {
                 helper.downloadFile(this.imageFile.httpUri);
@@ -346,7 +364,7 @@
                     count: this.pageSize,
                     big_dept_id: this.filters.big_dept_id,
                     small_dept_id: this.filters.small_dept_id,
-                    record_type:this.filters.record_type
+                    record_type: this.filters.record_type
                 }
                 console.log(params);
                 this.getPagedRecordList(this, params);
@@ -356,7 +374,6 @@
             getPagedRecordList(vm, params) {
                 vm.tableLoading = true;
                 vm.$ajax.post('/activity_record/activity_record_list', params).then(res => {
-                    console.log('res.data----', res.data);
                     if (res.data.errno == 0) {
                         vm.tableData = res.data.data.data;
                         vm.tableDataTotal = res.data.data.count;
@@ -386,17 +403,36 @@
 
             },
 
-            evaluateRecord() {
+            evaluateRecord(scope) {
                 this.rate = {
-                    grades:4,
-                    desc:''
+                    grades: 4,
+                    desc: '',
+                    id: scope.row.id
                 }
                 this.evaluateDialog = true;
             },
-            evaluateSubmit(){
-                console.log('aaaaa-----',this.rate)
+            evaluateSubmit() {
+                let params = {
+                    comment_data: {
+                        comment_score: this.rate.grades,
+                        comment_content: this.rate.desc,
+                        activity_record_id: this.rate.id,
+                    }
+                }
+                this.$ajax.post('/comment/comment_add', params).then(res => {
+                    console.log('res======', res.data);
+                    if (res.data.errno == 0) {
+                        this.$message({message: '评论成功', type: 'success'});
+                        this.evaluateDialog = false;
+                    } else {
+                        this.$message({message: '评论失败', type: 'error'});
+                    }
+                }).catch(err => {
+                    this.$message({message: '评论失败', type: 'error'});
+                    console.log('res======', err);
+                })
             },
-            evaluateDialogClose(){
+            evaluateDialogClose() {
                 this.evaluateDialog = false;
             }
         },
@@ -413,7 +449,7 @@
             }
         },
         components: {
-            organizedCascader, cellArr, recordEdit,evaluate
+            organizedCascader, cellArr, recordEdit, evaluate
         },
         mounted() {
             this.local_people_info = this.$localStore.get('people_info')[0];
@@ -445,4 +481,41 @@
         })
         return str;
     }
+
+    function getCommentList(vm, id) {
+        vm.commentList = [];
+        vm.$ajax.post('/comment/comment_list', {activity_record_id: id}).then(res => {
+            console.log('res======', res.data);
+            if (res.data.errno == 0) {
+                res.data.data.forEach(v => {
+                    if (v.comment_content == null) {
+                        v.comment_content = '空'
+                    }
+                    vm.commentList.push(v)
+                })
+            }
+        }).catch(err => {
+            console.log('res======', err);
+        })
+    }
 </script>
+
+<style lang="less">
+    .comment-list {
+        margin-top: 1rem;
+        box-shadow:0 0 10px rgba(0,0,0,.2);
+        padding:1rem 2rem;
+        border-radius:2px;
+
+    small {
+        margin-left: 2rem;
+        color: #AAA;
+
+    }
+    .deptment{
+        color: #bbb;
+    }
+
+    }
+
+</style>

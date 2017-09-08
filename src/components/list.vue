@@ -14,7 +14,7 @@
         <hr>
         <ul>
             <li v-for="(li,index) in dataArray">
-                <router-link :to="'/home/noticeInfo/'+li.title">
+                <router-link :to="'/home/noticeInfo/'+li.id">
                     <el-row>
                         <el-col :span="2" class="index">
                             {{index+1}}

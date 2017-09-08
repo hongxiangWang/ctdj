@@ -41,7 +41,8 @@ const selectArr = {
         {value:'86908',label:'克州'},
         {value:'86909',label:'博州'},
         {value:'86990',label:'克拉玛依'},
-    ]
+    ],
+    notice_type:[{label: '通知公告', value: 1},{label: '学习任务', value: 2}]
 }
 
 const peopleQuerySelect = [
@@ -92,6 +93,13 @@ const record = [
     {activity_place: '地点', type: 'input'},
     {file_id_list: '附件', type: 'file'},
     {attend_people_name: '参与党员', type: 'text'},
+]
+const notice = [
+    {notice_type: '类型', type: 'select'},
+    {title: '名称', type: 'input'},
+    {content: '内容', type: 'quill'},
+    {file_id_str: '附件', type: 'file'},
+
 ]
 export {
     people, selectArr, deptment, cascaderArr, cascaderProps, peopleQuerySelect, plan, record

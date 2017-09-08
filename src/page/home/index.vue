@@ -58,7 +58,7 @@
                             </el-menu-item>
                         </el-submenu>
 
-                        <el-submenu index="5" v-if="true">
+                        <el-submenu index="5" v-if="false">
                             <template slot="title">组件测试</template>
                             <el-menu-item index="/home/table1Mode">table1</el-menu-item>
                             <el-menu-item index="/home/cellMode">cellMode</el-menu-item>

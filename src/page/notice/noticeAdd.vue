@@ -1,6 +1,27 @@
 <template>
     <div style="padding-right: 2rem">
         <el-form ref="form" :model="form" label-width="100px">
+            <el-row>
+                <el-col :span="8">
+                    <el-form-item label="类型"
+                                  :rules="notEmpty"
+                                  prop="notice_type">
+                        <el-select v-model="form.notice_type" placeholder="请选择">
+                            <el-option
+                                    v-for="item in options"
+                                    :key="item.value"
+                                    :label="item.label"
+                                    :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="4" :push="12">
+                <el-button @click="listBtn" v-if="false">列表</el-button>
+                </el-col>
+            </el-row>
+
+
             <el-form-item label="活动名称"
                           :rules="notEmpty"
                           prop="title">
@@ -26,7 +47,7 @@
                     <i class="el-icon-plus"></i>
                 </el-upload>
 
-                <el-dialog v-model="uploadDialog" size="tiny" >
+                <el-dialog v-model="uploadDialog" size="tiny">
                     <img width="100%" :src="dialogImageUrl" alt="">
                 </el-dialog>
             </el-form-item>
@@ -50,20 +71,28 @@
     </div>
 </template>
 <script>
+    import {selectArr} from '../../assets/kvword'
+    import ElCol from "element-ui/packages/col/src/col";
+
     export default {
+        components: {ElCol},
         data() {
             return {
                 form: {
                     title: '',
-                    content: ''
+                    content: '',
+                    notice_type: 1,
+                    file_lsit: []
                 },
+
+                options: selectArr.notice_type,
                 editorOption: {},
                 previewDialog: false,
                 notEmpty: [{required: true, message: '不许为空'}],
-                uploadUri:require('../../value/string').uploadUrl,
-                fileList:[],
-                uploadDialog:false,
-                dialogImageUrl:''
+                uploadUri: require('../../value/string').uploadUrl,
+                fileList: [],
+                uploadDialog: false,
+                dialogImageUrl: ''
             }
         },
         computed: {
@@ -72,10 +101,30 @@
             }
         },
         methods: {
+            listBtn(){
+                this.$router.push('/home/noticeList')
+            },
             submit() {
                 this.$refs.form.validate(valid => {
                     if (valid) {
-
+                        this.form.file_id_str = dealFormArrayData(this.form.file_lsit);
+                        let params = {
+                            notice_data:this.form,
+                            admin_id:require('store').get('people_info')[0].admin_id
+                        }
+                        this.$ajax.post('/notice/notice_add',params).then(res=>{
+                            if(res.data.errno == 0){
+                                this.$message({message: '添加成功,2s后跳转', type: 'success'});
+                                setTimeout(_=>{
+                                    this.$router.push('/home/main')
+                                },2000)
+                            }else{
+                                this.$message({message: '操作失败,请重试', type: 'error'});
+                            }
+                        }).catch(err=>{
+                            this.$message({message: '操作失败,请重试', type: 'error'});
+                            console.log('------',err)
+                        })
                     } else {
                         this.$message({message: '请填写完整', type: 'warning'})
                     }
@@ -87,16 +136,37 @@
             preview() {
                 this.previewDialog = true;
             },
-            uploadPreview(){
-
+            uploadPreview(file) {
+                this.dialogImageUrl = file.url;
+                this.uploadDialog = true;
             },
-            uploadSuccess(){
-
+            uploadSuccess(res) {
+                console.log('res-----', res)
+                if (res.errno == 0) {
+                    this.form.file_lsit.push(res.data)
+                }
             },
-            uploadRemove(){
-
+            uploadRemove(file) {
+                this.form.file_lsit.forEach((v, i, s) => {
+                    if (file.response != undefined && v == file.response.data) {
+                        s.splice(i, 1);
+                    }
+                    if (file.response == undefined && v == file.url.replace(require('../../value/string').fileread, '').replace(`ctdj/www/static`, `file`)) {
+                        s.splice(i, 1);
+                    }
+                })
             }
         },
+    }
+
+    function dealFormArrayData(arr) {
+        let temp = '';
+        if (arr instanceof Array) {
+            arr.forEach(v => {
+                temp += v + '|';
+            });
+        }
+        return temp;
     }
 </script>
 <style>
