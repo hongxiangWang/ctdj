@@ -27,12 +27,14 @@
             <el-pagination
                     style="text-align: center"
                     small
-                    layout="prev, pager, next"
-                    :total="50">
+                    @current-change="currentChange"
+                    :current-page.sync="currentPage"
+                    :total="noticeTotal"
+                    layout="prev, pager, next">
             </el-pagination>
         </el-col>
 
-        <el-col :span="13" >
+        <el-col :span="13">
             <div class="shortcut">
                 <label>快捷菜单</label>
                 <hr>
@@ -43,7 +45,7 @@
             <div class="chart shortcut">
                 <label>统计分析</label>
                 <hr>
-                <chart  :options="polar" theme="macarons" style="margin: 10px auto"></chart>
+                <chart :options="polar" theme="macarons" style="margin: 10px auto"></chart>
             </div>
         </el-col>
 
@@ -68,36 +70,21 @@
                 data.push([r, i])
             }
             return {
-                list: [{title: '两学一做的任务要求', time: '2017-08-04', type: '1'},
-                    {title: '两学一做的任务要求', time: '2017-08-04', type: '1'},
-                    {title: '两学一做的任务要求', time: '2017-08-04', type: '1'},
-                    {title: '两学一做的任务要求,两学一做的任务要求', time: '2017-08-04', type: '1'},
-                    {title: '两学一做的任务要求，关于开什么什么的会谈', time: '2017-08-04', type: '1'},
-                    {title: '两学一做的任务要求', time: '2017-08-04', type: '1'},
-                    {title: '两学一做的任务要求,两学一做的任务要求', time: '2017-08-04', type: '1'},
-                    {title: '两学一做的任务要求', time: '2017-08-04', type: '1'},
-                    {title: '两学一做的任务要求', time: '2017-08-04', type: '1'},
-                    {title: '两学一做的任务要求', time: '2017-08-04', type: '1'},
-                    {title: '两学一做的任务要求', time: '2017-08-04', type: '1'},
-                    {title: '两学一做的任务要求', time: '2017-08-04', type: '1'},
-                    {title: '两学一做的任务要求', time: '2017-08-04', type: '1'},
-                    {title: '两学一做的任务要求', time: '2017-08-04', type: '1'},
-                    {title: '两学一做的任务要求', time: '2017-08-04', type: '1'},
-                    {title: '两学一做的任务要求', time: '2017-08-04', type: '1'},
-                    {title: '两学一做的任务要求', time: '2017-08-04', type: '1'},
-                    {title: '两学一做的任务要求', time: '2017-08-04', type: '1'},],
+                list: [],
                 type: "3",
-                noticelabel:'通知广告/学习任务',
+                currentPage: 1,
+                noticeTotal:18,
+                noticelabel: '通知广告/学习任务',
                 polar: {
                     title: {
                         text: '本地网党组织数量'
                     },
                     tooltip: {},
                     legend: {
-                        data:['数量']
+                        data: ['数量']
                     },
                     xAxis: {
-                        data: ["哈密","伊犁","乌鲁木齐","巴州","喀什","石河子"]
+                        data: ["哈密", "伊犁", "乌鲁木齐", "巴州", "喀什", "石河子"]
                     },
                     yAxis: {},
                     series: [{
@@ -111,16 +98,50 @@
             }
         },
         methods: {
-            liClick(){
+            liClick() {
 
             },
-            addNotice(){
+            addNotice() {
                 this.$router.push('/home/noticeAdd')
+            },
+            currentChange(call) {
+                this.currentPage = call;
             }
         },
         components: {
             shortcutMeun, list
+        },
+        mounted() {
+            getNoticeList(this);
         }
+    }
+
+    function getNoticeList(vm) {
+        let params = {
+            page: vm.currentPage,
+            count: 18,
+            notice_type: 3
+        };
+        vm.$ajax.post('/notice/notice_list', params).then(res => {
+            console.log('res======', res.data);
+            if (res.data.errno == 0) {
+                vm.noticeTotal = res.data.data.count;
+                let list = [];
+                res.data.data.data.forEach(v => {
+                    let json = {
+                        title: v.title,
+                        time: v.create_time.substr(0,11),
+                        type: v.notice_type,
+                        id:v.id
+                    };
+                    list.push(json);
+                })
+                require('store').set('notice_list',res.data.data.data)
+                vm.list = list;
+            }
+        }).catch(err => {
+            console.log('err======', err)
+        })
     }
 </script>
 <style lang="less" scoped>
@@ -144,19 +165,22 @@
         border-radius: 8px;
         z-index: 10;
 
-        hr {
-            border-color: fade(#FFAB91, 30%);
-            width: 98%;
-            text-align: center;
-        }
+    hr {
+        border-color: fade(#FFAB91, 30%);
+        width: 98%;
+        text-align: center;
     }
-    .list{
+
+    }
+    .list {
         height: auto;
     }
-    .shortcut{
+
+    .shortcut {
         margin-left: 1rem;
     }
-    .chart{
+
+    .chart {
         margin-top: 20px;
     }
 </style>

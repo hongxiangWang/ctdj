@@ -82,7 +82,6 @@
                         arr.push(json);
                     }
                 });
-                console.log('fileArray----',arr);
                 return arr;
             }
         },
