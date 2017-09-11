@@ -243,10 +243,9 @@
 
             },
             editBtn() {
-
                 let noValueForm = getForm();
                 noValueForm.forEach(v => {
-                    v.value = this.oCellDate[v.key]
+                    v.value = this.oCellDate[v.key];
                 });
 
                 let pid = {
@@ -360,44 +359,34 @@
             },
             treeData1(){
                 let oArr = this.$store.state.organized.cascader_data;
+
                 let arr = [];
                 oArr.forEach(v=>{
                     let parent  = {
                         id:v.id,
-                        name:v.dept_name
+                        name:v.dept_name,
+                        order_num:v.order_num
                     };
 
                     if(v.children.length>0){
                         let children = [];
                         v.children.forEach(value=>{
-                            let item = {
+                            children.push({
                                 id:value.id,
                                 name:value.dept_name
-                            }
-                            if(value.children!=undefined && value.children.length>0){
-                                let son = [];
-                                value.children.forEach(s=>{
-                                    son.push({
-                                        id:s.id,
-                                        name:s.dept_name
-                                    })
-                                })
-                                item.name = item.name + ' ('+value.children.length+')'
-                                item.children = son;
-                            }
-                            children.push(item)
-
-                        })
+                            })
+                        });
                         parent.name = parent.name + ' ('+v.children.length+')';
                         parent.children = children;
                     }
-                    arr.push(parent)
-                })
-                this.$jquery('.root').text('区党委')
-                return arr
+                    arr.push(parent);
+                });
+                this.$jquery('.root').text('新疆电信区公司党委');
+                return arr;
             }
         },
         mounted() {
+            console.log(this.account);
             if (this.account.role_id == 2) {
                 this.selectArr.dept_type[1].disabled = true;
             } else {
