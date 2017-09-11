@@ -370,10 +370,23 @@
                     if(v.children.length>0){
                         let children = [];
                         v.children.forEach(value=>{
-                            children.push({
+                            let item = {
                                 id:value.id,
                                 name:value.dept_name
-                            })
+                            }
+                            if(value.children!=undefined && value.children.length>0){
+                                let son = [];
+                                value.children.forEach(s=>{
+                                    son.push({
+                                        id:s.id,
+                                        name:s.dept_name
+                                    })
+                                })
+                                item.name = item.name + ' ('+value.children.length+')'
+                                item.children = son;
+                            }
+                            children.push(item)
+
                         })
                         parent.name = parent.name + ' ('+v.children.length+')';
                         parent.children = children;
