@@ -199,4 +199,25 @@
         text-align: right;
         position: relative;
     }
+
+    .ql-editor{
+
+    }
+    .ql-editor p{
+        line-height:200%;
+    }
+    .notice_title{
+        text-align:center;
+        font-size:24px;
+        font-weight:bold;
+        height:60px;
+        line-height:60px;
+        border-bottom:1px solid red;
+        margin:0px 10px;
+    }
+    .notice_action{
+        text-align: center;
+        height:30px;
+        margin:10px 0px;
+    }
 </style>

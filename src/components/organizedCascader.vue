@@ -8,6 +8,7 @@
             :clearable="true"
             :show-all-levels="true"
             placeholder="请选择党支部"
+            filterable
             v-model="selectValue"
             @change="cascaderChange">
     </el-cascader>
@@ -39,10 +40,10 @@
                     let arr = this.$store.state.organized.cascader_data;
                     if (arr.length == 1) {
                         if (arr[0].children == undefined) {
-                            vArr.push(temp);
+                            vArr.push(temp)
                         } else {
                             vArr.push(arr[0].id);
-                            vArr.push(temp);
+                            vArr.push(temp)
                         }
                     } else {
                         arr.forEach(value => {
@@ -81,7 +82,7 @@
             this.$ajax.post('/department/dept_list_to_tree', {}).then(res => {
                 let groupArr = [];
                 if (res.data.errno == 0) {
-                    console.log('res------', '获取组织架构数据成功-->')
+
                     if (res.data.data.length == 1 && res.data.data[0].id != 1) {
                         if (res.data.data[0].children == undefined) {
                             this.options = res.data.data;
@@ -101,19 +102,18 @@
                             json.label = value.dept_name;
                             json.value = Number(value.id);
                             groupArr.push(json);
-                            value.children.forEach(v => {
-                                delete v.children;
-                            })
                         });
+
                         this.options = res.data.data[0].children;
                         this.$store.commit('ORGANIZED_CASCADER_DATA', res.data.data[0].children);
                     }
                     this.$store.commit('ORGANIZED_PARTY', groupArr);
                     return;
                 }
-                this.$message({message: '数据获取失败,请重试', type: 'error'})
+                this.$message({message: '数据获取失败,请重试111', type: 'error'})
+                console.log('res------', res.data)
             }).catch(err => {
-                this.$message({message: '数据获取失败,请重试', type: 'error'})
+                this.$message({message: '数据获取失败,请重试222', type: 'error'})
                 console.log('err------', err)
             })
         }
