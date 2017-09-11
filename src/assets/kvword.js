@@ -71,6 +71,7 @@ const deptment = [
     {dept_name: '名称', type: 'input'},
     {prov_latn_id: '本地网', type: 'select'},
     {dept_status: '有效/无效', type: 'select'},
+    {order_num:'排序',type:'input'}
 ]
 
 const plan = [

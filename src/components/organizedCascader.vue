@@ -39,10 +39,10 @@
                     let arr = this.$store.state.organized.cascader_data;
                     if (arr.length == 1) {
                         if (arr[0].children == undefined) {
-                            vArr.push(temp)
+                            vArr.push(temp);
                         } else {
                             vArr.push(arr[0].id);
-                            vArr.push(temp)
+                            vArr.push(temp);
                         }
                     } else {
                         arr.forEach(value => {
@@ -81,7 +81,7 @@
             this.$ajax.post('/department/dept_list_to_tree', {}).then(res => {
                 let groupArr = [];
                 if (res.data.errno == 0) {
-                    console.log('res------', '获取组织架构数据成功')
+                    console.log('res------', '获取组织架构数据成功-->')
                     if (res.data.data.length == 1 && res.data.data[0].id != 1) {
                         if (res.data.data[0].children == undefined) {
                             this.options = res.data.data;
