@@ -243,10 +243,9 @@
 
             },
             editBtn() {
-
                 let noValueForm = getForm();
                 noValueForm.forEach(v => {
-                    v.value = this.oCellDate[v.key]
+                    v.value = this.oCellDate[v.key];
                 });
 
                 let pid = {
@@ -360,11 +359,13 @@
             },
             treeData1(){
                 let oArr = this.$store.state.organized.cascader_data;
+
                 let arr = [];
                 oArr.forEach(v=>{
                     let parent  = {
                         id:v.id,
-                        name:v.dept_name
+                        name:v.dept_name,
+                        order_num:v.order_num
                     };
 
                     if(v.children.length>0){
@@ -374,17 +375,18 @@
                                 id:value.id,
                                 name:value.dept_name
                             })
-                        })
+                        });
                         parent.name = parent.name + ' ('+v.children.length+')';
                         parent.children = children;
                     }
-                    arr.push(parent)
-                })
-                this.$jquery('.root').text('区党委')
-                return arr
+                    arr.push(parent);
+                });
+                this.$jquery('.root').text('新疆电信区公司党委');
+                return arr;
             }
         },
         mounted() {
+            console.log(this.account);
             if (this.account.role_id == 2) {
                 this.selectArr.dept_type[1].disabled = true;
             } else {
