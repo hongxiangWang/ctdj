@@ -1,4 +1,4 @@
-<template ref="">
+<template ref="" xmlns:v="http://www.w3.org/1999/html">
     <div>
         <div id="topMeun">
             <el-row id="top">
@@ -40,10 +40,9 @@
 
                         <el-submenu index="3">
                             <template slot="title">管理</template>
-                            <el-menu-item index="/home/roleManage">角色管理</el-menu-item>
-                            <el-menu-item index="/home/permissionSet">权限管理</el-menu-item>
+                            <el-menu-item index="/home/roleManage" v-if="account.role_id<2">角色管理</el-menu-item>
+                            <el-menu-item index="/home/permissionSet" v-if="account.role_id<2">权限管理</el-menu-item>
                             <el-menu-item index="/home/adminSet">管理员管理</el-menu-item>
-
                             <el-menu-item index="/home/organizedSet">组织管理</el-menu-item>
                             <el-menu-item index="/home/userManage">党员管理</el-menu-item>
                         </el-submenu>

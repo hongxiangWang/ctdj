@@ -10,6 +10,7 @@ const people = [
     {people_enter_work_time: "工作时间", type: 'date'},
     {people_jobname: "现任职务", type: 'input'},
     {depart_id: "党支部", type: 'cascader'},
+    {order_num:"人员排序",type:'input'}
 ]
 import {nation, province, city} from './staticData'
 

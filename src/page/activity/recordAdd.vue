@@ -123,10 +123,16 @@
 
             <el-row>
                 <el-col :span="24">
-                    <el-form-item label="会议内容"
-                                  :rules="notEmpty"
-                                  prop="record_content">
-                        <el-input v-model="form.record_content" type="textarea"></el-input>
+                    <!--<el-form-item label="会议内容"-->
+                                  <!--:rules="notEmpty"-->
+                                  <!--prop="record_content">-->
+                        <!--<el-input v-model="form.record_content" type="textarea"></el-input>-->
+                    <!--</el-form-item>-->
+                    <el-form-item label="会议内容" :rules="notEmpty">
+                    <quill-editor v-model="form.record_content"
+                                  ref="quillEditor"
+                                  :options="editorOption">
+                    </quill-editor>
                     </el-form-item>
                 </el-col>
             </el-row>
@@ -192,7 +198,9 @@
                 dialogImageUrl: '',
                 dialogVisible: false,
                 peopleList: [],
-
+                editorOption: {
+                    placeholder: '请输入内容',
+                },
                 uploadUri: require('../../value/string').uploadUrl,
                 notEmpty: [{required: true, message: '不许为空'}],
 
@@ -304,6 +312,9 @@
             },
         },
         computed: {
+            editor() {
+                return this.$refs.myQuillEditor.quill
+            },
             activity_end_time() {
                 let vm = this;
                 if (this.parentForm != undefined) {
@@ -425,3 +436,32 @@
         })
     }
 </script>
+<style>
+    .ql-editor {
+        min-height: 200px;
+    }
+
+    .ql-snow .ql-picker.ql-size .ql-picker-label::before, .ql-snow .ql-picker.ql-size .ql-picker-item::before {
+        top: -5px;
+        text-align: right;
+        position: relative;
+    }
+
+    .ql-snow .ql-picker.ql-header .ql-picker-label::before, .ql-snow .ql-picker.ql-header .ql-picker-item::before {
+        top: -5px;
+        position: relative;
+    }
+
+    .ql-snow .ql-picker:not(.ql-color-picker):not(.ql-icon-picker) svg {
+        position: absolute;
+        margin-top: -7px;
+        top: 50%;
+        width: 18px;
+    }
+
+    .ql-snow .ql-picker.ql-font .ql-picker-label::before, .ql-snow .ql-picker.ql-font .ql-picker-item::before {
+        top: -5px;
+        text-align: right;
+        position: relative;
+    }
+</style>
