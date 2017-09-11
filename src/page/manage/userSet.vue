@@ -147,7 +147,7 @@
                     {lable: '性别', prop: 'people_gender', width: '80', align: 'center'},
                     {lable: '民族', prop: 'people_race', width: '180', align: 'center'},
                     {lable: '入党时间', prop: 'people_enter_party_time', width: '180', align: 'center'},
-                    {lable: '籍贯', prop: 'people_residence', width: '180', align: 'center'},
+//                    {lable: '籍贯', prop: 'people_residence', width: '180', align: 'center'},
                     {lable: '出生年月', prop: 'people_birthday', width: '180', align: 'center'},
                    ],
                 //操作的方法，clickFun为父组件向子组件传递的事件
