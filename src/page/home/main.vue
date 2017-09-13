@@ -30,6 +30,7 @@
                     @current-change="currentChange"
                     :current-page.sync="currentPage"
                     :total="noticeTotal"
+                    :page-size="18"
                     layout="prev, pager, next">
             </el-pagination>
         </el-col>
@@ -107,6 +108,7 @@
             },
             currentChange(call) {
                 this.currentPage = call;
+                getNoticeList(this);
             },
             selsectChange(call){
                 this.notice_type = Number(call);

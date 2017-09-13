@@ -100,18 +100,33 @@
                         @imageDialog="imageDialog"
                         :editMode="false"></cell-arr>
 
-                <div v-for="item in commentList"
-                     :key="item.id"
-                     class="comment-list">
-                    <div><label>得分：</label>
-                        <b>{{item.comment_score}}</b>
-                        <small>
-                            <i class="fa fa-user"></i>
-                            &nbsp;{{item.people_name}}&nbsp;<i class="deptment">({{item.big_dept_name}}/{{item.small_dept_name}})</i>&nbsp;
-                        </small> <small>
-                            <i class="fa fa-clock-o"></i>&nbsp;{{item.create_time}}</small></div>
-                    <div><label>评价：</label>{{item.comment_content}}</div>
-                </div>
+                <el-row>
+                    <el-col :span="16">
+                        <div v-if="oScope.row!=undefined">
+                            <h3>活动内容</h3>
+                            <div v-html="oScope.row.record_content" style="border:1px #EEE solid;padding:0 10px"></div>
+                        </div>
+                    </el-col>
+                    <el-col :span="8">
+                        <h3>评价</h3>
+                        <div style="padding-left: 10px">
+                            <div v-for="item in commentList"
+                                 :key="item.id"
+                                 class="comment-list">
+                                <div><label>得分：</label>
+                                    <b>{{item.comment_score}}</b>
+                                    <small>
+                                        <i class="fa fa-user"></i>
+                                        &nbsp;{{item.people_name}}&nbsp;<i class="deptment">({{item.big_dept_name}}/{{item.small_dept_name}})</i>&nbsp;
+                                    </small> <small>
+                                        <i class="fa fa-clock-o"></i>&nbsp;{{item.create_time}}</small></div>
+                                <div><label>评价：</label>{{item.comment_content}}</div>
+                             </div>
+                        </div>
+                    </el-col>
+                </el-row>
+
+
             </span>
         </el-dialog>
         <!--编辑-->
@@ -225,6 +240,7 @@
                 rate: {},
 
                 commentList: [],
+                oScope: {},
             }
         },
         methods: {
@@ -280,6 +296,7 @@
                 this.editDialog = true;
             },
             infoRecord(scope) {
+                this.oScope = scope;
                 let row = scope.row;
                 let arr = helper.createTableArr(record, row);
                 arr.forEach(value => {
@@ -290,7 +307,7 @@
                         value.value = dealVirguleData(value.value)
                     }
                     if (value.key == 'record_type') {
-                        value.value = helper.getSelectLabel(selectArr.record_type,value.value);
+                        value.value = helper.getSelectLabel(selectArr.record_type, value.value);
                     }
                 })
                 this.infoDialog = true;
@@ -503,16 +520,17 @@
 <style lang="less">
     .comment-list {
         margin-top: 1rem;
-        box-shadow:0 0 10px rgba(0,0,0,.2);
-        padding:1rem 2rem;
-        border-radius:2px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, .2);
+        padding: 1rem 1rem;
+        border-radius: 2px;
 
     small {
-        margin-left: 2rem;
+        margin-left: 0rem;
         color: #AAA;
 
     }
-    .deptment{
+
+    .deptment {
         color: #bbb;
     }
 
