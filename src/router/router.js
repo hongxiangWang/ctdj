@@ -87,11 +87,11 @@ export default {
                     component: listMode
                 },
 
-                {
-                    path: 'noticeInfo',
-                    name:'noticeInfo',
-                    component: noticeInfo
-                },
+                // {
+                //     path: 'noticeInfo',
+                //     name:'noticeInfo',
+                //     component: noticeInfo
+                // },
                 {
                     path: 'noticeInfo/:id',
                     name:'noticeInfo',
