@@ -20,6 +20,7 @@ const listMode = r => require.ensure([], () => r(require('../components/listMode
 const noticeInfo = r => require.ensure([], () => r(require('../page/notice/noticeInfo.vue')), 'noticeInfo');
 const noticeAdd = r => require.ensure([], () => r(require('../page/notice/noticeAdd.vue')), 'noticeAdd');
 const noticeList = r => require.ensure([], () => r(require('../page/notice/noticeList.vue')), 'noticeList');
+const fengcaiManage  = r => require.ensure([], () => r(require('../page/manage/fengcaiManage.vue')), 'fengcaiManage');
 export default {
     path: '/',
     component: App,
@@ -104,6 +105,10 @@ export default {
                 {
                     path: 'noticeList',
                     component: noticeList
+                },
+                {
+                    path: 'fengcaiManage',
+                    component: fengcaiManage
                 },
             ]
         },
