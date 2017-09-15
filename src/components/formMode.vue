@@ -1,8 +1,8 @@
 <template>
     <div>
         <form1
-        :dataArr="dataArr"
-        :selectArr="selectArr"></form1>
+            :dataArr="dataArr"
+            :selectArr="selectArr"></form1>
     </div>
 
 </template>
