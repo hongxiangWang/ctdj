@@ -122,6 +122,10 @@
         mix-height: 2rem;
         line-height: 32px;
         vertical-align: middle;
+        min-height:32px;
+    .el-row,.el-col,.label{
+        min-height:32px;
+    }
 
     .label {
         border-right: 1px solid #ECDBD6;

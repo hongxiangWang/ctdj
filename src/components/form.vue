@@ -85,6 +85,7 @@
         margin-left: -1px;
         margin-top: -1px;
         padding: 5px 3px;
+        min-height:36px;
 
     .el-form-item__error {
         top: 20%;
