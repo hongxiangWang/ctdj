@@ -80,7 +80,6 @@
                 </template>
             </el-table-column>
 
-
         </el-table>
     <el-dialog
             title="查看"
@@ -88,6 +87,17 @@
             size="small"
             :before-close="imgClose">
         <img :src="imgSrc" width="590"/>
+    </el-dialog>
+    <el-dialog
+            title="添加"
+            :visible.sync="addDialog"
+            size="tiny"
+            :before-close="addDialogClose">
+        <span>这是一段信息</span>
+        <span slot="footer" class="dialog-footer">
+            <el-button @click="addDialog = false">取 消</el-button>
+            <el-button type="primary" @click="addDialog = false">确 定</el-button>
+        </span>
     </el-dialog>
     </div>
 </template>
@@ -100,7 +110,8 @@
             return {
                 tableData: [],
                 imgDialog:false,
-                imgSrc:''
+                imgSrc:'',
+                addDialog:false,
             }
         },
         components:{
@@ -123,6 +134,9 @@
             },
             cascaderChange(call){
 
+            },
+            addDialogClose(){
+                this.addDialog = false;
             }
         },
         mounted(){
