@@ -89,7 +89,7 @@ const record = [
     {dept_name: '党支部', type: 'text'},
     {record_title: '名称', type: 'input'},
     {record_subtitle: '主题', type: 'input'},
-    {record_content: '内容', type: 'input'},
+    // {record_content: '内容', type: 'input'},
     {activity_start_time: '开始时间', type: 'date'},
     {activity_end_time: '结束时间', type: 'select'},
     {activity_place: '地点', type: 'input'},
