@@ -28,8 +28,13 @@
                              default-active="/home/main"
                              :router="true">
                         <el-menu-item index="/home/main">首页</el-menu-item>
-
                         <el-submenu index="2">
+                            <template slot="title">文化建设</template>
+                            <el-menu-item index="/home/fengcaiManage">党员风采</el-menu-item>
+                            <el-menu-item index="/home/recordAdd">滚动图</el-menu-item>
+                        </el-submenu>
+
+                        <el-submenu index="3">
                             <template slot="title">活动/建设</template>
                             <el-menu-item index="/home/recordAdd">新增活动</el-menu-item>
                             <el-menu-item index="/home/recordList">活动列表</el-menu-item>
@@ -38,7 +43,7 @@
 
                         </el-submenu>
 
-                        <el-submenu index="3">
+                        <el-submenu index="4">
                             <template slot="title">管理</template>
                             <el-menu-item index="/home/roleManage" v-if="account.role_id<2">角色管理</el-menu-item>
                             <el-menu-item index="/home/permissionSet" v-if="account.role_id<2">权限管理</el-menu-item>
@@ -47,7 +52,7 @@
                             <el-menu-item index="/home/userManage">党员管理</el-menu-item>
                         </el-submenu>
 
-                        <el-submenu index="4" style="padding-right: 50px">
+                        <el-submenu index="5" style="padding-right: 50px">
                             <template slot="title"><span>
                         <svg class="icon" aria-hidden="true">
                             <use xlink:href="#icon-yonghu"></use>
@@ -59,7 +64,7 @@
                             </el-menu-item>
                         </el-submenu>
 
-                        <el-submenu index="5" v-if="false">
+                        <el-submenu index="6" v-if="false">
                             <template slot="title">组件测试</template>
                             <el-menu-item index="/home/table1Mode">table1</el-menu-item>
                             <el-menu-item index="/home/cellMode">cellMode</el-menu-item>

@@ -2,10 +2,19 @@
     <div>
         <el-row>
             <el-col style="margin-left: 1rem;height:30px;line-height: 30px;">
-                <el-breadcrumb separator="/">
-                    <el-breadcrumb-item :to="{ path: '/home/main' }"><i class="fa fa-home"></i>首页</el-breadcrumb-item>
-                    <el-breadcrumb-item>详情内容</el-breadcrumb-item>
-                </el-breadcrumb>
+                <el-row>
+                    <el-col :span="16">
+                        <el-breadcrumb separator="/">
+                            <el-breadcrumb-item :to="{ path: '/home/main' }"><i class="fa fa-home"></i>首页</el-breadcrumb-item>
+                            <el-breadcrumb-item>详情内容</el-breadcrumb-item>
+                        </el-breadcrumb>
+                    </el-col>
+                    <el-col :span=2>
+                        <el-button style="float: right;top:-5px;position: relative" size="small" @click="deleteBt">删除</el-button>
+                    </el-col>
+                </el-row>
+
+
             </el-col>
             <el-col :span="18" style="border:1px #ccc solid;padding: 1rem 2rem; margin-left: 1rem">
                 <div class="notice_title">{{oData.title}}</div>
@@ -43,6 +52,42 @@
                 let httpUri = require('../../value/string.js').fileread+file.uri;
                 console.log(httpUri,'frssss---')
                 helper.downloadFile(httpUri);
+            },
+            deleteBt(){
+                this.$confirm('删除, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.$ajax.post('/notice/notice_delete',{notice_id:this.$route.params.id}).then(res=>{
+                        console.log('res-----',res.data);
+                        if(res.data.errno==0){
+                            this.$message({
+                                type: 'success',
+                                message: '删除成功!,2s后跳转'
+                            });
+                            setTimeout(_=>{
+                                this.$router.replace('/home/main');
+                            },2000)
+                        }else{
+                            this.$message({
+                                type: 'error',
+                                message: '删除失败!'
+                            });
+                        }
+                    }).catch(err=>{
+                        this.$message({
+                            type: 'error',
+                            message: '删除失败!'
+                        });
+                        console.log('err-----',err);
+                    });
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
             }
         },
         created() {

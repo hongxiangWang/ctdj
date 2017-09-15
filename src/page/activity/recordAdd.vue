@@ -113,7 +113,7 @@
             </el-row>
             <el-row>
                 <el-col :span="24">
-                    <el-form-item label="议会/主题"
+                    <el-form-item label="议会主题"
                                   :rules="notEmpty"
                                   prop="record_subtitle">
                         <el-input v-model="form.record_subtitle"></el-input>
@@ -299,7 +299,8 @@
                         params.admin_id = require('store').get('people_info')[0].admin_id;
                         params.activity_start_time = dealDateFormt(new Date(params.activity_start_time));
                         params.activity_end_time = dealDateFormt(new Date(params.activity_end_time));
-                        console.log('submit--params--', this.parentForm)
+
+                        console.log('submit--params--', params)
                         submitData(this, params)
 
 
