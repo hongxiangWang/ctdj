@@ -145,10 +145,11 @@
                 tdArr: [{lable: '姓名', prop: 'people_name', width: '180', align: 'center'},
                    // {lable: '党员类型', prop: 'type_name', width: '180', align: 'center'},
                     {lable: '性别', prop: 'people_gender', width: '80', align: 'center'},
-                    {lable: '民族', prop: 'people_race', width: '180', align: 'center'},
-                    {lable: '入党时间', prop: 'people_enter_party_time', width: '180', align: 'center'},
-//                    {lable: '籍贯', prop: 'people_residence', width: '180', align: 'center'},
-                    {lable: '出生年月', prop: 'people_birthday', width: '180', align: 'center'},
+                    {lable: '民族', prop: 'people_race', width: '100', align: 'center'},
+                    {lable: '入党时间', prop: 'people_enter_party_time', width: '100', align: 'center'},
+                    {lable: '单位', prop: 'big_dept_name', width: '200', align: 'center'},
+                    {lable: '所在党支部', prop: 'small_dept_name', width: '200', align: 'center'},
+                    {lable: '出生年月', prop: 'people_birthday', width: '120', align: 'center'},
                    ],
                 //操作的方法，clickFun为父组件向子组件传递的事件
                 operate: [
