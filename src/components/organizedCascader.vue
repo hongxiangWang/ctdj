@@ -1,5 +1,5 @@
 <template>
-    <span>
+    <span id="organizedCascader">
     <el-cascader
             ref="cascader"
             expand-trigger="hover"
@@ -12,6 +12,7 @@
             v-model="selectValue"
             @change="cascaderChange">
     </el-cascader>
+        <!--<small class="organizedName">{{label}}</small>-->
         <span v-show="false">{{setDefaultValue}}</span>
     </span>
 </template>
@@ -26,6 +27,7 @@
                     value: "id",
                     children: "children"
                 },
+                label:''
 
             }
         },
@@ -64,7 +66,13 @@
         },
         methods: {
             cascaderChange(call) {
-                this.$emit('cascaderChange', call)
+                let $ = this.$jquery;
+                this.$nextTick(_=>{
+                    let label = $('#organizedCascader .el-cascader__label').text().replaceAll(/\s+/g, "");
+                    this.label = label;
+                    this.$emit('cascaderChange', call,label);
+                })
+                //this.$emit('cascaderChange', call,)
             },
 
         },
@@ -118,9 +126,16 @@
             })
         }
     }
+
+    function ClearBr(key) {
+        key = key.replace(/<\/?.+?>/g,"");
+        key = key.replace(/[\r\n]/g, "");
+        return key;
+    }
 </script>
-<style>
+<style lang="less">
     div.el-cascader-menu {
         left: 0px;
     }
+
 </style>

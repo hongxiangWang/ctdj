@@ -34,6 +34,10 @@ Date.prototype.Format = function(fmt)
     return fmt;
 }
 
+String.prototype.replaceAll = function(s1,s2){
+    return this.replace(new RegExp(s1,"gm"),s2);
+}
+
 </script>
 
 <style>
