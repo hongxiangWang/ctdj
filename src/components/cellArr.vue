@@ -30,11 +30,14 @@
             //调节后一个cell的高度，勿动
             adjustHeight(index, h) {
                 let $ = this.$jquery;
-                if (index % 2 == 0 && index < this.$refs.cellArr.length - 1) {
-                    let cellArr = this.$refs.cellArr;
-                    let nextCellDom = cellArr[index + 1].$el;
-                    $(nextCellDom).find('.el-row').css({height: h + 'px', lineHeight: h + 'px'})
-                }
+                this.$nextTick(_=>{
+                    if (index % 2 == 0 && index < this.$refs.cellArr.length - 1) {
+                        let cellArr = this.$refs.cellArr;
+                        let nextCellDom = cellArr[index + 1].$el;
+                        $(nextCellDom).find('.el-row').css({height: h + 'px', lineHeight: h + 'px'})
+                    }
+                })
+
             },
             edit(cell){
                 this.$emit('edit',cell);
