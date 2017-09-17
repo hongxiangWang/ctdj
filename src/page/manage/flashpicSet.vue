@@ -95,6 +95,61 @@
                 :before-close="imgClose">
             <img :src="imgSrc" width="590"/>
         </el-dialog>
+
+        <!--编辑界面-->
+        <el-dialog title="编辑" v-model="editFormVisible" :close-on-click-modal="false">
+            <el-form :model="editForm" label-width="100px" :rules="editFormRules" ref="editForm">
+                <el-form-item label="图片标题" prop="pic_title">
+                    <el-input type="text" placeholder="请输入轮播图片标题" v-model="editForm.pic_title"
+                              auto-complete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="失效时间" prop="expire_time">
+                    <el-date-picker
+                            v-model="editForm.expire_time"
+                            type="date"
+                            placeholder="选择日期"
+                            :picker-options="pickerOptions0">
+                    </el-date-picker>
+                </el-form-item>
+                <el-form-item label="排序" prop="order_num">
+                    <el-input type="text" placeholder="" v-model="editForm.order_num"
+                              size="small"
+                              auto-complete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="图片地址" prop="pic_url">
+                    <el-upload
+                            :disabled="disabled"
+                            :action="uploadUri"
+                            list-type="picture-card"
+                            :file-list="fileList"
+                            :on-preview="uploadPreview"
+                            :on-success="uploadSuccess"
+                            :on-remove="uploadRemove">
+                        <i class="el-icon-plus"></i>
+                    </el-upload>
+                </el-form-item>
+                <el-form-item label="状态" prop="add_status">
+                    <el-radio-group v-model="editForm.status">
+                        <el-radio :label="1">有效</el-radio>
+                        <el-radio :label="0">无效</el-radio>
+                    </el-radio-group>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click.native="editFormVisible = false">取消</el-button>
+                <el-button type="primary" @click.native="editSubmit" :loading="editLoading">提交</el-button>
+            </div>
+        </el-dialog>
+        <el-dialog v-model="dialogVisible" v-if="parentForm == undefined">
+            <img width="100%" :src="dialogImageUrl" alt="">
+        </el-dialog>
+        <el-dialog
+                title="查看"
+                :visible.sync="imgDialog"
+                size="small"
+                :before-close="imgClose">
+            <img :src="imgSrc" width="590"/>
+        </el-dialog>
     </div>
 </template>
 
@@ -125,10 +180,7 @@
                 addFormRules: {
                     pic_title: [
                         {required: true, message: '请输入轮播图标题', trigger: 'blur'},
-                    ],
-//                    pic_url:[
-//                        {required: true, message: '请上传轮播图片', trigger: 'blur'},
-//                    ]
+                    ]
                 },
                 //新增界面数据
                 addForm: {
@@ -170,18 +222,34 @@
         methods: {
             uploadRemove(file, fileList) {
                 const $ = this.$jquery;
-                this.addForm.pic_url.forEach((v, i, s) => {
-                    if (file.response != undefined && v == file.response.data) {
-                        s.splice(i, 1);
-                        this.disabled = false;
-                        $(".el-upload--picture-card").show();
-                    }
-                    if (file.response == undefined && v == file.url.replace(require('../../value/string').fileread, '').replace(`ctdj/www/static`, `file`)) {
-                        s.splice(i, 1);
-                        this.disabled = false;
-                        $(".el-upload--picture-card").show();
-                    }
-                })
+                if(this.addFormVisible){
+                    this.addForm.pic_url.forEach((v, i, s) => {
+                        if (file.response != undefined && v == file.response.data) {
+                            s.splice(i, 1);
+                            this.disabled = false;
+                            $(".el-upload--picture-card").show();
+                        }
+                        if (file.response == undefined && v == file.url.replace(require('../../value/string').fileread, '')) {
+                            s.splice(i, 1);
+                            this.disabled = false;
+                            $(".el-upload--picture-card").show();
+                        }
+                    });
+                }
+                if(this.editFormVisible){
+                    this.editForm.pic_url.forEach((v, i, s) => {
+                        if (file.response != undefined && v == file.response.data) {
+                            s.splice(i, 1);
+                            this.disabled = false;
+                            $(".el-upload--picture-card").show();
+                        }
+                        if (file.response == undefined && v == file.url.replace(require('../../value/string').fileread, '')) {
+                            s.splice(i, 1);
+                            this.disabled = false;
+                            $(".el-upload--picture-card").css('display','block');
+                        }
+                    });
+                }
             },
             uploadPreview(file) {
 
@@ -192,15 +260,22 @@
             uploadSuccess(res) {
                 if (res.errno == 0) {
                     this.addForm.pic_url.push(res.data);
+                    this.editForm.pic_url.push(res.data);
                     this.disabled = false;
-                    const $ = this.$jquery;
-                    $(".el-upload--picture-card").hide();
+                    this.$nextTick(_=>{
+                        const $ = this.$jquery;
+                        $("div.el-upload--picture-card").hide();
+                    });
                 }
                 console.log('res-----', res);
             },
             //显示新增界面
             addFlashpic(){
                 this.addFormVisible = true;
+                //this.$refs是dom加载完后的，所以要用this.$nextTick方法等待dom记载完毕
+                this.$nextTick(_=>{
+                    this.$refs.addForm.resetFields();
+                });
             },
             //处理新增
             addSubmit() {
@@ -272,6 +347,53 @@
                 this.imgSrc = url;
                 this.imgDialog = true;
             },
+            editFlashpic(index,row){
+                this.editFormVisible = true;
+                const $ = this.$jquery;
+                this.$nextTick(_=>{
+                    $(".el-upload--picture-card").hide();
+                });
+                //动态遍历所有row值，copy到v-model中,不能使用Object.assign深拷贝
+                for(let key in row){
+                    this.editForm[key] = row[key];
+                }
+                this.editForm.pic_url=[row['pic_url']];
+                this.editForm.pic_url.push()
+                let pic_url = require('../../value/string').fileread +row['pic_url'];
+                let pic_name = pic_url.substring(pic_url.lastIndexOf('_')+1);
+                this.fileList=[];
+                this.fileList.push({name:pic_name,url:pic_url});
+            },
+            editSubmit(){
+
+            },
+            deleteFlashpic(scope){
+                this.$confirm('确定删除改该条轮播图吗', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.$ajax.post('/flashpic/flashpic_delete', {id:scope.row.id}).then(res => {
+                        let result = res.data;
+                        if (result.errno == 0) {
+                            this.$message({message:'删除成功',type:'success'});
+                            this.tableData.splice(scope.$index,1);
+                        }
+                        else{
+                            this.$message({message:'删除失败',type:'error'});
+                        }
+                    }).catch(err => {
+                        this.tableLoading = false;
+                        this.$message({message: '抱歉，获取数据失败，请重试', type: 'error'})
+                        console.log('----', err)
+                    });
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
+            }
         },
         computed: {
             parentFormCom() {
