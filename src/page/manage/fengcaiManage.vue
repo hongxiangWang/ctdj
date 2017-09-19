@@ -8,7 +8,7 @@
                 </organized-cascader>
             </el-col>
             <el-col :span="8" :push="4">
-                <el-button >添加</el-button>
+                <el-button @click="addBt">添加</el-button>
             </el-col>
         </el-row>
         <el-table
@@ -137,6 +137,9 @@
             },
             addDialogClose(){
                 this.addDialog = false;
+            },
+            addBt(){
+                this.$router.push('/home/fengcaiAdd')
             }
         },
         mounted(){

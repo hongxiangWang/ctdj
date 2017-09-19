@@ -1,5 +1,5 @@
 const base = require('../value/string.js')
 export default {
     baseURL: base.baseUrl,
-    timeout: 8000,
+     timeout: 15000,
 }

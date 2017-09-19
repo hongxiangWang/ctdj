@@ -124,15 +124,21 @@
             <el-row>
                 <el-col :span="24">
                     <!--<el-form-item label="会议内容"-->
-                                  <!--:rules="notEmpty"-->
-                                  <!--prop="record_content">-->
-                        <!--<el-input v-model="form.record_content" type="textarea"></el-input>-->
+                    <!--:rules="notEmpty"-->
+                    <!--prop="record_content">-->
+                    <!--<el-input v-model="form.record_content" type="textarea"></el-input>-->
                     <!--</el-form-item>-->
                     <el-form-item label="会议内容" :rules="notEmpty">
-                    <quill-editor v-model="form.record_content"
-                                  ref="quillEditor"
-                                  :options="editorOption">
-                    </quill-editor>
+                        <!--<quill-editor v-model="form.record_content"-->
+                                      <!--ref="quillEditor"-->
+                                      <!--:options="editorOption">-->
+                        <!--</quill-editor>-->
+                        <quill-editer
+                                :canCrop="canCrop"
+                                :fileName="'file'"
+                                :uploadUrl="uploadUri"
+                                v-model="form.record_content">
+                        </quill-editer>
                     </el-form-item>
                 </el-col>
             </el-row>
@@ -160,7 +166,7 @@
 
             <el-row type="flex" justify="center">
                 <el-col :span="6" style=" text-align: center">
-                    <el-button>撤销</el-button>
+                    <el-button @click="$emit('closeEditDialid')" v-if="parentForm != undefined">取消</el-button>
                     <el-button @click="submitForm" :disabled="submitBtn">提交</el-button>
                 </el-col>
             </el-row>
@@ -174,7 +180,7 @@
     import organizedCascader from '../../components/organizedCascader.vue'
     import {selectArr} from '../../assets/kvword.js'
     import ElRow from "element-ui/packages/row/src/row";
-
+    import quillEditer from '../../components/quillEditer.vue'
     let messge = null;
     const helper = require('../../tools/helper')
     export default {
@@ -203,16 +209,21 @@
                 },
                 uploadUri: require('../../value/string').uploadUrl,
                 notEmpty: [{required: true, message: '不许为空'}],
-
+                canCrop:false,
                 cascderValue: 0,
                 message: {},
                 fileList: [],
-                submitBtn:false
+                submitBtn: false,
+                allPeople:[]
+
+
+
             }
         },
         components: {
             ElRow,
-            organizedCascader
+            organizedCascader,
+            quillEditer
         },
         methods: {
             cascaderChange(call) {
@@ -221,6 +232,7 @@
                 getQueryResult(this, depart_id);
             },
             peopleArrayChange(call) {
+                console.log(call)
                 let isAll = false;
                 let re = /^[0-9]+.?[0-9]*$/;
                 call.forEach(value => {
@@ -244,12 +256,15 @@
                         type: 'warning',
                         offset: '0'
                     })
-                    console.log(s)
                     this.form.attend_user_arr.forEach((value, index, self) => {
                         if (re.test(value)) {
                             self.splice(index, 1);
                         }
                     });
+//                    this.allPeople.forEach(v=>{
+//                        this.form.attend_user_arr.push(v)
+//                    })
+                    //console.log(this.peopleList)
                     this.$refs.peopleArray.visible = false
                 }
             },
@@ -268,7 +283,7 @@
                     if (file.response != undefined && v == file.response.data) {
                         s.splice(i, 1);
                     }
-                    if (file.response == undefined && v == file.url.replace(require('../../value/string').fileread, '').replace(`ctdj/www/static`, `file`)) {
+                    if (file.response == undefined && v == file.url.replace(require('../../value/string').fileread, '')) {
                         s.splice(i, 1);
                     }
                 })
@@ -300,7 +315,7 @@
                         params.activity_start_time = dealDateFormt(new Date(params.activity_start_time));
                         params.activity_end_time = dealDateFormt(new Date(params.activity_end_time));
 
-                        console.log('submit--params--', params)
+                        console.log('submit--params--', params, JSON.stringify(params.record_content))
                         submitData(this, params)
 
 
@@ -311,6 +326,9 @@
                     }
                 })
             },
+            imgClick(){
+
+            }
         },
         computed: {
             editor() {
@@ -368,13 +386,14 @@
             if (res.data.errno == 0) {
                 let arr = [];
                 let valueArr = '';
-
+                vm.allPeople = [];
                 res.data.data.forEach(value => {
                     let json = {};
                     json.label = value.people_name;
                     json.value = value.id;
                     arr.push(json);
                     valueArr += value.id + '|';
+                    vm.allPeople.push(value.id)
                 })
                 arr.unshift({label: '全部', value: valueArr})
                 vm.peopleList = arr;
@@ -427,11 +446,13 @@
                     }
                     vm.submitBtn = false;
                 }, 2000);
+
             } else {
                 vm.submitBtn = false;
                 vm.$message({message: '操作失败,请重试', type: 'error'});
             }
         }).catch(err => {
+            console.log('err------')
             vm.submitBtn = false;
             vm.$message({message: '操作失败,请重试' + err.message, type: 'error'});
         })

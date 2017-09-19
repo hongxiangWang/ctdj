@@ -49,7 +49,8 @@
                   style="width: 100%">
             <el-table-column
                     type="index"
-                    width="50">
+                    align="center"
+                    width="60">
             </el-table-column>
             <el-table-column prop="record_title" label="活动名称" width="300" align="center">
             </el-table-column>
@@ -101,13 +102,13 @@
                         :editMode="false"></cell-arr>
 
                 <el-row>
-                    <el-col :span="16">
+                    <el-col :span="quillSpan" class="ql-editor">
                         <div v-if="oScope.row!=undefined">
                             <h3>活动内容</h3>
                             <div v-html="oScope.row.record_content" style="border:1px #EEE solid;padding:0 10px"></div>
                         </div>
                     </el-col>
-                    <el-col :span="8">
+                    <el-col :span="8" v-if="commentList.length>0">
                         <h3>评价</h3>
                         <div style="padding-left: 10px">
                             <div v-for="item in commentList"
@@ -481,6 +482,13 @@
             big_party_list() {
                 //console.log("organized.party===>",this.$store.state.organized.party);
                 return this.$store.state.organized.party;
+            },
+            quillSpan(){
+                if(this.commentList.length>0){
+                    return 16;
+                }else {
+                    return 24;
+                }
             }
         }
     }
@@ -534,6 +542,9 @@
         color: #bbb;
     }
 
+    }
+    .ql-editor img{
+        width: 100%;
     }
 
 </style>
