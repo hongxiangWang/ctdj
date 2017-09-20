@@ -27,18 +27,21 @@
                         :on-preview="uploadPreview"
                         :on-success="uploadSuccess"
                         :before-upload="beforeUpload"
+                        multiple
                         :on-remove="uploadRemove">
                     <i class="el-icon-plus"></i>
                 </el-upload>
-                <span v-for="item in pic_txt_arr">
+                <span v-for="(item,index) in pic_txt_arr" :key="item.text">
                     <el-input v-model="item.text" class="pic_txt"></el-input>
+                    <div v-if="(pic_txt_arr.length%5) == 0 ">
+                        444
+                    </div>
                 </span>
                 <el-dialog v-model="dialogVisible" size="tiny">
                     <img width="100%" :src="dialogImageUrl" alt="">
                 </el-dialog>
             </el-form-item>
 
-           <el-button>添加描述</el-button>
 
         </el-form>
     </div>
@@ -113,6 +116,7 @@
     .pic_txt{
         max-width: 148px;
         margin: 0px 8px 0px 0;
+        position:relative;
     }
     .el-upload-list--picture-card .el-upload-list__item{
         margin: 0px 8px 2px 0;
