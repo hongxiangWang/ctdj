@@ -73,6 +73,7 @@
                             <el-menu-item index="/home/formMode">formMode</el-menu-item>
                             <el-menu-item index="/home/organizedCascaderMode">organizedCascaderMode</el-menu-item>
                             <el-menu-item index="/home/listMode">listMode</el-menu-item>
+                            <el-menu-item index="/home/quillEditer">quillEditer</el-menu-item>
                         </el-submenu>
                     </el-menu>
                 </el-col>

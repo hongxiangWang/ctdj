@@ -31,10 +31,15 @@
             <el-form-item label="活动名称"
                           :rules="notEmpty"
                           prop="title">
-                <quill-editor v-model="form.content"
-                              ref="quillEditor"
-                              :options="editorOption">
-                </quill-editor>
+                <!--<quill-editor v-model="form.content"-->
+                              <!--ref="quillEditor"-->
+                              <!--:options="editorOption">-->
+                <!--</quill-editor>-->
+                <quill-editer
+                        :fileName="'file'"
+                        :uploadUrl="uploadUri"
+                        v-model="form.content">
+                </quill-editer>
             </el-form-item>
             <el-form-item label="附件">
                 <el-upload
@@ -72,10 +77,10 @@
 </template>
 <script>
     import {selectArr} from '../../assets/kvword'
-    import ElCol from "element-ui/packages/col/src/col";
+    import quillEditer from '../../components/quillEditer.vue'
 
     export default {
-        components: {ElCol},
+        components: {quillEditer},
         data() {
             return {
                 form: {

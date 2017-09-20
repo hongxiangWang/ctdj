@@ -17,10 +17,12 @@ const editDialogMode = r => require.ensure([], () => r(require('../components/ed
 const formMode = r => require.ensure([], () => r(require('../components/formMode.vue')), 'formMode');
 const organizedCascaderMode = r => require.ensure([], () => r(require('../components/organizedCascaderMode.vue')), 'organizedCascaderMode');
 const listMode = r => require.ensure([], () => r(require('../components/listMode.vue')), 'listMode');
+const quillEditer = r => require.ensure([], () => r(require('../components/quillEditer.vue')), 'listMode');
 const noticeInfo = r => require.ensure([], () => r(require('../page/notice/noticeInfo.vue')), 'noticeInfo');
 const noticeAdd = r => require.ensure([], () => r(require('../page/notice/noticeAdd.vue')), 'noticeAdd');
 const noticeList = r => require.ensure([], () => r(require('../page/notice/noticeList.vue')), 'noticeList');
 const fengcaiManage  = r => require.ensure([], () => r(require('../page/manage/fengcaiManage.vue')), 'fengcaiManage');
+const fengcaiAdd  = r => require.ensure([], () => r(require('../page/manage/fengcaiAdd.vue')), 'fengcaiAdd');
 export default {
     path: '/',
     component: App,
@@ -86,6 +88,10 @@ export default {
                     path: 'listMode',
                     component: listMode
                 },
+                {
+                    path: 'quillEditer',
+                    component: quillEditer
+                },
 
                 // {
                 //     path: 'noticeInfo',
@@ -109,6 +115,10 @@ export default {
                 {
                     path: 'fengcaiManage',
                     component: fengcaiManage
+                },
+                {
+                    path: 'fengcaiAdd',
+                    component: fengcaiAdd
                 },
             ]
         },
