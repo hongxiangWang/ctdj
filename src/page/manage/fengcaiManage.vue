@@ -20,21 +20,21 @@
                     align="center"
                     width="200">
                 <template scope="scope">
-                   <img :src="scope.row.url" height="120px" @click="imgClick(scope.row.url)" />
+                    <img :src="scope.row.urls[0]" height="120px"/>
                 </template>
             </el-table-column>
             <el-table-column
                     label="标题"
                     width="280">
                 <template scope="scope">
-                            <el-tag>{{ scope.row.title }}</el-tag>
+                    <el-tag>{{ scope.row.title }}</el-tag>
                 </template>
             </el-table-column>
             <el-table-column
                     label="说明"
                     width="180">
                 <template scope="scope">
-                   {{ scope.row.pic_content }}
+                    {{ scope.row.contents[0] }}
                 </template>
             </el-table-column>
 
@@ -53,8 +53,7 @@
                     align="left"
                     width="200">
                 <template scope="scope">
-                    {{ scope.row.small_dept_name }}<br>
-                    <small> {{ scope.row.big_dept_name }}</small>
+                    {{ scope.row.dept_name }}
                 </template>
             </el-table-column>
 
@@ -68,53 +67,80 @@
                 </template>
             </el-table-column>
 
-            <el-table-column label="操作"  fixed="right" width="200" align="center" >
+            <el-table-column label="操作" fixed="right" width="200"  align="center">
                 <template scope="scope">
                     <el-button
                             size="small"
-                            @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                            @click="infoClick(scope.$index, scope.row)">查看
+                    </el-button>
+                    <el-button
+                            size="small"
+                            @click="handleEdit(scope.$index, scope.row)">编辑
+                    </el-button>
                     <el-button
                             size="small"
                             type="danger"
-                            @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+                            @click="handleDelete(scope.$index, scope.row)">删除
+                    </el-button>
                 </template>
             </el-table-column>
 
         </el-table>
-    <el-dialog
-            title="查看"
-            :visible.sync="imgDialog"
-            size="small"
-            :before-close="imgClose">
-        <img :src="imgSrc" width="590"/>
-    </el-dialog>
-    <el-dialog
-            title="添加"
-            :visible.sync="addDialog"
-            size="tiny"
-            :before-close="addDialogClose">
-        <span>这是一段信息</span>
-        <span slot="footer" class="dialog-footer">
+
+        <el-pagination
+                style="text-align: center"
+                small
+                @current-change="currentChange"
+                :current-page.sync="currentPage"
+                :total="noticeTotal"
+                :page-size="5"
+                layout="prev, pager, next">
+        </el-pagination>
+
+        <el-dialog
+                title="查看"
+                :visible.sync="infoDialog"
+                size="large"
+                :before-close="imgClose">
+            <span v-for="(img,index) in imgArray" :key="img" style="text-align: center;margin: 0 auto;display: block; border: 1px solid #EEE">
+                <img  :src="img" style="min-width:200px;max-width: 800px"/>
+                <p>{{contentArray[index]}}</p>
+            </span>
+
+        </el-dialog>
+        <el-dialog
+                title="添加"
+                :visible.sync="addDialog"
+                size="tiny"
+                :before-close="addDialogClose">
+            <span>这是一段信息</span>
+            <span slot="footer" class="dialog-footer">
             <el-button @click="addDialog = false">取 消</el-button>
             <el-button type="primary" @click="addDialog = false">确 定</el-button>
         </span>
-    </el-dialog>
+        </el-dialog>
     </div>
 </template>
 <script>
     import '../../assets/elCss/table.css';
     import '../../assets/elCss/loading.css';
     import organizedCascader from '../../components/organizedCascader.vue'
+
     export default {
         data() {
             return {
                 tableData: [],
-                imgDialog:false,
-                imgSrc:'',
-                addDialog:false,
+                infoDialog: false,
+                imgSrc: '',
+                addDialog: false,
+                noticeTotal: 0,
+                currentPage: 1,
+                dept_id: '',
+                imgArray:[],
+                contentArray:[],
             }
         },
-        components:{
+        components: {
             organizedCascader
         },
         methods: {
@@ -122,38 +148,71 @@
                 console.log(index, row);
             },
             handleDelete(index, row) {
-                this.imgDialog = true;
-                console.log(index, row);
-            },
-            imgClose(){
-                this.imgDialog = false;
-            },
-            imgClick(url){
-                this.imgSrc = url;
-                this.imgDialog = true;
-            },
-            cascaderChange(call){
+                this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.$ajax.post('/fengcai/fengcai_delete', {id: row.id}).then(res => {
+                        console.log('res.data----', res.data);
+                        if (res.data.errno == 0) {
+                            this.$message({type: 'success', message: '删除成功!'});
+                            this.tableData.splice(index, 1)
+                        } else {
+                            this.$message({type: 'error', message: '删除失败，请重试!'});
+                        }
+                    }).catch(err => {
+                        this.$message({type: 'error', message: '删除失败，请重试!'});
+                        console.log('----', err);
+                    });
+
+                }).catch(() => {
+                    this.$message({type: 'info', message: '已取消删除'});
+                });
 
             },
-            addDialogClose(){
+            imgClose() {
+                this.infoDialog = false;
+            },
+            infoClick(index,row) {
+                this.imgArray = row.urls;
+                this.contentArray = row.contents;
+                this.infoDialog = true;
+            },
+            cascaderChange(call) {
+                this.dept_id = call[call.length - 1]
+            },
+            addDialogClose() {
                 this.addDialog = false;
             },
-            addBt(){
+            addBt() {
                 this.$router.push('/home/fengcaiAdd')
+            },
+            currentChange(call) {
+                this.currentPage = call;
+                getFengcaiList(this);
             }
         },
-        mounted(){
+        mounted() {
             getFengcaiList(this)
         }
     }
+    const helper = require('../../tools/helper')
 
-    function getFengcaiList(vm){
-        vm.$ajax.post('/fengcai/fengcai_list', {}).then(res => {
+    function getFengcaiList(vm) {
+        vm.$ajax.post('/fengcai/fengcai_list', {page: vm.currentPage, count: 5, dept_id: vm.dept_id}).then(res => {
+            console.log('--fengcai--', res.data)
             if (res.data.errno == 0) {
-                 res.data.data.forEach(v=>{
-                    v.url = require('../../value/string').fileread + v.pic_url
+                vm.noticeTotal = res.data.data.count;
+                res.data.data.data.forEach(v => {
+                    v.urls = [];
+                    v.contents = [];
+                    helper.stringToArray(v.pic_url_all).forEach(img => {
+                        v.urls.push(require('../../value/string').fileread + img);
+                    });
+                    v.contents = helper.stringToArray(v.pic_content_all);
                 });
-                vm.tableData = res.data.data;
+                vm.tableData = res.data.data.data;
                 console.log('----', vm.tableData)
             } else {
                 vm.$message({message: '内容获取失败，请重试', type: 'error'});
