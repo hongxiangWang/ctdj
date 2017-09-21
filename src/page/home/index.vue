@@ -31,7 +31,7 @@
                         <el-submenu index="2">
                             <template slot="title">文化建设</template>
                             <el-menu-item index="/home/fengcaiManage">党员风采</el-menu-item>
-                            <el-menu-item index="/home/recordAdd">滚动图</el-menu-item>
+                            <el-menu-item index="/home/flashpicSet">轮播图管理</el-menu-item>
                         </el-submenu>
 
                         <el-submenu index="3">
@@ -50,7 +50,7 @@
                             <el-menu-item index="/home/adminSet">管理员管理</el-menu-item>
                             <el-menu-item index="/home/organizedSet">组织管理</el-menu-item>
                             <el-menu-item index="/home/userManage">党员管理</el-menu-item>
-                            <el-menu-item index="/home/flashpicSet">轮播图管理</el-menu-item>
+
                         </el-submenu>
 
                         <el-submenu index="5" style="padding-right: 50px">
