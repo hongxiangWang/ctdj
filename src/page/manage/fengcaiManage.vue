@@ -73,10 +73,10 @@
                             size="small"
                             @click="infoClick(scope.$index, scope.row)">查看
                     </el-button>
-                    <el-button
-                            size="small"
-                            @click="handleEdit(scope.$index, scope.row)">编辑
-                    </el-button>
+                    <!--<el-button-->
+                            <!--size="small"-->
+                            <!--@click="handleEdit(scope.$index, scope.row)">编辑-->
+                    <!--</el-button>-->
                     <el-button
                             size="small"
                             type="danger"
@@ -180,7 +180,8 @@
                 this.infoDialog = true;
             },
             cascaderChange(call) {
-                this.dept_id = call[call.length - 1]
+                this.dept_id = call[call.length - 1];
+                getFengcaiList(this);
             },
             addDialogClose() {
                 this.addDialog = false;
@@ -201,7 +202,6 @@
 
     function getFengcaiList(vm) {
         vm.$ajax.post('/fengcai/fengcai_list', {page: vm.currentPage, count: 5, dept_id: vm.dept_id}).then(res => {
-            console.log('--fengcai--', res.data)
             if (res.data.errno == 0) {
                 vm.noticeTotal = res.data.data.count;
                 res.data.data.data.forEach(v => {

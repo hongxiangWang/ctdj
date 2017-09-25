@@ -11,6 +11,7 @@
                   v-loading="tableLoading"
                   element-loading-text="拼命加载中"
                   max-height="500"
+                  border
                   style="width: 100%">
             <el-table-column
                     type="index"
@@ -36,13 +37,13 @@
             <el-table-column label="操作" align="center">
                 <template scope="scope">
                     <el-button size="small" @click="editFlashpic(scope.$index, scope.row)">编辑</el-button>
-                    <el-button type="danger" size="small" @click="deleteFlashpic(scope)">删除</el-button>
+                    <el-button type="danger" size="small" @click="deleteFlashpic(scope.$index,scope.row)">删除</el-button>
                 </template>
             </el-table-column>
         </el-table>
 
         <!--新增界面-->
-        <el-dialog title="新增" v-model="addFormVisible" :close-on-click-modal="false">
+        <el-dialog :title="addDialogTitle" v-model="addFormVisible" :close-on-click-modal="false">
             <el-form :model="addForm" label-width="100px" :rules="addFormRules" ref="addForm">
                 <el-form-item label="图片标题" prop="pic_title">
                     <el-input type="text" placeholder="请输入轮播图片标题" v-model="addForm.pic_title"
@@ -85,7 +86,7 @@
                 <el-button type="primary" @click.native="addSubmit" :loading="addLoading">提交</el-button>
             </div>
         </el-dialog>
-        <el-dialog v-model="dialogVisible" v-if="parentForm == undefined">
+        <el-dialog v-model="dialogVisible">
             <img width="100%" :src="dialogImageUrl" alt="">
         </el-dialog>
         <el-dialog
@@ -164,11 +165,14 @@
                 dialogImageUrl: '',
                 dialogVisible: false,
                 imgDialog: false,
-                imgSrc: ''
+                imgSrc: '',
+                addDialogTitle:'新增',
+                rowClick:{}
             }
         },
         methods: {
             uploadRemove(file, fileList) {
+                console.log('uploadRemove---',file)
                 const $ = this.$jquery;
                 this.addForm.pic_url.forEach((v, i, s) => {
                     if (file.response != undefined && v == file.response.data) {
@@ -176,7 +180,7 @@
                         this.disabled = false;
                         $(".el-upload--picture-card").show();
                     }
-                    if (file.response == undefined && v == file.url.replace(require('../../value/string').fileread, '').replace(`ctdj/www/static`, `file`)) {
+                    if (file.response == undefined && v == file.url.replace(require('../../value/string').fileread, '')) {
                         s.splice(i, 1);
                         this.disabled = false;
                         $(".el-upload--picture-card").show();
@@ -200,21 +204,27 @@
             },
             //显示新增界面
             addFlashpic(){
+                this.addDialogTitle = '新增';
                 this.addFormVisible = true;
+                this.addForm = {
+                    pic_title: '',
+                    pic_url: [],
+                    expire_time: '2099-12-31',
+                    order_num: 999,
+                    status: 1,
+                };
+                this.fileList = [];
+                this.$nextTick(_=>{
+                    let $ = this.$jquery;
+                    $(".el-upload--picture-card").show();
+                })
+
             },
             //处理新增
             addSubmit() {
                 this.$refs.addForm.validate((valid) => {
                     if (valid) {
                         this.addLoading = true;
-//                        let para = Object.assign({}, this.addForm);
-//                        let addinfo = {
-//                            pic_title: para.pic_title,
-//                            pic_url: para.pic_url[0],
-//                            expire_time: para.expire_time,
-//                            order_num: para.order_num,
-//                            status: para.status
-//                        };
                         let addinfo = {
                             pic_title: this.addForm.pic_title,
                             pic_url: this.addForm.pic_url[0],
@@ -222,9 +232,19 @@
                             order_num: this.addForm.order_num,
                             status: this.addForm.status
                         };
-                        this.$ajax.post('/flashpic/flashpic_add', addinfo).then(response => {
-                            let result = response.data;
-                            console.log('result===>', result);
+                        let par = {};
+                        if(this.addDialogTitle == '修改'){
+                            par.url = '/flashpic/flashpic_edit'
+                            par.params = {data:addinfo,id:this.rowClick.id};
+                        }else {
+                            par.url = '/flashpic/flashpic_add';
+                            par.params = addinfo;
+                        }
+                        console.log(par);
+                        this.$ajax.post(par.url, par.params).then(res => {
+                            console.log('result===>', res.data);
+                            let result = res.data;
+
                             if (result.errno == 0) {
                                 this.$message({
                                     message: '提交成功',
@@ -242,7 +262,7 @@
                                 });
                             }
                         }).catch(error => {
-                            console.log(error.message);
+                            console.log(error);
                             this.$message({message: error.message, type: 'error'});
                         });
                     }
@@ -272,27 +292,53 @@
                 this.imgSrc = url;
                 this.imgDialog = true;
             },
-        },
-        computed: {
-            parentFormCom() {
-                if (this.parentForm != undefined) {
-                    this.cascderValue = this.parentForm.cascderValue;
-                    this.form = this.parentForm.form;
-                    this.fileList = this.parentForm.file_list;
-                    getQueryResult(this, this.parentForm.form.dept_id);
 
-//                    setTimeout(_=>{
-//                        this.form.attend_user_arr = [1,3]
-//                    },2000)
-                    return this.parentForm
-                } else {
-                    return 0;
-                }
+            deleteFlashpic(index,row){
+                console.log('row-----',row);
+                this.$confirm('此操作将永久删除, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.$ajax.post('flashpic/flashpic_delete',{id:row.id}).then(res=>{
+                        if(res.data.errno==0){
+                            this.$message({type: 'success', message: '删除成功!'});
+                            this.tableData.splice(index,1);
+                        }else{
+                            this.$message({type: 'error', message: '删除失败'});
+                        }
+                    }).catch(err=>{
+                        this.$message({type: 'error', message: '删除失败'});
+                    })
+
+                }).catch(() => {
+                    this.$message({type: 'info', message: '已取消'});
+                });
+            },
+            editFlashpic(index,row){
+                this.addDialogTitle = '修改';
+                this.addFormVisible = true;
+                this.addForm = {
+                        pic_title: row.pic_title,
+                        expire_time: row.expire_time,
+                        order_num: row.order_num,
+                        status: row.status,
+                };
+                this.addForm.pic_url = [];
+                this.addForm.pic_url.push(row.pic_url);
+                this.fileList = [];
+                this.fileList.push({
+                    url:row.url
+                })
+                this.rowClick = row;
+                this.$nextTick(_=>{
+                    let $ = this.$jquery;
+                    $(".el-upload--picture-card").hide();
+                })
 
             }
         },
-        props: {
-            parentForm: {}
+        computed: {
         },
         created(){
 

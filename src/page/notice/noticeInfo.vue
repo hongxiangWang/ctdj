@@ -3,14 +3,17 @@
         <el-row>
             <el-col style="margin-left: 1rem;height:30px;line-height: 30px;">
                 <el-row>
-                    <el-col :span="16">
+                    <el-col :span="14">
                         <el-breadcrumb separator="/">
                             <el-breadcrumb-item :to="{ path: '/home/main' }"><i class="fa fa-home"></i>首页</el-breadcrumb-item>
                             <el-breadcrumb-item>详情内容</el-breadcrumb-item>
                         </el-breadcrumb>
                     </el-col>
+                    <!--<el-col :span=2>-->
+                        <!--<el-button style="float: right;top:-5px;position: relative" size="small" @click="deleteBt">编辑</el-button>-->
+                    <!--</el-col>-->
                     <el-col :span=2>
-                        <el-button style="float: right;top:-5px;position: relative" size="small" @click="deleteBt">删除</el-button>
+                        <el-button style="float: right;top:-5px;position: relative" size="small" @click="deleteBt" type="" v-if="account.role_id<2">删除</el-button>
                     </el-col>
                 </el-row>
 
@@ -44,7 +47,8 @@
         data() {
             return {
                 msg: 'Hello world!',
-                oData: {}
+                oData: {},
+                account: require('store').get('people_info')[0]
             }
         },
         methods:{
@@ -91,7 +95,6 @@
             }
         },
         created() {
-            console.log('=======>>=====', this.$route.params.id);
             require('store').get('notice_list').forEach(v => {
                 if (v.id == this.$route.params.id) {
                     this.oData = v;

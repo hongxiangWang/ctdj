@@ -34,6 +34,7 @@
                   v-loading="tableLoading"
                   element-loading-text="拼命加载中"
                   max-height="500"
+                  border
                   style="width: 100%">
             <el-table-column
                     type="index"
@@ -47,8 +48,15 @@
             </el-table-column>
             <el-table-column prop="role_type" label="管理级别" width="100" align="center">
             </el-table-column>
-            <el-table-column prop="dept_name" label="所在部门" width="200" align="center">
+            <!--<el-table-column prop="dept_name" label="所在部门" width="200" align="left">-->
+            <!--</el-table-column>-->
+            <el-table-column label="所在部门" width="200" align="left">
+                <template scope="scope">
+                    {{ scope.row.dept_name }}<br>
+                    <small>[{{scope.row.dept_parent_name}}]</small>
+                </template>
             </el-table-column>
+
             <el-table-column prop="status" label="状态" width="100" align="center">
                 <template scope="scope">
                     <el-tag :type="scope.row.status === 1 ? 'success' : 'danger'">{{scope.row.status == 1 ? '有效' : '禁用'}}</el-tag>
