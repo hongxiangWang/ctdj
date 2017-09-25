@@ -32,7 +32,7 @@
                     <i class="el-icon-plus"></i>
                 </el-upload>
                 <span v-for="(item,index) in pic_txt_arr" :key="item.text">
-                    <el-input v-model="item.text" :placeholder="'图片'+(index+1)+'说明'" class="pic_txt"></el-input>
+                    <el-input v-model="item.text" :placeholder="'第'+(index+1)+'张图片说明'" class="pic_txt"></el-input>
                 </span>
                 <el-dialog v-model="dialogVisible" size="tiny">
                     <img width="100%" :src="dialogImageUrl" alt="">
@@ -108,15 +108,15 @@
             },
             beforeUpload(file) {
                 const isJPG = file.type === 'image/jpg' || file.type === 'image/png' || file.type === 'image/jpeg';
-                const isLt2M = file.size / 1024 / 1024 < 2;
+                const isLt3M = file.size / 1024 / 1024 < 3;
 
                 if (!isJPG) {
-                    this.$message.error('上传头像图片只能是 JPG,PNG 格式!');
+                    this.$message.error('上传文件只能是 JPG,PNG 格式!');
                 }
-                if (!isLt2M) {
-                    this.$message.error('上传头像图片大小不能超过 2MB!');
+                if (!isLt3M) {
+                    this.$message.error('上传文件大小不能超过 3MB!');
                 }
-                return isJPG && isLt2M;
+                return isJPG && isLt3M;
             },
             cascaderChange(call) {
                 let depart_id = call[call.length - 1];

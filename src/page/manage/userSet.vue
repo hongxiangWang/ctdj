@@ -59,7 +59,7 @@
                 @sureEdit="sureEdit">
         </edit-dialog>
         <el-row>
-            <el-col :span="22" :push="1">
+            <el-col :span="20" :push="1">
 
 
                 <label></label>
@@ -92,7 +92,7 @@
 
                 <span>总共：{{tableDataTotal}}条数据</span>
             </el-col>
-            <el-col :span="1" :push="0">
+            <el-col :span="2" :push="2">
                 <el-button @click="addPeople">添加</el-button>
             </el-col>
         </el-row>
@@ -147,8 +147,8 @@
                     {lable: '性别', prop: 'people_gender', width: '80', align: 'center'},
                     {lable: '民族', prop: 'people_race', width: '100', align: 'center'},
                     {lable: '入党时间', prop: 'people_enter_party_time', width: '100', align: 'center'},
-                    {lable: '单位', prop: 'big_dept_name', width: '200', align: 'center'},
-                    {lable: '所在党支部', prop: 'small_dept_name', width: '200', align: 'center'},
+                    {lable: '单位', prop: 'company_name', width: '200', align: 'left'},
+                    {lable: '所在党支部', prop: 'dept_name', width: '200', align: 'center'},
                     {lable: '出生年月', prop: 'people_birthday', width: '120', align: 'center'},
                    ],
                 //操作的方法，clickFun为父组件向子组件传递的事件
@@ -197,6 +197,7 @@
         methods: {
             //查看用户信息
             info(index, row) {
+                //console.log('info------',JSON.stringify(row))
                 this.infoDialog = true;
                 let arr = helper.createTableArr(people, row);
                 arr.forEach(value => {
@@ -220,7 +221,7 @@
 
             },
             //添加用户
-            addPeople(index, row) {
+            addPeople() {
                 this.dataArr = [];
                 this.addDialog = true;
                 let noNeedEmptyRule = ['people_jobname']
@@ -480,6 +481,7 @@
     function getUserList(vm, params) {
         vm.tableLoading = true;
         vm.$ajax.post('/people/user_list', params).then(res => {
+            //console.log('res----',res.data)
             if (res.data.errno == 0) {
                 vm.tableData = res.data.data.result_list;
                 vm.tableDataTotal = res.data.data.totalCnt;

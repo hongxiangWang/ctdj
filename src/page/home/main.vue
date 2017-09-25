@@ -17,7 +17,7 @@
                             value=2>
                     </el-option>
                 </el-select>
-                <el-button class="more" type="text" @click="addNotice">添加</el-button>
+                <el-button class="more" type="text" @click="addNotice" v-if="account.role_id<2">添加</el-button>
             </div>
 
             <list :dataArray="list"
@@ -51,6 +51,7 @@
         </el-col>
 
     </el-row>
+
     </div>
 </template>
 <script>
@@ -74,8 +75,8 @@
                 list: [],
                 type: "3",
                 currentPage: 1,
-                noticeTotal:18,
-                noticelabel: '通知广告/学习任务',
+                noticeTotal: 18,
+                noticelabel: '通知公告/学习任务',
                 polar: {
                     title: {
                         text: '本地网党组织数量'
@@ -95,7 +96,8 @@
                     }],
 
                 },
-                notice_type:3
+                notice_type: 3,
+                account: require('store').get('people_info')[0]
 
             }
         },
@@ -110,7 +112,7 @@
                 this.currentPage = call;
                 getNoticeList(this);
             },
-            selsectChange(call){
+            selsectChange(call) {
                 this.notice_type = Number(call);
                 getNoticeList(this);
             }
@@ -137,13 +139,13 @@
                 res.data.data.data.forEach(v => {
                     let json = {
                         title: v.title,
-                        time: v.create_time.substr(0,11),
+                        time: v.create_time.substr(0, 11),
                         type: v.notice_type,
-                        id:v.id
+                        id: v.id
                     };
                     list.push(json);
                 })
-                require('store').set('notice_list',res.data.data.data)
+                require('store').set('notice_list', res.data.data.data)
                 vm.list = list;
             }
         }).catch(err => {
