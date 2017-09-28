@@ -4,6 +4,7 @@
         <el-row type="flex" justify="center">
             <el-col :span="8">
                 <organized-cascader
+
                         @cascaderChange="cascaderChange">
                 </organized-cascader>
             </el-col>
@@ -20,7 +21,7 @@
                     align="center"
                     width="200">
                 <template scope="scope">
-                    <img :src="scope.row.urls[0]" height="120px"/>
+                    <img :src="scope.row.urls[0]" height="120px" style="max-width: 160px"/>
                 </template>
             </el-table-column>
             <el-table-column
@@ -106,6 +107,7 @@
                 <img  :src="img" style="min-width:200px;max-width: 800px"/>
                 <p>{{contentArray[index]}}</p>
             </span>
+            <span class="ql-editor" v-html="quillContent"></span>
 
         </el-dialog>
         <el-dialog
@@ -138,6 +140,7 @@
                 dept_id: '',
                 imgArray:[],
                 contentArray:[],
+                quillContent:'',
             }
         },
         components: {
@@ -177,6 +180,7 @@
             infoClick(index,row) {
                 this.imgArray = row.urls;
                 this.contentArray = row.contents;
+                this.quillContent = row.content;
                 this.infoDialog = true;
             },
             cascaderChange(call) {

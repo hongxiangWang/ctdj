@@ -215,7 +215,7 @@
         text-align:center;
         font-size:24px;
         font-weight:bold;
-        height:60px;
+        min-height:60px;
         line-height:60px;
         border-bottom:1px solid red;
         margin:0px 10px;

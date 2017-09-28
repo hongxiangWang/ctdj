@@ -2,18 +2,15 @@
     <div>
         <el-row>
             <el-col style="margin-left: 1rem;height:30px;line-height: 30px;">
-                <el-row>
+                <el-row >
                     <el-col :span="14">
                         <el-breadcrumb separator="/">
                             <el-breadcrumb-item :to="{ path: '/home/main' }"><i class="fa fa-home"></i>首页</el-breadcrumb-item>
                             <el-breadcrumb-item>详情内容</el-breadcrumb-item>
                         </el-breadcrumb>
                     </el-col>
-                    <!--<el-col :span=2>-->
-                        <!--<el-button style="float: right;top:-5px;position: relative" size="small" @click="deleteBt">编辑</el-button>-->
-                    <!--</el-col>-->
                     <el-col :span=2>
-                        <el-button style="float: right;top:-5px;position: relative" size="small" @click="deleteBt" type="" v-if="account.role_id<2">删除</el-button>
+                        <el-button style="float: right;top:-5px;position: relative" size="small" @click="deleteBt" :plain="true" type="danger" v-if="account.role_id<2">删除</el-button>
                     </el-col>
                 </el-row>
 
@@ -131,7 +128,7 @@
         text-align:center;
         font-size:24px;
         font-weight:bold;
-        height:60px;
+        min-height:60px;
         line-height:60px;
         border-bottom:1px solid red;
         margin:0px 10px;

@@ -30,8 +30,8 @@
                         <el-menu-item index="/home/main">首页</el-menu-item>
                         <el-submenu index="2">
                             <template slot="title">文化建设</template>
-                            <el-menu-item index="/home/fengcaiManage">党员风采</el-menu-item>
-                            <el-menu-item index="/home/flashpicSet">轮播图管理</el-menu-item>
+                            <el-menu-item index="/home/fengcaiManage">风采展示</el-menu-item>
+                            <el-menu-item index="/home/flashpicSet" v-if="account.role_id<2">轮播图管理</el-menu-item>
                         </el-submenu>
 
                         <el-submenu index="3">
@@ -47,7 +47,7 @@
                             <template slot="title">管理</template>
                             <el-menu-item index="/home/roleManage" v-if="account.role_id<2">角色管理</el-menu-item>
                             <el-menu-item index="/home/permissionSet" v-if="account.role_id<2">权限管理</el-menu-item>
-                            <el-menu-item index="/home/adminSet">管理员管理</el-menu-item>
+                            <el-menu-item index="/home/adminSet" v-if="account.role_id<3">管理员管理</el-menu-item>
                             <el-menu-item index="/home/organizedSet">组织管理</el-menu-item>
                             <el-menu-item index="/home/userManage">党员管理</el-menu-item>
 
@@ -119,6 +119,7 @@
                         message: '退出成功!'
                     });
                     require('store').clearAll();
+                    this.$store.commit('ORGANIZED_CASCADER_DATA', []);
                     this.$router.replace('/')
                 }).catch(() => {
                 });

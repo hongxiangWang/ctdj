@@ -21,7 +21,7 @@ const selectArr = {
     people_gender: [{label: '男', value: '男'}, {label: '女', value: '女'}],
     people_residence: province,
     people_culture: [{label: '高中及以下', value: '高中及以下'}, {label: '本科', value: '本科'}, {label: '硕士', value: '硕士'}, {label: '博士及以上', value: '博士及以上'}],
-    dept_type: [{label: '党支部', value: 1}, {label: '党群', value: 2}],
+    dept_type: [{label: '党支部', value: 4}, {label: '党委', value: 2},{label: '分公司', value: 3}],
     dept_status: [{label: '有效', value: 1}, {label: '无效', value: 0}],
     record_type: [{label: '每周一学习', value: 1}, {label: '三会一课', value: 2}, {label: '新三会一课', value: 3}, {label: '主题党日', value: 4}, {label: '支局文化建设', value: 5}, {label: '其他', value: 6}],
     prov_latn_id:[

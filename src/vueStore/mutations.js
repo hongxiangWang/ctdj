@@ -9,7 +9,8 @@ const CHANGE_TREENODE_ROLECODE = 'CHANGE_TREENODE_ROLECODE'//改变左侧树角�
 /*
 * organizedSet
 * */
-const ORGANIZED_PARTY = 'ORGANIZED_PARTY' // 组织数组 organizedSet
+const ORGANIZED_PARTY = 'ORGANIZED_PARTY' // 组织数组 organizedSet 全是党委
+const ORGANIZED_PARTY2 = 'ORGANIZED_PARTY2' // 组织数组 organizedSet  党委与分公司
 const ORGANIZED_CASCADER_DATA = 'ORGANIZED_CASCADER_DATA' // 组织数组 organizedSet
 export default {
      /*
@@ -32,6 +33,9 @@ export default {
     * */
     [ORGANIZED_PARTY](state, payload) {
         state.organized.party = payload;
+    },
+    [ORGANIZED_PARTY2](state, payload) {
+        state.organized.party2 = payload;
     },
     [ORGANIZED_CASCADER_DATA](state, payload){
         state.organized.cascader_data = payload;

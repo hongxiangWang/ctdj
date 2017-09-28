@@ -14,7 +14,8 @@ const state = {
     },
     organized:{
         party:[],
-        cascader_data:[]
+        cascader_data:[],
+        party2:[]
     }
 };
 

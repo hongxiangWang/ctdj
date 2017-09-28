@@ -4,12 +4,11 @@
             ref="cascader"
             expand-trigger="hover"
             :options="options"
-            :props="props"
-            :clearable="true"
-            :show-all-levels="true"
-            placeholder="请选择党支部"
+            clearable
             filterable
+            placeholder="请选择党支部"
             v-model="selectValue"
+            active-item-change="activeItemChange"
             @change="cascaderChange">
     </el-cascader>
         <!--<small class="organizedName">{{label}}</small>-->
@@ -20,19 +19,24 @@
     export default {
         data() {
             return {
-                options: [],
+
                 selectValue: [],
                 props: {
                     label: "dept_name",
                     value: "id",
                     children: "children"
                 },
-                label:''
+                label: '',
+                options: []
 
             }
         },
         props: {
-            cascderValue: Number
+            cascderValue: Number,
+            changeOnSelect: {
+                type: Boolean,
+                default: false
+            },
         },
         computed: {
             setDefaultValue() {
@@ -67,12 +71,13 @@
         methods: {
             cascaderChange(call) {
                 let $ = this.$jquery;
-                this.$nextTick(_=>{
+                this.$nextTick(_ => {
                     let label = $('#organizedCascader .el-cascader__label').text().replaceAll(/\s+/g, "");
                     this.label = label;
-                    this.$emit('cascaderChange', call,label);
+                    this.$emit('cascaderChange', call, label);
                 })
                 //this.$emit('cascaderChange', call,)
+                console.log('cascaderChange---',this.$refs.cascader)
             },
 
         },
@@ -87,13 +92,15 @@
             $(cascaderDom).click(_ => {
                 $('.el-cascader-menus:first .el-cascader-menu__item').css({minWidth: boxW + 'px'})
             })
+            //return;
             this.$ajax.post('/department/dept_list_to_tree', {}).then(res => {
-                let groupArr = [];
+                let groupArr1 = [];
+                let groupArr2 = [];
                 if (res.data.errno == 0) {
-
                     if (res.data.data.length == 1 && res.data.data[0].id != 1) {
                         if (res.data.data[0].children == undefined) {
                             this.options = res.data.data;
+                            dealArr(res.data.data);
                             this.$store.commit('ORGANIZED_CASCADER_DATA', res.data.data);
                             return;
                         }
@@ -101,7 +108,9 @@
                         let json = {};
                         json.label = parent.dept_name;
                         json.value = parent.id;
-                        groupArr.push(json);
+                        groupArr1.push(json);
+                        groupArr2 = dealGroupArr(res.data.data);
+                        dealArr(res.data.data);
                         this.options = res.data.data;
                         this.$store.commit('ORGANIZED_CASCADER_DATA', res.data.data);
                     } else {
@@ -109,13 +118,15 @@
                             let json = {};
                             json.label = value.dept_name;
                             json.value = Number(value.id);
-                            groupArr.push(json);
+                            groupArr1.push(json);
                         });
-
+                        groupArr2 = dealGroupArr(res.data.data[0].children);
+                        dealArr(res.data.data[0].children);
                         this.options = res.data.data[0].children;
                         this.$store.commit('ORGANIZED_CASCADER_DATA', res.data.data[0].children);
                     }
-                    this.$store.commit('ORGANIZED_PARTY', groupArr);
+                    this.$store.commit('ORGANIZED_PARTY', groupArr1);
+                    this.$store.commit('ORGANIZED_PARTY2', groupArr2);
                     return;
                 }
                 this.$message({message: '数据获取失败,请重试111', type: 'error'})
@@ -128,9 +139,42 @@
     }
 
     function ClearBr(key) {
-        key = key.replace(/<\/?.+?>/g,"");
+        key = key.replace(/<\/?.+?>/g, "");
         key = key.replace(/[\r\n]/g, "");
         return key;
+    }
+
+    function dealArr(arr) {
+        arr.forEach(v => {
+            v.label = v.dept_name;
+            v.value = v.id;
+            if (v.children != undefined) {
+                dealArr(v.children);
+            }
+        })
+    }
+    function dealGroupArr(arr) {
+        let groupArr= [];
+        arr.forEach(v=>{
+            let json = {label:v.dept_name,value:v.id};
+            if(v.children!=undefined ){
+                let children = [];
+                v.children.forEach(item=>{
+                    if(item.is_sub_dept==1){
+                        let json2={
+                            label:item.dept_name,value:item.id
+                        }
+                        children.push(json2);
+                    }
+                });
+                if(children.length>0){
+                    json.children = children;
+                }
+            }
+            groupArr.push(json)
+        });
+        console.log('this.groupArr2---',groupArr)
+        return groupArr;
     }
 </script>
 <style lang="less">

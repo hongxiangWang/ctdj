@@ -40,6 +40,15 @@
             </el-form-item>
         </el-form>
 
+        <div style="text-align: center;padding-left: 100px">
+            <quill-editer
+                    :fileName="'file'"
+                    :uploadUrl="uploadUri"
+                    v-model="form.content">
+            </quill-editer>
+        </div>
+
+
         <el-row type="flex" justify="center">
             <el-col :span="6" style="text-align: center">
                 <el-button @click="$router.go(-1)">返回</el-button>
@@ -50,13 +59,15 @@
 </template>
 <script>
     import organizedCascader from '../../components/organizedCascader.vue'
+    import quillEditer from '../../components/quillEditer.vue'
 
     export default {
         data() {
             return {
                 form: {
                     dept_id: '',
-                    title: ''
+                    title: '',
+                    content: ''
                 },
                 uploadUri: require('../../value/string').uploadUrl,
                 fileList: [],
@@ -67,7 +78,7 @@
                 pic_txt_arr: [{text: ''}],
                 dialogVisible: false,
                 wh: window.innerWidth,
-                upload_box_num:0,
+                upload_box_num: 0,
             }
         },
         mounted() {
@@ -76,11 +87,9 @@
             let upload_box_num = Math.ceil((this.wh - 100) / 158) - 1;
             this.upload_box_num = upload_box_num;
         },
-        computed: {
-
-        },
+        computed: {},
         components: {
-            organizedCascader
+            organizedCascader, quillEditer
         },
         methods: {
             uploadRemove(file, fileList) {
@@ -137,9 +146,9 @@
                         let params = {
                             title: this.form.title,
                             dept_id: this.form.dept_id,
-                            fengcai_pic_json_array: fengcai_pic_json_array
+                            fengcai_pic_json_array: fengcai_pic_json_array,
+                            content:this.form.content,
                         }
-
                         this.$ajax.post('/fengcai/fengcai_add', params).then(res => {
                             console.log('fengcai_pic_json_array----', res.data)
                             if (res.data.errno == 0) {
@@ -160,6 +169,7 @@
             }
         }
     }
+
     function ajust(vm) {
         let $ = vm.$jquery;
 //        vm.$nextTick(_=>{
@@ -176,7 +186,8 @@
 </script>
 
 <style lang="less">
-    #fengcaiAdd{
+    #fengcaiAdd {
+
         .pic_txt {
             max-width: 148px;
             margin: 0px 8px 0px 0;
@@ -185,9 +196,11 @@
         .el-upload-list--picture-card .el-upload-list__item {
             margin: 0px 8px 2px 0;
         }
-        .el-upload--picture-card{
+
+        .el-upload--picture-card {
             margin-top: 0px;
         }
+
     }
 
 </style>

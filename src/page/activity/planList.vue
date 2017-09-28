@@ -53,7 +53,11 @@
             </el-table-column>
             <el-table-column prop="activity_name" label="计划名称" width="300" align="center">
             </el-table-column>
-            <el-table-column prop="dept_name" label="党支部" width="200" align="center">
+            <el-table-column  label="党支部" width="200" align="left">
+                <template scope="scope">
+                    {{ scope.row.dept_name }}<br>
+                    <small>[{{scope.row.company_name}}]</small>
+                </template>
             </el-table-column>
             <el-table-column label="年/月/周" width="150" align="center">
                 <template scope="scope">

@@ -11,17 +11,9 @@
             </el-col>
             <el-col :span="10">
                 <el-row type="flex" justify="end">
-                    <el-col :span="8">
-                        <!--<el-input-->
-                                <!--placeholder="请选择日期"-->
-                                <!--icon="search"-->
-                                <!--v-model="input"-->
-                                <!--:on-icon-click="handleIconClick">-->
-                        <!--</el-input>-->
-                    </el-col>
                     <el-col :span="16" :offset="1">
                         <el-button icon="edit" @click="editBtn" :disabled="editDisabled">修改</el-button>
-                        <el-button icon="plus" @click="addBtn">增加</el-button>
+                        <el-button icon="plus" @click="addBtn"  v-if="account.role_id<3">增加</el-button>
                         <el-button icon="delete2" @click="deleteBtn">删除</el-button>
                     </el-col>
                 </el-row>
@@ -101,6 +93,7 @@
     import cellArr from '../../components/cellArr.vue'
     import form1 from '../../components/form.vue'
     import organizedCascader from '../../components/organizedCascader.vue'
+
     const helper = require('../../tools/helper.js');
     import {deptment, selectArr, cascaderArr, cascaderProps} from '../../assets/kvword.js';
     import {notEmpty} from '../../assets/rules.js'
@@ -109,7 +102,7 @@
         data() {
             return {
                 options: [],
-                selectValue: [],
+                selectValue: '',
                 props: {
                     label: "dept_name",
                     value: "id",
@@ -129,7 +122,7 @@
                 editDialog: false,
                 editFormData: [],
                 oCellDate: [],
-                editDisabled:true,
+                editDisabled: true,
 
                 treeOptions: {
                     labelKey: 'name',
@@ -141,6 +134,8 @@
                         add: 'icon-add'
                     },
                 },
+
+                chooseDeptType:0,
 
             }
         },
@@ -158,7 +153,8 @@
                         })
                     }
                 });
-                this.getNodeData(call[1])
+                this.getNodeData(call[call.length - 1]);
+                this.selectValue = call[call.length - 1];
 
             },
             handleIconClick() {
@@ -171,56 +167,81 @@
                 this.addDialog = true;
                 this.formData = getForm();
             },
+            //选择党支部、党委时监听器
             deptmentTypeChange(call) {
+                console.log('deptmentTypeChange---', call.value)
                 let pid = {
-                    label: '隶属党群',
-                    value: '',
+                    label: '隶属上级',
+                    value: [],
                     rule: notEmpty,
                     key: 'pid',
-                    type: 'select'
+                    type: 'cascader',
+                    cascaderOptions:'',
+                    props:{
+                        label:'label',
+                        value:"value"
+                    }
                 }
-
-                if (call.value == 1 && (this.editFormData.length < 5  && this.formData.length<5) ) {
-                    this.selectArr.pid = this.groupArr;
-                } else {
-                    this.formData.forEach((value, index, self) => {
-                        if (value.key == 'pid') {
-                            self.splice(index, 1)
-                        }
-                    });
-                    this.editFormData.forEach((value, index, self) => {
-                        if (value.key == 'pid') {
-                            self.splice(index, 1)
-                        }
-                    })
-                    return;
+                this.chooseDeptType = call.value;
+                switch (call.value){
+                    case 4:
+                        pid.cascaderOptions = this.groupArr2;
+                        console.log('this.groupArr2---',this.groupArr2)
+                        delFormPid(this);
+                        addFormPid(this,pid);
+                        break;
+                    case 3:
+                        pid.cascaderOptions = this.groupArr;
+                        delFormPid(this);
+                        addFormPid(this,pid);
+                        break;
+                    case 2:
+                        delFormPid(this);
+                        break;
                 }
-                //this.selectArr.dept_type[1].disabled = true;
-                if (this.editDialog) {
-                    this.editFormData.push(pid);
-                } else {
-                    this.formData.push(pid);
-                }
-                console.log('deptmentTypeChange-----', call)
             },
             cascaderChangeFrom(call) {
-                this.formCascader = call[0] + '/' + call[1];
+                console.log('cascaderChangeFrom----',call)
+                //this.formCascader = call[0] + '/' + call[1];
             },
             sureAdd() {
                 let form = this.$refs.form1.form;
                 this.$refs.form1.$refs.form.validate((valid) => {
                     if (valid) {
                         let params = {};
-                        if(form.pid==undefined){
+                        if (form.pid == undefined) {
                             form.pid = 1;
+                        }else{
+                            form.pid = form.pid[form.pid.length-1]
+                        }
+                        switch (this.chooseDeptType){
+                            case 1:
+                                form.is_sub_dept = 0;
+                                form.dept_type = 4;
+                                break;
+                            case 2:
+                                form.dept_type = 2;
+                                form.is_sub_dept = 0;
+                                break;
+                            case 3:
+                                form.dept_type = 3;
+                                form.is_sub_dept = 1;
+                                break;
+                        }
+                        if(this.chooseDeptType==3){
+                            form.is_sub_dept = 1;
+                        }else{
+                            form.is_sub_dept = 0;
                         }
                         params.deptdata = form;
-                        console.log('sureAdd----params-------',params)
                         this.$ajax.post('/department/dept_add', params).then(res => {
                             console.log('res------', res.data)
                             if (res.data.errno == 0) {
-                                this.$message({message: '添加成功', type: 'success'});
-                                this.addDialog = false;
+                                this.$message({message: '添加成功，2s后自动刷新', type: 'success'});
+                                setTimeout(_ => {
+                                    this.$store.commit('ORGANIZED_CASCADER_DATA', []);
+                                    window.location.reload();
+                                }, 2500)
                             } else {
                                 this.$message({message: '添加组织失败，请重试', type: 'error'});
                             }
@@ -235,7 +256,7 @@
                 });
             },
             deleteBtn() {
-                if (this.selectValue.length == 0) {
+                if (this.selectValue == '') {
                     this.$message({message: '请先在左边选择党支部', type: 'warning'});
                     return;
                 }
@@ -247,32 +268,51 @@
                 noValueForm.forEach(v => {
                     v.value = this.oCellDate[v.key];
                 });
-
                 let pid = {
-                    label: '隶属党群',
-                    value: '',
+                    label: '隶属上级',
+                    value: [],
                     rule: notEmpty,
                     key: 'pid',
-                    type: 'select'
+                    type: 'cascader',
+                    cascaderOptions:'',
+                    props:{
+                        label:'label',
+                        value:"value"
+                    }
                 }
-
                 console.log('editBtn========', this.oCellDate, noValueForm);
                 this.editFormData = noValueForm;
-                if (this.oCellDate.dept_type == 1) {
-                    this.selectArr.pid = this.groupArr;
-                    pid.value = Number(this.oCellDate.pid);
-                    this.editFormData.push(pid);
-
-                }
                 this.editDialog = true;
+
+                switch (this.oCellDate.dept_type){
+                    case 4:
+                        pid.value = [this.oCellDate.pid]
+                        pid.cascaderOptions = this.groupArr2;
+                        delFormPid(this);
+                        addFormPid(this,pid);
+                        break;
+                    case 3:
+                        pid.value = [this.oCellDate.pid]
+                        pid.cascaderOptions = this.groupArr;
+                        delFormPid(this);
+                        addFormPid(this,pid);
+                        break;
+                    case 2:
+                        delFormPid(this);
+                        break;
+                }
+
 
             },
             sureDelete() {
-                this.$ajax.post('/department/dept_delete', {dept_id: this.selectValue[1]}).then(res => {
-                    console.log('res------', res.data)
+                this.$ajax.post('/department/dept_delete', {dept_id: this.selectValue}).then(res => {
                     if (res.data.errno == 0) {
-                        this.$message({message: '删除成功', type: 'success'});
+                        this.$message({message: '删除成功，2s后自动刷新', type: 'success'});
                         this.deleteDialog = false;
+                        setTimeout(_ => {
+                            this.$store.commit('ORGANIZED_CASCADER_DATA', []);
+                            window.location.reload();
+                        }, 2500)
                     } else {
                         this.$message({message: '删除组织失败，请重试', type: 'error'});
                     }
@@ -289,118 +329,165 @@
                 this.editDialog = false;
                 this.editFormData = [];
             },
-            sureEdit(){
-                let form  = this.$refs.form2.form;;
-                this.$refs.form2.$refs.form.validate(valid=>{
-                    if(valid){
-                        if(form.pid==undefined){
-                            form.pid =1;
+            sureEdit() {
+                let form = this.$refs.form2.form;
+                this.$refs.form2.$refs.form.validate(valid => {
+                    if (valid) {
+                        let params = {};
+                        if (form.pid == undefined) {
+                            form.pid = 1;
+                        }else{
+                            form.pid = form.pid[form.pid.length-1]
                         }
-                        let params = {
-                            dept_id : this.oCellDate.id,
-                            deptdata:form,
+                        switch (this.chooseDeptType){
+                            case 1:
+                                form.is_sub_dept = 0;
+                                form.dept_type = 4;
+                                break;
+                            case 2:
+                                form.dept_type = 2;
+                                form.is_sub_dept = 0;
+                                break;
+                            case 3:
+                                form.dept_type = 3;
+                                form.is_sub_dept = 1;
+                                break;
                         }
-                      this.$ajax.post('/department/dept_edit',params).then(res=>{
-                          console.log(res.data);
-                          if(res.data.errno==0){
-                              this.$message({message:'修改成功',type:'success'});
-                              this.editDialogClose();
-                              let arr = helper.createTableArr(deptment, form);
-                              arr.forEach(value => {
-                                  value.oType = value.type;
-                                  value.type = value.type != 'file' ? 'text' : 'file';
-                                  helper.selectDataShow(['dept_status', 'dept_type','prov_latn_id'], selectArr, value);
-                              });
-                              this.cellDate = arr;
-                          }
-                      }).catch(err=>{
-                          console.log(err)
-                      })
-                    }else{
+                        if(this.chooseDeptType==3){
+                            form.is_sub_dept = 1;
+                        }else{
+                            form.is_sub_dept = 0;
+                        }
+                        params.dept_id=this.oCellDate.id;
+                        params.deptdata = form;
+                        console.log('params------',params);
+                        this.$ajax.post('/department/dept_edit', params).then(res => {
+                            console.log(res.data);
+                            if (res.data.errno == 0) {
+                                this.$message({message: '修改成功,2s后自动刷新', type: 'success'});
+                                this.editDialogClose();
+                                let arr = helper.createTableArr(deptment, form);
+                                arr.forEach(value => {
+                                    value.oType = value.type;
+                                    value.type = value.type != 'file' ? 'text' : 'file';
+                                    helper.selectDataShow(['dept_status', 'dept_type', 'prov_latn_id'], selectArr, value);
+                                });
+                                this.cellDate = arr;
+                                setTimeout(_ => {
+                                    this.$store.commit('ORGANIZED_CASCADER_DATA', []);
+                                    window.location.reload();
+                                }, 2500)
+
+                            }
+                        }).catch(err => {
+                            console.log(err)
+                        })
+                    } else {
                         this.$message({message: '请填写完整表单', type: 'warning'})
                     }
                 })
             },
-            itemClick (node) {
-                console.log(node.id);
+            itemClick(node) {
                 this.getNodeData(node.id);
             },
-            getNodeData(id){
+            getNodeData(id) {
+                this.selectValue = id;
+                if (id == undefined) {
+                    return;
+                }
                 this.$ajax.post('/department/dept_search_by_id', {dept_id: id}).then(res => {
-                    console.log('res------', res.data.data[0]);
-                    if(res.data.errno==0){
+                    console.log('res---7777---', res.data.data[0]);
+                    if (res.data.errno == 0) {
                         this.oCellDate = res.data.data[0];
                         let arr = helper.createTableArr(deptment, res.data.data[0]);
                         arr.forEach(value => {
                             value.oType = value.type;
                             value.type = value.type != 'file' ? 'text' : 'file';
-                            helper.selectDataShow(['dept_status', 'dept_type','prov_latn_id'], selectArr, value);
+                            helper.selectDataShow(['dept_status', 'dept_type', 'prov_latn_id'], selectArr, value);
                         });
                         this.cellDate = arr;
                         this.editDisabled = false;
-                    }else {
-                        this.$message({messge:'获取数据失败',type:'warning'});
+                    } else {
+                        this.$message({messge: '获取数据失败', type: 'warning'});
                         this.editDisabled = true;
                     }
 
                 }).catch(err => {
-                    this.$message({messge:'获取数据失败',type:'warning'});
+                    this.$message({messge: '获取数据失败', type: 'warning'});
                     this.editDisabled = true;
                     console.log('res------', err);
                 })
             }
         },
         components: {
-            cellArr, form1, organizedCascader,ZTree
+            cellArr, form1, organizedCascader, ZTree
         },
         computed: {
             groupArr() {
                 return this.$store.state.organized.party;
             },
-            treeData1(){
+            groupArr2() {
+                return this.$store.state.organized.party2;
+            },
+            treeData1() {
                 let oArr = this.$store.state.organized.cascader_data;
                 let arr = [];
-                oArr.forEach(v=>{
-                    let parent  = {
-                        id:v.id,
-                        name:v.dept_name
+                oArr.forEach(v => {
+                    let parent = {
+                        id: v.id,
+                        name: v.dept_name
                     };
 
-                    if(v.children.length>0){
+                    if (v.children != undefined && v.children.length > 0) {
                         let children = [];
-                        v.children.forEach(value=>{
+                        v.children.forEach(value => {
                             let item = {
-                                id:value.id,
-                                name:value.dept_name
+                                id: value.id,
+                                name: value.dept_name
                             }
-                            if(value.children!=undefined && value.children.length>0){
+                            if (value.children != undefined && value.children.length > 0) {
                                 let son = [];
-                                value.children.forEach(s=>{
+                                value.children.forEach(s => {
                                     son.push({
-                                        id:s.id,
-                                        name:s.dept_name
+                                        id: s.id,
+                                        name: s.dept_name
                                     })
                                 })
-                                item.name = item.name + ' ('+value.children.length+')'
+                                item.name = item.name + ' (' + value.children.length + ')'
                                 item.children = son;
+                            }
+                            if(value.is_sub_dept==1 && value.children == undefined){
+                                item.name = item.name + ' (' + 0 + ')'
+                                item.children = [{
+
+                                }];
                             }
                             children.push(item)
 
                         })
-                        parent.name = parent.name + ' ('+v.children.length+')';
+                        parent.name = parent.name + ' (' + v.children.length + ')';
                         parent.children = children;
                     }
                     arr.push(parent)
                 })
-                this.$jquery('.root').text('区党委')
+                this.$nextTick(_ => {
+                    this.$jquery('.root').text('区党委')
+                })
+
                 return arr
             }
         },
         mounted() {
-            if (this.account.role_id == 2) {
-                this.selectArr.dept_type[1].disabled = true;
-            } else {
-                this.selectArr.dept_type[1].disabled = false;
+            switch(this.account.role_id){
+                case 1:
+                    break;
+                case 2:
+                    this.selectArr.dept_type[1].disabled = true;
+                    break;
+                case 3:
+                    this.selectArr.dept_type[1].disabled = true;
+                    this.selectArr.dept_type[2].disabled = true;
+                    break;
             }
         }
 
@@ -439,6 +526,39 @@
             value.rule = notEmpty;
         });
         return arr;
+    }
+    function isHaveFormPid(arr) {
+        let flag = false;
+        arr.forEach(v=>{
+            if( v.key == 'pid'){
+                flag = true;
+            }
+        })
+        return flag;
+    }
+    
+    function delFormPid(vm) {
+        if(isHaveFormPid(vm.formData) || isHaveFormPid(vm.editFormData)){
+            vm.formData.forEach((value, index, self) => {
+                if (value.key == 'pid') {
+                    self.splice(index, 1)
+                }
+            });
+            vm.editFormData.forEach((value, index, self) => {
+                if (value.key == 'pid') {
+                    self.splice(index, 1)
+                }
+            })
+        }
+    }
+    function addFormPid(vm,pid) {
+        if (vm.editDialog) {
+            if(vm.account.role_id<3){
+                vm.editFormData.push(pid);
+            }
+        } else {
+            vm.formData.push(pid);
+        }
     }
 </script>
 

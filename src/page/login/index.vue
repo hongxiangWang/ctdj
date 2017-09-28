@@ -83,19 +83,17 @@
                             userpwd: this.ruleForm2.checkPass
                         }
                         this.$ajax.post('/admin/login', params).then(response => {
-                            console.log(response);
                             switch (Number(response.data.errno)) {
                                 case 0 :
                                     getAccount(this, response.data.data);
                                     this.$router.replace('/home/main');
                                     break;
                                 default:
-                                    console.log(response.data)
                                     this.$message({message: response.data.errmsg, type: 'error'})
                             }
                             //console.log(response.data.data.flg)
                         }).catch(error => {
-                            console.log(error.message);
+                            console.log(error);
                             this.$message({message: error.message, type: 'error'})
                         })
                     } else {

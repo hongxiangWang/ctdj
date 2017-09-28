@@ -54,7 +54,11 @@
             </el-table-column>
             <el-table-column prop="record_title" label="活动名称" width="300" align="center">
             </el-table-column>
-            <el-table-column prop="dept_name" label="党支部" width="200" align="center">
+            <el-table-column  label="党支部" width="200" align="left">
+                <template scope="scope">
+                    {{ scope.row.dept_name }}<br>
+                    <small>[{{scope.row.company_name}}]</small>
+                </template>
             </el-table-column>
             <el-table-column prop="record_type" label="党建类型" width="150" align="center">
                 <template scope="scope">

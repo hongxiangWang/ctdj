@@ -33,6 +33,7 @@
                     expand-trigger="hover"
                     :props="it.props"
                     :options="it.cascaderOptions"
+                    change-on-select
                     v-model="it.value"
                     @change="cascaderChange">
             </el-cascader>
